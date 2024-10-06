@@ -59,8 +59,9 @@ for province_name, info in province_data.items():
     # 행정구역 이름 추가
     text_x = contour[:, 0, 0].mean()  # 중심 X 좌표
     text_y = contour[:, 0, 1].mean()  # 중심 Y 좌표
-    text_elements.append(f'<text x="{text_x}" y="{text_y}" font-size="30" fill="black" '
-                         f'text-anchor="middle" alignment-baseline="middle">{province_name}</text>')
+    text_elements.append(f'<text x="{text_x}" y="{text_y}" font-size="20" fill="black" '
+                         f'text-anchor="middle" alignment-baseline="middle" '
+                         f'style="pointer-events: none;">{province_name}</text>')
 
     subdivision_id += 1
 
@@ -68,21 +69,36 @@ for province_name, info in province_data.items():
 svg_content = f"""
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {image.shape[1]} {image.shape[0]}" id="map">
     {''.join(svg_paths)}
-    {''.join(text_elements)}  <!-- 텍스트를 맨 앞으로 이동 -->
+    {''.join(text_elements)}
     <text id="info" x="10" y="30" font-size="20" fill="black"></text>
 </svg>
 """
 
-# html 파일 생성
+
+# HTML 파일 생성
 html_content = f"""
 <!DOCTYPE html>
 <html>
 <head>
     <title>Vector Map</title>
     <style>
+        html, body {{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }}
+        #map-container {{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }}
         #map {{
             width: 100%;
-            height: auto;
+            height: 100%;
         }}
         .subdivision {{
             fill: #989898;
@@ -90,15 +106,6 @@ html_content = f"""
         }}
         .subdivision:hover {{
             fill: #f00;
-        }}
-        #population-toggle {{
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #000;
-            cursor: pointer;
         }}
         #tooltip {{
             position: absolute;
@@ -108,21 +115,37 @@ html_content = f"""
             z-index: 1000;
             display: none;
         }}
+        #toggle-buttons {{
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+        }}
+        #toggle-buttons button {{
+            font-size: 16px;
+            padding: 10px 20px;
+        }}
     </style>
 </head>
 <body>
     <!-- SVG Content -->
     <div id="map-container">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" id="map">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" id="map">
             {svg_content}
         </svg>
+
+        <!-- Tooltip Element -->
+        <div id="tooltip"></div>
+
+        <!-- Toggle Buttons Container -->
+        <div id="toggle-buttons">
+            <!-- Population Color Toggle Button -->
+            <button id="population-toggle">Toggle Population Color</button>
+        
+            <!-- Population Density Toggle Button -->
+            <button id="density-toggle">Toggle Population Density Color</button>
+        </div>
     </div>
-
-    <!-- Tooltip Element -->
-    <div id="tooltip"></div>
-
-    <!-- Population Color Toggle Button -->
-    <div id="population-toggle">Toggle Population Color</div>
 
     <!-- JavaScript to control interaction -->
     <script src="map_interaction.js"></script>
