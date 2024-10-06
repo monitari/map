@@ -80,8 +80,7 @@ print("국가명 : 트라야비아")
 print(f"주 수: {len(province)}개")
 print(f"행정구역 수: {len(province_data)}개")
 print(f"총 인구: {format_number(total_population)}명")
-print(f"총 인구 밀도: {total_population / sum([int(province_data[p]['area']) for p in province_data]):.2f}명/A")
-print()
+print(f"총 인구 밀도: {total_population / sum([int(province_data[p]['area']) for p in province_data]):.2f}명/A\n")
 
 # 주 정보 (인구가 가장 많은 주, 가장 적은 주, 인구 밀도가 가장 높은 주, 낮은 주)
 max_population = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]))
@@ -96,9 +95,7 @@ min_density_ratio = sum([int(province_data[p]['population']) for p in province[m
 print(f"인구가 가장 많은 주: {max_population} ({format_number(max_population_num)}명)")
 print(f"인구가 가장 적은 주: {min_population} ({format_number(min_population_num)}명)")
 print(f"인구 밀도가 가장 높은 주: {max_density} ({max_density_ratio:.2f}명/A)")
-print(f"인구 밀도가 가장 낮은 주: {min_density} ({min_density_ratio:.2f}명/A)")
-
-print()
+print(f"인구 밀도가 가장 낮은 주: {min_density} ({min_density_ratio:.2f}명/A)\n")
 
 # 행정구역 정보 (인구가 가장 많은 행정구역, 가장 적은 행정구역, 인구 밀도가 가장 높은 행정구역, 낮은 행정구역)
 max_population = max(province_data, key=lambda x: int(province_data[x]["population"]))
@@ -113,4 +110,47 @@ min_density_ratio = int(province_data[min_density]["population"]) / int(province
 print(f"인구가 가장 많은 행정구역: {max_population} ({format_number(max_population_num)}명)")
 print(f"인구가 가장 적은 행정구역: {min_population} ({format_number(min_population_num)}명)")
 print(f"인구 밀도가 가장 높은 행정구역: {max_density} ({max_density_ratio:.2f}명/A)")
-print(f"인구 밀도가 가장 낮은 행정구역: {min_density} ({min_density_ratio:.2f}명/A)")
+print(f"인구 밀도가 가장 낮은 행정구역: {min_density} ({min_density_ratio:.2f}명/A)\n")
+
+for i in range(128): # 구분선 출력
+    print("-", end="")
+
+# 주별 인구 순위
+population_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]), reverse=True)
+print("\n주별 인구 순위")
+for rank, pro in enumerate(population_rank):
+    print(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['population']) for p in province[pro]]))}명)")
+
+print()
+
+# 주별 인구 밀도 순위
+density_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]) / sum([int(province_data[p]['area']) for p in province[x]]), reverse=True)
+print("주별 인구 밀도 순위")
+for rank, pro in enumerate(density_rank):
+    print(f"{rank + 1}위: {pro} ({sum([int(province_data[p]['population']) for p in province[pro]]) / sum([int(province_data[p]['area']) for p in province[pro]]):>6.2f}명/A)")
+
+print()
+
+# 행정구역별 인구 순위
+population_rank = sorted(province_data, key=lambda x: int(province_data[x]["population"]), reverse=True)
+print("행정구역별 인구 순위 상위 16개")
+for rank, pro in enumerate(population_rank):
+    for p in province:
+        if pro in province[p]:
+            print(f"{rank + 1}위: {pro} ({format_number(int(province_data[pro]['population']))}명) (주 : {p})")
+    if rank == 15:
+        break
+
+print()
+
+# 행정구역별 인구 밀도 순위
+density_rank = sorted(province_data, key=lambda x: int(province_data[x]["population"]) / int(province_data[x]["area"]), reverse=True)
+print("행정구역별 인구 밀도 순위 상위 16개")
+for rank, pro in enumerate(density_rank):
+    for p in province:
+        if pro in province[p]:
+            print(f"{rank + 1}위: {pro} ({int(province_data[pro]['population']) / int(province_data[pro]['area']):>6.2f}명/A) (주 : {p})")
+    if rank == 15:
+        break
+
+print()
