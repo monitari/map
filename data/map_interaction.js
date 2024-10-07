@@ -5,7 +5,84 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     let densityToggleButton = document.getElementById('density-toggle'); // 밀도 토글 버튼 가져오기
     let populationMode = false; // 인구 모드
     let densityMode = false; // 밀도 모드
+    
+    const mapContainer = document.getElementById('map-container');
+    const map = document.getElementById('map');
+    let scale = 1; // 초기 확대/축소 비율
+    let originX = 0; // 확대/축소 중심점
+    let originY = 0; // 확대/축소 중심점
+    let translateX = 0; // 드래그에 따른 x축 이동
+    let translateY = 0; // 드래그에 따른 y축 이동
+    let isDragging = false; // 드래그 중인지 여부
+    let startX, startY; // 드래그 시작 좌표
+    
+    // 마우스 휠로 확대/축소
+    mapContainer.addEventListener('wheel', (event) => {
+        event.preventDefault();
+    
+        const rect = mapContainer.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+    
+        const delta = event.deltaY > 0 ? -0.2 : 0.2; // 마우스 휠 방향에 따라 확대/축소 비율 결정
+        const newScale = Math.min(Math.max(1, scale + delta), 5); // 최소 1배, 최대 5배로 제한
+        
+        // 확대/축소 비율에 따른 중심점 조정 (기존 좌표계를 기준으로 재조정)
+        const ratio = newScale / scale;
+        const newOriginX = (offsetX - translateX) * (1 - ratio);
+        const newOriginY = (offsetY - translateY) * (1 - ratio);
+    
+        // translate 값에 새 origin 좌표 반영
+        translateX += newOriginX;
+        translateY += newOriginY;
+    
+        scale = newScale;
 
+        // 1배일때 원래위치로 돌아가기
+        if (scale === 1) {
+            map.style.transition = 'transform 0.3s ease-out'; // 부드럽게 이동
+            translateX = 0;
+            translateY = 0;
+        }
+        else map.style.transition = 'transform 0s'; // 이동 없음
+
+        // CSS 변환 적용 (translate와 scale을 함께 적용)
+        map.style.transformOrigin = '0 0'; // 고정
+        map.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    });
+    
+    // 마우스 드래그로 지도 이동
+    mapContainer.addEventListener('mousedown', (event) => {
+        if (event.button === 0) { // 왼쪽 버튼
+            isDragging = true;
+            startX = event.clientX;
+            startY = event.clientY;
+        }
+    });
+    
+    mapContainer.addEventListener('mousemove', (event) => {
+        if (isDragging) {
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
+    
+            translateX += dx;
+            translateY += dy;
+    
+            map.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    
+            startX = event.clientX;
+            startY = event.clientY;
+        }
+    });
+    
+    mapContainer.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+    
+    mapContainer.addEventListener('mouseleave', () => {
+        isDragging = false;
+    });    
+    
     // 인구에 따라 색상을 설정하는 함수
     function getPopulationColor(population) {
         let minPop = 100000;  // 최소 인구
@@ -43,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         applyColor(); // 색상 적용
     });
 
-    // ㅋ릭 이벤트 리스너를 추가하여 모드를 전환하는 함수
+    // 클릭 이벤트 리스너를 추가하여 모드를 전환하는 함수
     densityToggleButton.addEventListener('click', function () {
         densityMode = !densityMode; // 밀도 모드 전환 
         populationMode = false; // 인구 모드를 끔
@@ -81,19 +158,32 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                     margin-left: 5px;">(${rank_density} / ${province_cnt}위)</span></div>
                 </div>
             `;
+    
             tooltip.style.display = 'block'; // 툴팁 표시
             tooltip.style.left = event.pageX + 'px'; // 툴팁 위치 설정
             tooltip.style.top = (event.pageY + 7) + 'px'; // 툴팁 위치 설정
             subdivision.style.stroke = 'yellow'; // 노란색 테두리
             subdivision.style.strokeWidth = '5px'; // 테두리 두께
         });
-        
+    
         // 마우스 이동 이벤트 리스너를 추가하여 툴팁을 따라다니게 함
         subdivision.addEventListener('mousemove', function (event) {
-            tooltip.style.left = event.pageX + 'px';  
-            tooltip.style.top = (event.pageY + 10) + 'px';
-        });
-
+            let tooltipWidth = tooltip.offsetWidth;
+            let tooltipHeight = tooltip.offsetHeight;
+            let pageWidth = window.innerWidth;
+            let pageHeight = window.innerHeight;
+            
+            let x = event.pageX;
+            let y = event.pageY + 10;
+        
+            // 화면 밖으로 나가지 않도록 경계 조건 추가
+            if (x + tooltipWidth > pageWidth) x = pageWidth - tooltipWidth;
+            if (y + tooltipHeight > pageHeight) y = pageHeight - tooltipHeight;
+        
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+        });        
+    
         // 마우스 떠남 이벤트 리스너를 추가하여 툴팁을 숨기고 색상을 초기화함
         subdivision.addEventListener('mouseleave', function () {
             tooltip.style.display = 'none';
@@ -101,5 +191,6 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             applyColor(); // 색상 초기화
         });
     });
+
     applyColor(); // 색상 초기화
 });

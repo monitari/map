@@ -16,8 +16,8 @@ inside_color = np.array([152, 152, 152])  # #989898 국가 내 영역
 # 색상 범위 정의
 color_value = inside_color
 tolerance = 2  # 색상 허용 범위
-lower_bound = np.array([color_value - tolerance])
-upper_bound = np.array([color_value + tolerance])
+lower_bound = np.clip(color_value - tolerance, 0, 255)
+upper_bound = np.clip(color_value + tolerance, 0, 255)
 inside_mask = cv2.inRange(image, lower_bound, upper_bound)
 
 # 컨투어 추출

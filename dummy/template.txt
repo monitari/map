@@ -15,18 +15,17 @@
 
         <!-- Tooltip Element -->
         <div id="tooltip"></div>
-
-        <!-- Toggle Buttons Container -->
-        <div id="toggle-buttons">
-            <!-- Population Color Toggle Button -->
-            <button id="population-toggle">Toggle Population Color</button>
-        
-            <!-- Population Density Toggle Button -->
-            <button id="density-toggle">Toggle Population Density Color</button>
-        </div>
+    </div>
+    <!-- Toggle Buttons Container -->
+    <div id="toggle-buttons">
+        <!-- Population Color Toggle Button -->
+        <button id="population-toggle">인구 분포</button>
+            
+        <!-- Population Density Toggle Button -->
+        <button id="density-toggle">인구 밀도</button>
     </div>
 
     <!-- JavaScript to control interaction -->
-    <script src="data\map_interaction.js"></script>
+    <script src="data/map_interaction.js"></script>
 </body>
 </html>
