@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vector Map</title>
+    <style>
+        /* CSS_CONTENT */
+    </style>
+</head>
+<body>
+    <!-- SVG Content -->
+    <div id="map-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" id="map">
+            <!-- SVG_CONTENT -->
+        </svg>
+
+        <!-- Tooltip Element -->
+        <div id="tooltip"></div>
+
+        <!-- Toggle Buttons Container -->
+        <div id="toggle-buttons">
+            <!-- Population Color Toggle Button -->
+            <button id="population-toggle">Toggle Population Color</button>
+        
+            <!-- Population Density Toggle Button -->
+            <button id="density-toggle">Toggle Population Density Color</button>
+        </div>
+    </div>
+
+    <!-- JavaScript to control interaction -->
+    <script src="data\map_interaction.js"></script>
+</body>
+</html>

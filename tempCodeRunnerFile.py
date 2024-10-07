@@ -1,0 +1,1 @@
+open("data/template.txt", "r", encoding='utf-8').read()
