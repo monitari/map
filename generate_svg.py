@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import re
+import pandas as pd
 
 # 이미지 경로
 image_path = r'map\TRAYAVIYA_o.png'
@@ -23,19 +24,25 @@ inside_mask = cv2.inRange(image, lower_bound, upper_bound)
 # 컨투어 추출
 contours_inside, _ = cv2.findContours(inside_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-# province_info.txt 파일에서 데이터 읽기
+# province_info_all.xlsx 파일에서 데이터 읽기
 province_data = {}
 province_cnt = 0
-with open(r"data\province_info_all.txt", "r", encoding='utf-8') as file:
-    lines = file.readlines()
-    for line in lines:
-        # 각 줄을 읽어서 이름, 주 이름, 면적, 인구로 나누기
-        name, state, area, population, density, rank_area, rank_population, rank_density = line.strip().split(", ")
-        state = re.sub(r' 주$', '', state) # 주 이름에서 ' 주' 제거
-        province_data[name] = {"state": state.strip(), "area": area.strip(), # 데이터 추가
-                               "population": population.strip(), "density": int(population) / float(area), 
-                               "rank-area": rank_area, "rank-population": rank_population, "rank-density": rank_density}
-        province_cnt += 1
+df = pd.read_excel(r"data\province_info_all.xlsx")
+
+# 데이터 처리
+for _, row in df.iterrows():
+    name = row['province']
+    state = re.sub(r' 주$', '', row['province_state']) # 주 이름에서 ' 주' 제거
+    province_data[name] = {
+        "state": state.strip(),
+        "area": row['area'],
+        "population": row['population'],
+        "density": row['density'],
+        "rank-area": row['area_rank'],
+        "rank-population": row['population_rank'],
+        "rank-density": row['density_rank'],
+    }
+    province_cnt += 1
 
 # SVG 생성 준비
 svg_paths = []
@@ -53,8 +60,8 @@ for province_name, info in province_data.items():
                      f'data-population="{info["population"]}" '
                      f'data-state="{info["state"]}" data-density="{info["density"]}" '
                      f'data-rank-area="{info["rank-area"]}" data-rank-population="{info["rank-population"]}" '
-                     f'data-rank-density="{info["rank-density"]}" data-all-province="{province_cnt}" />')
-    
+                     f'data-rank-density="{info["rank-density"]}" data-all-province="{province_cnt}"/>')
+
     # 행정구역 이름 추가
     text_x = contour[:, 0, 0].mean()  # 중심 X 좌표
     text_y = contour[:, 0, 1].mean()  # 중심 Y 좌표

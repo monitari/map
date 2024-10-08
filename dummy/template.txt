@@ -23,6 +23,9 @@
             
         <!-- Population Density Toggle Button -->
         <button id="density-toggle">인구 밀도</button>
+        
+        <!-- Election Results Toggle Button -->
+        <button id="election-toggle">선거 결과</button>
     </div>
 
     <!-- JavaScript to control interaction -->

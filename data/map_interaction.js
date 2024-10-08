@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     let tooltip = document.getElementById('tooltip'); // 툴팁 요소 가져오기
     let populationToggleButton = document.getElementById('population-toggle'); // 인구 토글 버튼 가져오기
     let densityToggleButton = document.getElementById('density-toggle'); // 밀도 토글 버튼 가져오기
+    let electionToggleButton = document.getElementById('election-toggle'); // 선거 토글 버튼 가져오기
     let populationMode = false; // 인구 모드
     let densityMode = false; // 밀도 모드
+    let electionMode = false; // 선거 모드
     
     const mapContainer = document.getElementById('map-container');
     const map = document.getElementById('map');
     let scale = 1; // 초기 확대/축소 비율
-    let originX = 0; // 확대/축소 중심점
-    let originY = 0; // 확대/축소 중심점
     let translateX = 0; // 드래그에 따른 x축 이동
     let translateY = 0; // 드래그에 따른 y축 이동
     let isDragging = false; // 드래그 중인지 여부
@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             let area = parseFloat(subdivision.getAttribute('data-area')); // 면적 가져오기
             if (populationMode) subdivision.style.fill = getPopulationColor(population); // 인구 모드일 때 색상 적용
             else if (densityMode) subdivision.style.fill = getDensityColor(population, area); // 밀도 모드일 때 색상 적용
+            else if (electionMode) subdivision.style.fill = getElectionColor(electionResult); // 선거 모드일 때 색상 적용
             else subdivision.style.fill = '#989898'; // 기본 색상
         });
     }
@@ -125,6 +126,14 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         densityMode = !densityMode; // 밀도 모드 전환 
         populationMode = false; // 인구 모드를 끔
         applyColor(); // 색상 적용
+    });
+ 
+    electionToggleButton.addEventListener('click', function () {
+        electionMode = !electionMode;
+        populationMode = false;
+        densityMode = false;
+        applyColor();
+        toggleMinMaxControls();
     });
 
     // 툴팁을 표시하고 색상을 변경하는 이벤트 리스너
