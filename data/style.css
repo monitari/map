@@ -54,9 +54,16 @@ text {
     z-index: 1000;
     margin-top: 10px;
     text-align: center;
+    display: flex; /* 버튼들을 나란히 배치 */
+    gap: 10px; /* 버튼 사이 간격 */
 }
 
 #toggle-buttons button {
     font-size: 12px;
     padding: 10px 20px;
+}
+
+/* 1등 정당 버튼 스타일 */
+#leading-party-toggle {
+    display: none; /* 처음에는 숨김 */
 }

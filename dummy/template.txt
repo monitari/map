@@ -26,6 +26,9 @@
         
         <!-- Election Results Toggle Button -->
         <button id="election-toggle">선거 결과</button>
+
+        <!-- Leading Party Toggle Button (Initially Hidden) -->
+        <button id="leading-party-toggle">1등 정당</button>
     </div>
 
     <!-- JavaScript to control interaction -->

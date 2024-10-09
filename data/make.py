@@ -44,10 +44,15 @@ def update_province_info(relations, input_file, election_file, output_file):
 
     # Read election data
     election_data = pd.read_excel(election_file)
-    
+
     # '주' 열을 추가하고 인덱스로 설정하지 않음
     election_data['주'] = election_data['행정구역'].apply(lambda x: x.split()[0])
-    election_data = election_data.set_index('행정구역').T.to_dict()  # 행정구역을 인덱스로 설정
+
+    # 면적, 인구, 인구밀도 열을 제거
+    election_data = election_data.drop(columns=['면적', '인구', '인구밀도'], errors='ignore')
+
+    # 행정구역을 인덱스로 설정하고 딕셔너리로 변환
+    election_data = election_data.set_index('행정구역').T.to_dict()
 
     # Update province data with election data
     for data in province_data:
