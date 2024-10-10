@@ -31,6 +31,12 @@
         <button id="leading-party-toggle">1등 정당</button>
     </div>
 
+    <!-- Info Box in the bottom right corner -->
+    <div id="info-box">
+        <h3>선거 결과</h3>
+        <p>여기에 정보를 표시합니다.</p>
+    </div>
+
     <!-- JavaScript to control interaction -->
     <script src="data/map_interaction.js"></script>
 </body>

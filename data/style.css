@@ -63,7 +63,21 @@ text {
     padding: 10px 20px;
 }
 
-/* 1등 정당 버튼 스타일 */
-#leading-party-toggle {
+#leading-party-toggle { /* 주요 정당 토글 버튼 */
     display: none; /* 처음에는 숨김 */
+}
+
+#info-box {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+    height: auto; /* 높이를 자동으로 조정 */
+    background-color: rgba(255, 255, 255, 0.8); /* 투명도 조절 */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 11px;
+    overflow: hidden; /* 스크롤을 없앰 */
+    line-height: 0.4;  
 }

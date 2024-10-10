@@ -1,28 +1,28 @@
 import os
 import pandas as pd
-from province import province  # Import the province dictionary
+from data.province import province  # province 딕셔너리 가져오기
 
 def calculate_rankings(province_data):
-    # Calculate population density
+    # 인구 밀도 계산
     for data in province_data:
         data['density'] = data['population'] / data['area']
 
-    # Sort and rank by area
+    # 면적 기준으로 정렬 및 순위 매기기
     province_data.sort(key=lambda x: x['area'], reverse=True)
     for rank, data in enumerate(province_data, start=1):
         data['area_rank'] = rank
 
-    # Sort and rank by population
+    # 인구 기준으로 정렬 및 순위 매기기
     province_data.sort(key=lambda x: x['population'], reverse=True)
     for rank, data in enumerate(province_data, start=1):
         data['population_rank'] = rank
 
-    # Sort and rank by population density
+    # 인구 밀도 기준으로 정렬 및 순위 매기기
     province_data.sort(key=lambda x: x['density'], reverse=True)
     for rank, data in enumerate(province_data, start=1):
         data['density_rank'] = rank
 
-    # Restore original order
+    # 원래 순서로 복원
     province_data.sort(key=lambda x: x['original_index'])
 
     return province_data
@@ -36,13 +36,13 @@ def update_province_info(relations, input_file, election_file, output_file):
             parts = line.strip().split(',')
             province_data.append({
                 'province': parts[0],
-                'province_state': parts[1],  # state를 province_state로 변경
+                'province_state': parts[1].strip(),  # 주 이름 공백 제거
                 'area': int(parts[2]),
                 'population': int(parts[3]),
                 'original_index': index
             })
 
-    # Read election data
+    # 선거 데이터 읽기
     election_data = pd.read_excel(election_file)
 
     # '주' 열을 추가하고 인덱스로 설정하지 않음
@@ -54,7 +54,7 @@ def update_province_info(relations, input_file, election_file, output_file):
     # 행정구역을 인덱스로 설정하고 딕셔너리로 변환
     election_data = election_data.set_index('행정구역').T.to_dict()
 
-    # Update province data with election data
+    # 선거 데이터로 province 데이터 업데이트
     for data in province_data:
         province_name = data['province']
         if province_name in election_data:
@@ -63,16 +63,16 @@ def update_province_info(relations, input_file, election_file, output_file):
 
     province_data = calculate_rankings(province_data)
 
-    # Convert to DataFrame
+    # DataFrame으로 변환
     df = pd.DataFrame(province_data)
 
-    # Move election data columns to the end
+    # 선거 데이터 열을 끝으로 이동
     election_columns = list(election_data[next(iter(election_data))].keys())
     election_columns.remove('주')  # '주' 열을 제거
     other_columns = [col for col in df.columns if col not in election_columns]
     df = df[other_columns + election_columns]
 
-    # Write to Excel file
+    # Excel 파일로 쓰기
     df.to_excel(output_file, index=False)
 
 def main():
@@ -82,13 +82,13 @@ def main():
     output_file = os.path.join(base_dir, 'province_info_all.xlsx')
 
     if not os.path.exists(province_info_file):
-        raise FileNotFoundError(f"File not found: {province_info_file}")
+        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {province_info_file}")
 
     if not os.path.exists(election_file):
-        raise FileNotFoundError(f"File not found: {election_file}")
+        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {election_file}")
 
     update_province_info(province, province_info_file, election_file, output_file)
+    print("데이터 처리가 완료되었습니다.")
 
 if __name__ == "__main__":
     main()
-    print("Data processing is complete.")
