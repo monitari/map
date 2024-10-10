@@ -9,12 +9,13 @@ warnings.filterwarnings('ignore')
 
 # 정치 성향
 alignments = [
-    'Centrist', 'Center-left', 'Center-right', 'Far-left', 'Far-right','Left', 'Right', 
-    'Nationalism', 'Populism', 'Environmentalism','Single-issue', 'Religious', 'Progressive', 'Conservative', 
-    'Social Democracy', 'Social Justice', 'Liberal', 'Libertarian','Technocratic', 'Agrarian', 
-    'Federalist', 'Separatist','Traditionalist', 'Militarist', 'Pacifist', 'Secular', 'Theocratic',
-    'Socialist', 'Capitalist', 'Regionalist', 'Industrialist','Protectionist', 'Free-market', 'Labor-rights', 'Individual-rights',
-    'Unification', 'Innovation', 'Authoritarian', 'Anti-corruption', 'Transparency', 'Modernist', 'Autonomist', 'Economic-development'
+    'Centrist', 'Center-left', 'Center-right', 'Far-left', 'Far-right', 'Left', 'Right', 
+    'Nationalism', 'Populism', 'Environmentalism', 'Single-issue', 'Religious', 'Progressive', 'Conservative', 
+    'Social Democracy', 'Social Justice', 'Liberal', 'Libertarian', 'Technocratic', 'Agrarian', 
+    'Federalist', 'Separatist', 'Traditionalist', 'Militarist', 'Pacifist', 'Secular', 'Theocratic',
+    'Socialist', 'Capitalist', 'Regionalist', 'Industrialist', 'Protectionist', 'Free-market', 'Labor-rights', 'Individual-rights',
+    'Unification', 'Innovation', 'Authoritarian', 'Anti-corruption', 'Transparency', 'Modernist', 'Autonomist', 'Economic-development',
+    'Equality', 'Socialism', 'Anti-elite', 'Anti-nuclear', 'Decentralization', 'Rural', 'Agriculture', 'Anti-immigrant'
 ]
 
 # 사건 영향 (1보다 큰 값은 긍정적 영향, 1보다 작은 값은 부정적 영향)
@@ -32,14 +33,15 @@ events = {
 
 # 사건 영향 (1보다 큰 값은 긍정적 영향, 1보다 작은 값은 부정적 영향)
 event_impact = {
-    '자연재해': { 
+    '자연재해': {
         'Centrist': 1.23, 'Center-left': 1.52, 'Center-right': 1.21, 'Far-left': 1.83, 'Far-right': 1.04, 'Left': 1.81, 'Right': 1.23,
         'Nationalism': 1.02, 'Populism': 1.42, 'Environmentalism': 1.84, 'Single-issue': 1.23, 'Religious': 1.14, 'Progressive': 1.73,
         'Conservative': 1.03, 'Social Democracy': 1.74, 'Social Justice': 1.45, 'Liberal': 1.34, 'Libertarian': 1.25, 'Technocratic': 1.92,
         'Agrarian': 1.05, 'Federalist': 1.24, 'Separatist': 1.06, 'Traditionalist': 1.13, 'Militarist': 0.94, 'Pacifist': 1.21, 'Secular': 1.53,
         'Theocratic': 1.04, 'Socialist': 1.82, 'Capitalist': 1.13, 'Regionalist': 1.12, 'Industrialist': 0.95, 'Protectionist': 1.23,
         'Free-market': 1.14, 'Labor-rights': 1.64, 'Individual-rights': 1.23, 'Unification': 1.24, 'Innovation': 1.45, 'Authoritarian': 1.13,
-        'Anti-corruption': 1.42, 'Transparency': 1.63, 'Modernist': 1.45, 'Autonomist': 1.12, 'Economic-development': 1.14
+        'Anti-corruption': 1.42, 'Transparency': 1.63, 'Modernist': 1.45, 'Autonomist': 1.12, 'Economic-development': 1.14,
+        'Equality': 0.85, 'Socialism': 0.92, 'Anti-elite': 0.75, 'Anti-nuclear': 1.10, 'Decentralization': 1.08, 'Rural': 0.90, 'Agriculture': 0.88, 'Anti-immigrant': 0.82 
     },
     '경제위기': {
         'Centrist': 1.24, 'Center-left': 1.53, 'Center-right': 1.62, 'Far-left': 1.84, 'Far-right': 1.63, 'Left': 1.63, 'Right': 1.54,
@@ -48,7 +50,8 @@ event_impact = {
         'Agrarian': 1.23, 'Federalist': 1.53, 'Separatist': 1.14, 'Traditionalist': 1.34, 'Militarist': 1.13, 'Pacifist': 1.03, 'Secular': 1.23,
         'Theocratic': 1.13, 'Socialist': 1.93, 'Capitalist': 0.94, 'Regionalist': 1.13, 'Industrialist': 1.53, 'Protectionist': 1.53,
         'Free-market': 1.03, 'Labor-rights': 1.63, 'Individual-rights': 1.14, 'Unification': 1.23, 'Innovation': 1.63, 'Authoritarian': 1.63,
-        'Anti-corruption': 1.63, 'Transparency': 1.53, 'Modernist': 1.63, 'Autonomist': 1.13, 'Economic-development': 1.83
+        'Anti-corruption': 1.63, 'Transparency': 1.53, 'Modernist': 1.63, 'Autonomist': 1.13, 'Economic-development': 1.83,
+        'Equality': 0.75, 'Socialism': 1.20, 'Anti-elite': 0.70, 'Anti-nuclear': 1.25, 'Decentralization': 1.18, 'Rural': 0.85, 'Agriculture': 0.80, 'Anti-immigrant': 0.78 
     },
     '안보위기': {
         'Centrist': 1.03, 'Center-left': 0.84, 'Center-right': 1.53, 'Far-left': 0.74, 'Far-right': 1.83, 'Left': 1.03, 'Right': 1.53,
@@ -57,7 +60,8 @@ event_impact = {
         'Agrarian': 1.34, 'Federalist': 1.53, 'Separatist': 1.43, 'Traditionalist': 1.53, 'Militarist': 1.93, 'Pacifist': 0.43, 'Secular': 1.23,
         'Theocratic': 1.34, 'Socialist': 1.03, 'Capitalist': 1.43, 'Regionalist': 1.23, 'Industrialist': 1.53, 'Protectionist': 1.53,
         'Free-market': 1.14, 'Labor-rights': 0.93, 'Individual-rights': 1.03, 'Unification': 1.23, 'Innovation': 1.34, 'Authoritarian': 1.73,
-        'Anti-corruption': 1.23, 'Transparency': 1.03, 'Modernist': 1.23, 'Autonomist': 1.34, 'Economic-development': 1.63
+        'Anti-corruption': 1.23, 'Transparency': 1.03, 'Modernist': 1.23, 'Autonomist': 1.34, 'Economic-development': 1.63,
+        'Equality': 0.90, 'Socialism': 0.88, 'Anti-elite': 0.65, 'Anti-nuclear': 1.28, 'Decentralization': 1.25, 'Rural': 1.10, 'Agriculture': 1.12, 'Anti-immigrant': 1.35 
     },
     '사회문제': {
         'Centrist': 1.42, 'Center-left': 1.23, 'Center-right': 1.12, 'Far-left': 1.04, 'Far-right': 0.93, 'Left': 1.24, 'Right': 1.13,
@@ -66,7 +70,8 @@ event_impact = {
         'Agrarian': 1.14, 'Federalist': 1.22, 'Separatist': 1.06, 'Traditionalist': 0.94, 'Militarist': 0.92, 'Pacifist': 1.32, 'Secular': 1.53,
         'Theocratic': 1.01, 'Socialist': 1.55, 'Capitalist': 0.84, 'Regionalist': 1.12, 'Industrialist': 0.91, 'Protectionist': 0.93,
         'Free-market': 1.04, 'Labor-rights': 1.64, 'Individual-rights': 1.42, 'Unification': 1.13, 'Innovation': 1.34, 'Authoritarian': 0.82,
-        'Anti-corruption': 1.45, 'Transparency': 1.42, 'Modernist': 1.23, 'Autonomist': 1.12, 'Economic-development': 1.41
+        'Anti-corruption': 1.45, 'Transparency': 1.42, 'Modernist': 1.23, 'Autonomist': 1.12, 'Economic-development': 1.41,
+        'Equality': 0.65, 'Socialism': 1.30, 'Anti-elite': 0.55, 'Anti-nuclear': 1.35, 'Decentralization': 1.20, 'Rural': 1.15, 'Agriculture': 1.18, 'Anti-immigrant': 1.12     
     },
     '환경위기': {
         'Centrist': 1.12, 'Center-left': 1.54, 'Center-right': 1.03, 'Far-left': 1.62, 'Far-right': 0.92, 'Left': 1.23, 'Right': 0.84,
@@ -75,7 +80,8 @@ event_impact = {
         'Agrarian': 1.23, 'Federalist': 1.03, 'Separatist': 0.92, 'Traditionalist': 0.84, 'Militarist': 0.74, 'Pacifist': 1.32, 'Secular': 1.23,
         'Theocratic': 1.02, 'Socialist': 1.62, 'Capitalist': 0.82, 'Regionalist': 1.13, 'Industrialist': 0.92, 'Protectionist': 1.02,
         'Free-market': 0.82, 'Labor-rights': 1.32, 'Individual-rights': 1.12, 'Unification': 1.12, 'Innovation': 1.52, 'Authoritarian': 0.82,
-        'Anti-corruption': 1.32, 'Transparency': 1.42, 'Modernist': 1.23, 'Autonomist': 1.13, 'Economic-development': 1.32
+        'Anti-corruption': 1.32, 'Transparency': 1.42, 'Modernist': 1.23, 'Autonomist': 1.13, 'Economic-development': 1.32,
+        'Equality': 0.50, 'Socialism': 1.45, 'Anti-elite': 0.60, 'Anti-nuclear': 1.45, 'Decentralization': 1.25, 'Rural': 1.10, 'Agriculture': 1.22, 'Anti-immigrant': 1.15
     },
     '정치스캔들': {
         'Centrist': 1.52, 'Center-left': 1.72, 'Center-right': 1.03, 'Far-left': 2.02, 'Far-right': 2.23, 'Left': 1.92, 'Right': 1.42,
@@ -84,7 +90,8 @@ event_impact = {
         'Agrarian': 1.32, 'Federalist': 1.42, 'Separatist': 1.42, 'Traditionalist': 1.12, 'Militarist': 1.22, 'Pacifist': 1.02, 'Secular': 1.42,
         'Theocratic': 1.02, 'Socialist': 1.82, 'Capitalist': 1.52, 'Regionalist': 1.32, 'Industrialist': 1.32, 'Protectionist': 1.42,
         'Free-market': 1.62, 'Labor-rights': 1.72, 'Individual-rights': 1.62, 'Unification': 1.42, 'Innovation': 1.72, 'Authoritarian': 2.02,
-        'Anti-corruption': 2.42, 'Transparency': 2.02, 'Modernist': 1.62, 'Autonomist': 1.52, 'Economic-development': 1.52
+        'Anti-corruption': 2.42, 'Transparency': 2.02, 'Modernist': 1.62, 'Autonomist': 1.52, 'Economic-development': 1.52,
+        'Equality': 1.20, 'Socialism': 1.10, 'Anti-elite': 0.70, 'Anti-nuclear': 1.30, 'Decentralization': 1.15, 'Rural': 1.10, 'Agriculture': 1.20, 'Anti-immigrant': 1.18
     },
     '기술혁신': {
         'Centrist': 1.62, 'Center-left': 1.52, 'Center-right': 1.72, 'Far-left': 2.02, 'Far-right': 1.32, 'Left': 1.72, 'Right': 1.62,
@@ -93,7 +100,8 @@ event_impact = {
         'Agrarian': 1.32, 'Federalist': 1.52, 'Separatist': 1.42, 'Traditionalist': 1.22, 'Militarist': 1.42, 'Pacifist': 1.42, 'Secular': 1.62,
         'Theocratic': 1.22, 'Socialist': 1.52, 'Capitalist': 2.02, 'Regionalist': 1.52, 'Industrialist': 2.02, 'Protectionist': 1.42,
         'Free-market': 2.32, 'Labor-rights': 1.62, 'Individual-rights': 1.62, 'Unification': 1.52, 'Innovation': 2.42, 'Authoritarian': 1.22,
-        'Anti-corruption': 1.72, 'Transparency': 1.52, 'Modernist': 2.02, 'Autonomist': 1.62, 'Economic-development': 2.02
+        'Anti-corruption': 1.72, 'Transparency': 1.52, 'Modernist': 2.02, 'Autonomist': 1.62, 'Economic-development': 2.02,
+        'Equality': 1.35, 'Socialism': 1.38, 'Anti-elite': 1.15, 'Anti-nuclear': 1.50, 'Decentralization': 1.28, 'Rural': 1.15, 'Agriculture': 1.20, 'Anti-immigrant': 1.12 
     },
     '외교관계': {
         'Centrist': 1.52, 'Center-left': 1.63, 'Center-right': 1.74, 'Far-left': 1.53, 'Far-right': 1.85, 'Left': 1.64, 'Right': 1.82,
@@ -102,7 +110,8 @@ event_impact = {
         'Agrarian': 1.45, 'Federalist': 1.62, 'Separatist': 1.42, 'Traditionalist': 1.53, 'Militarist': 1.84, 'Pacifist': 1.62, 'Secular': 1.64,
         'Theocratic': 1.42, 'Socialist': 1.64, 'Capitalist': 1.82, 'Regionalist': 1.53, 'Industrialist': 1.74, 'Protectionist': 1.73,
         'Free-market': 1.63, 'Labor-rights': 1.64, 'Individual-rights': 1.74, 'Unification': 1.62, 'Innovation': 1.84, 'Authoritarian': 1.64,
-        'Anti-corruption': 1.74, 'Transparency': 1.73, 'Modernist': 1.74, 'Autonomist': 1.63, 'Economic-development': 1.74
+        'Anti-corruption': 1.74, 'Transparency': 1.73, 'Modernist': 1.74, 'Autonomist': 1.63, 'Economic-development': 1.74,
+        'Equality': 0.85, 'Socialism': 1.15, 'Anti-elite': 0.70, 'Anti-nuclear': 1.35, 'Decentralization': 1.28, 'Rural': 1.12, 'Agriculture': 1.18, 'Anti-immigrant': 1.40 
     },
     '정상상태': {
         'Centrist': 1.53, 'Center-left': 1.64, 'Center-right': 1.63, 'Far-left': 1.54, 'Far-right': 1.53, 'Left': 1.54, 'Right': 1.53,
@@ -111,32 +120,36 @@ event_impact = {
         'Agrarian': 1.43, 'Federalist': 1.43, 'Separatist': 1.43, 'Traditionalist': 1.43, 'Militarist': 1.54, 'Pacifist': 1.54, 'Secular': 1.54,
         'Theocratic': 1.24, 'Socialist': 1.54, 'Capitalist': 1.64, 'Regionalist': 1.43, 'Industrialist': 1.54, 'Protectionist': 1.43,
         'Free-market': 1.54, 'Labor-rights': 1.54, 'Individual-rights': 1.54, 'Unification': 1.54, 'Innovation': 1.54, 'Authoritarian': 1.34,
-        'Anti-corruption': 1.54, 'Transparency': 1.54, 'Modernist': 1.54, 'Autonomist': 1.43, 'Economic-development': 1.54
+        'Anti-corruption': 1.54, 'Transparency': 1.54, 'Modernist': 1.54, 'Autonomist': 1.43, 'Economic-development': 1.54,
+        'Equality': 1.10, 'Socialism': 1.25, 'Anti-elite': 1.15, 'Anti-nuclear': 1.08, 'Decentralization': 1.15, 'Rural': 1.05, 'Agriculture': 1.08, 'Anti-immigrant': 1.18 
     }
 }
 
 # 주요 대형 정당
 major_parties = {
-    '중앙당': ['Centrist', 'Right', 'Big Tent', 'Center-right', 'Center-left', 'Conservative'],
+    '중앙당': ['Centrist', 'Right', 'Big Tent', 'Center-right', 'Center-left', 'Conservative', 'Liberal'],
     '통합 트라야비야': ['Center-right', 'Right', 'Conservative', 'Nationalism', 'Populism'],
-    '진보를 외치다': ['Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
-    '노동자당': ['Social Democracy', 'Left', 'Labor-rights', 'Social Justice', 'Progressive', 'Far-left'],
-    '자유민주연합': ['Liberal', 'Right', 'Free-market', 'Individual-rights', 'Conservative', 'Center-right'],
+    '개혁당': ['Liberal', 'Right', 'Reformist', 'Technocratic', 'Innovation', 'Progressive', 'Center-right'],
+    '자유민주연합': ['Liberal', 'Right', 'Free-market', 'Individual-rights', 'Conservative', 'Center-right', 'Technocratic'],
 }
 
-# 중소 규모 정당
+# 중형 규모 정당
 medium_parties = {
-    '청년당': ['Youth-focused', 'Progressive', 'Digital', 'Innovation', 'Social Justice'],
+    '사회민주당': ['Social Democracy', 'Center-left', 'Progressive', 'Social Justice', 'Labor-rights', 'Environmentalism'],
+    '민주와 자유': ['Centrist', 'Center-left', 'Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
+    '진보를 외치다': ['Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
+    '민주통합당': ['Center-left', 'Progressive', 'Social Justice', 'Environmentalism', 'Labor-rights', 'Social Democracy'],
+    '청년당': ['Youth-focused', 'Progressive', 'Digital', 'Innovation', 'Social Justice', 'Center-left', 'Centrist'],
     '국가를 위한 보수당': ['Nationalism', 'Right', 'Conservative', 'Traditionalist', 'Religious', 'Free-market'],
-    '시민이 모였다!': ['Centrist', 'Anti-corruption', 'Transparency', 'Progressive'],
-    '사회민주당': ['Social Democracy', 'Left', 'Labor-rights', 'Social Justice', 'Progressive'],
+    '시민이 모였다!': ['Centrist', 'Anti-corruption', 'Transparency', 'Progressive', 'Center-left', 'Left'],
+    '자유혁신당': ['Center-left', 'Left', 'Progressive', 'Reformist', 'Technocratic', 'Innovation'],
+    '국민자유전선': ['Far-right', 'Nationalism', 'Conservative', 'Traditionalist', 'Protectionist', 'Regionalist'],
+    '새희망당': ['Right', 'Conservative', 'Traditionalist', 'Nationalism', 'Protectionist', 'Regionalist'],
 }
 
 # 소수 정당
 minor_parties = {
-    '자유혁신당': ['Center-left', 'Left', 'Progressive', 'Reformist', 'Technocratic', 'Innovation'],
-    '개혁당': ['Liberal', 'Right', 'Reformist', 'Technocratic', 'Innovation'],
-    '민주통합당': ['Center-left', 'Progressive', 'Social Justice', 'Environmentalism'],
+    '노동자당': ['Social Democracy', 'Left', 'Labor-rights', 'Social Justice', 'Progressive', 'Far-left'],
     '특이점이 온다': ['Technocratic', 'Modernist', 'Innovation', 'Progressive', 'Environmentalism'],
     '평화': ['Pacifist', 'Environmentalism', 'Social Justice', 'Progressive'],
     '녹색환경보호당': ['Environmentalism', 'Progressive', 'Social Justice', 'Left'],
@@ -146,17 +159,20 @@ minor_parties = {
     '농민당': ['Agrarian', 'Right', 'Protectionist', 'Agriculture', 'Rural', 'Conservative'],
     '통일당': ['Pacifist', 'Unification', 'Conservative', 'Centrist', 'Right', 'Nationalism'],
     '과학기술당': ['Technocratic', 'Innovation', 'Progressive', 'Environmentalism'],
+    '전사회당': ['Far-left', 'Equality', 'Socialism', 'Social Justice', 'Progressive', 'Anti-elite'],
+    '생명당': ['Environmentalism', 'Progressive', 'Social Justice', 'Regionalist', 'Anti-nuclear', 'Decentralization'],
+    '보호하라!': ['Far-right', 'Nationalism', 'Conservative', 'Traditionalist', 'Protectionist', 'Anti-immigrant'],
 }
 
 # 지역 정당
 regional_parties = {
-    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Regionalist', 'Left', 'Autonomist', 'Progressive', 'Social Justice']},
-    '하파차의 후예': {'region': '하파차', 'ideology': ['Conservative', 'Right', 'Traditionalist', 'Religious', 'Nationalism', 'Free-market']},
-    '도마니 연합': {'region': '도마니', 'ideology': ['Centrist', 'Right', 'Economic-development', 'Agrarian', 'Rural', 'Conservative']},
-    '테트라 인민당': {'region': '테트라', 'ideology': ['Socialist', 'Left', 'Industrialist', 'Labor-rights', 'Social Justice', 'Progressive']},
-    '세오어 보호당': {'region': '그라나데, 포어', 'ideology': ['Nationalism', 'Right', 'Conservative', 'Protectionist', 'Regionalist']},
-    '살기좋은 안텐시' : {'region': '안텐시', 'ideology': ['Environmentalism', 'Social Justice', 'Progressive', 'Centrist', 'Left']},
-    '림덴시를 위하여': {'region': '림덴시', 'ideology': ['Centrist', 'Big Tent', 'Right', 'Conservative', 'Traditionalist', 'Regionalist']},
+    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Centrist', 'Right', 'Economic-development', 'Industrialist', 'Technocratic', 'Progressive']},
+    '하파차의 후예': {'region': '하파차', 'ideology': ['Nationalism', 'Right', 'Conservative', 'Traditionalist', 'Regionalist', 'Protectionist']},
+    '도마니 연합': {'region': '도마니', 'ideology': ['Centrist', 'Right', 'Conservative', 'Economic-development', 'Industrialist', 'Technocratic']},
+    '테트라 인민당': {'region': '테트라', 'ideology':  ['Socialist', 'Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Labor-rights']},
+    '세오어 보호당': {'region': '그라나데, 포어', 'ideology': ['Far-right', 'Nationalism', 'Conservative', 'Traditionalist', 'Protectionist', 'Regionalist']},
+    '살기좋은 안텐시' : {'region': '안텐시', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Centrist', 'Left', 'Regionalist']},
+    '림덴시를 위하여': {'region': '림덴시', 'ideology': ['Agrarian', 'Rural', 'Conservative', 'Traditionalist', 'Protectionist', 'Regionalist']},
 }
 
 # 주와 행정구역별 정당 선호 지수 정의 (예시)
@@ -165,9 +181,9 @@ party_preference_map = {
     "메초오비카": {"Conservative": 1.32, "Progressive": 0.68},
     "아브레": {"Conservative": 1.21, "Progressive": 0.79},
     "피에트라": {"Conservative": 0.83, "Progressive": 1.17},
-    "아이리카": {"Conservative": 1.18, "Progressive": 0.82},
+    "아이리카": {"Conservative": 0.95, "Progressive": 1.05},
     "메르네": {"Conservative": 0.92, "Progressive": 1.08},
-    "츠비키": {"Conservative": 1.04, "Progressive": 0.96},
+    "츠비키": {"Conservative": 0.87, "Progressive": 1.13},
     "하르바트": {"Conservative": 1.11, "Progressive": 0.89},
 
     # 그라나데 주 (어업 중심, 낙후)
@@ -180,13 +196,13 @@ party_preference_map = {
 
     # 그미즈리 주 (1급 행정구, 중공업, 교통 중심)
     "오크모": {"Conservative": 1.12, "Progressive": 0.88},
-    "미톤노": {"Conservative": 1.03, "Progressive": 0.97},
+    "미톤노": {"Conservative": 1.15, "Progressive": 0.85},
     "페아그": {"Conservative": 0.91, "Progressive": 1.09},
-    "그미즈리": {"Conservative": 1.09, "Progressive": 0.91},
+    "그미즈리": {"Conservative": 0.85, "Progressive": 1.15},
     "아센시": {"Conservative": 1.02, "Progressive": 0.98},
-    "메깅고": {"Conservative": 0.93, "Progressive": 1.07},
-    "호오토": {"Conservative": 1.10, "Progressive": 0.90},
-    "키에오": {"Conservative": 1.01, "Progressive": 0.99},
+    "메깅고": {"Conservative": 0.94, "Progressive": 1.06},
+    "호오토": {"Conservative": 1.11, "Progressive": 0.89},
+    "키에오": {"Conservative": 0.93, "Progressive": 1.07},
 
     # 도마니 주 (첨단 산업 중심)
     "오브니": {"Conservative": 1.19, "Progressive": 0.81},
@@ -240,14 +256,14 @@ party_preference_map = {
     "리에다": {"Conservative": 0.86, "Progressive": 1.14},
 
     # 미치바 주 (행정 수도, 중앙 지역, 교육 중심)
-    "메고이오": {"Conservative": 0.91, "Progressive": 1.09},
-    "우프레나": {"Conservative": 0.82, "Progressive": 1.18},
-    "미츠비": {"Conservative": 0.93, "Progressive": 1.07},
+    "메고이오": {"Conservative": 0.81, "Progressive": 1.19},
+    "우프레나": {"Conservative": 0.92, "Progressive": 1.08},
+    "미츠비": {"Conservative": 0.80, "Progressive": 1.20},
     "알고": {"Conservative": 0.84, "Progressive": 1.16},
-    "산시아고": {"Conservative": 0.89, "Progressive": 1.11},
+    "산시아고": {"Conservative": 0.91, "Progressive": 1.09},
     "나릴로": {"Conservative": 0.83, "Progressive": 1.17},
     "유프란": {"Conservative": 0.92, "Progressive": 1.08},
-    "미치바": {"Conservative": 0.87, "Progressive": 1.13},
+    "미치바": {"Conservative": 0.85, "Progressive": 1.15},
 
     # 바니카-메고차 주 (산맥 지역, 관광 중심, 낙후)
     "바니아": {"Conservative": 1.21, "Progressive": 0.79},
@@ -316,12 +332,12 @@ party_preference_map = {
     "오르도기": {"Conservative": 1.01, "Progressive": 0.99},
 
     # 하파차 주 (1급 행정구, 제 2의 경제 중심, 제조업, 기술 개발)
-    "파시벤토": {"Conservative": 0.91, "Progressive": 1.09},
+    "파시벤토": {"Conservative": 0.92, "Progressive": 1.08},
     "오고이모": {"Conservative": 1.03, "Progressive": 0.97},
     "미느리오": {"Conservative": 0.92, "Progressive": 1.08},
-    "산세오": {"Conservative": 1.02, "Progressive": 0.98},
-    "아스타나": {"Conservative": 0.93, "Progressive": 1.07},
-    "티레니오": {"Conservative": 1.04, "Progressive": 0.96},
+    "산세오": {"Conservative": 1.11, "Progressive": 0.89},
+    "아스타나": {"Conservative": 0.88, "Progressive": 1.12},
+    "티레니오": {"Conservative": 0.94, "Progressive": 1.06},
     "비엥고": {"Conservative": 0.91, "Progressive": 1.09},
     "아린키고": {"Conservative": 1.02, "Progressive": 0.98},
     "하싱고": {"Conservative": 0.93, "Progressive": 1.07},
@@ -331,9 +347,9 @@ party_preference_map = {
 
 def calculate_priority(event):
     # 각 요소에 대한 점수와 가중치
-    impact_score = event['impact'] * 0.5
-    frequency_score = event['frequency'] * 0.3
-    importance_score = event['importance'] * 0.2
+    impact_score = event['impact'] * 1.5  # 영향력
+    frequency_score = event['frequency'] * 1.2  # 빈도
+    importance_score = event['importance']
     
     # 총 점수 계산
     total_score = impact_score + frequency_score + importance_score
@@ -358,7 +374,7 @@ def calculate_party_preference_index(province_info_row):
     # 각 주와 행정구역에 대한 정치적 성향을 기반으로 선호 지수 설정
     preference_index = {
         'Conservative': 1.0,
-        'Progressive': 1.0
+        'Progressive': 1.0,
     }
 
     # 주에 대한 선호 지수 반영
@@ -467,7 +483,7 @@ def calculate_vote_shares(event, state, row):
 
     if regional_party_found: # 지역 정당이 있는 경우
         while True:
-            ma, me, mi, reg = random.uniform(20.0, 40.0), random.uniform(10.0, 30.0), random.uniform(0.0, 20.0), random.uniform(0.0, 20.0)
+            ma, me, mi, reg = random.uniform(40.0, 60.0), random.uniform(20.0, 30.0), random.uniform(10.0, 20.0), random.uniform(0.0, 10.0)
             if 90 <= ma + me + mi + reg <= 110: break
         major_votes = [random.uniform(0, ma) for _ in range(len(major_parties))]
         medium_votes = [random.uniform(0, me) for _ in range(len(medium_parties))]
@@ -475,7 +491,7 @@ def calculate_vote_shares(event, state, row):
         reg_votes = [random.uniform(0, reg) for _ in range(len(relevant_regional_parties))]
     else: # 지역 정당이 없는 경우
         while True:
-            ma, me, mi, reg = random.uniform(20.0, 40.0), random.uniform(15.0, 35.0), random.uniform(5.0, 25.0), 0.0
+            ma, me, mi, reg = random.uniform(40.0, 60.0), random.uniform(20.0, 30.0), random.uniform(0.0, 20.0), 0.0
             if 90 <= ma + me + mi + reg <= 110: break
         major_votes = [random.uniform(0, ma) for _ in range(len(major_parties))]
         medium_votes = [random.uniform(0, ma) for _ in range(len(medium_parties))]
@@ -529,7 +545,7 @@ def process_data_with_indexes(province_info):
         local_sub_event = random.choices(events[local_event]['subtypes']) # 주 단위 사건의 세부 사건 선택
 
         # 우선 순위에 따라 사건 선택
-        if calculate_priority(events[local_event]) < calculate_priority(events[global_event]):
+        if calculate_priority(events[local_event]) > calculate_priority(events[global_event]):
             local_event, local_sub_event = global_event, global_sub_event
         # 사건이 같고 세부 사건이 다른 경우
         if local_event == global_event: local_sub_event = global_sub_event # 세부 사건을 동일하게 설정

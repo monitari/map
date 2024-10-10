@@ -69,8 +69,8 @@ text {
 
 #info-box {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    top: 5px; /* 상단에 위치 */
+    right: 8px; /* 우측에 위치 */
     width: 200px;
     height: auto; /* 높이를 자동으로 조정 */
     background-color: rgba(255, 255, 255, 0.8); /* 투명도 조절 */
@@ -79,5 +79,9 @@ text {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-size: 11px;
     overflow: hidden; /* 스크롤을 없앰 */
-    line-height: 0.4;  
+}
+
+#info-box h3 {
+    font-size: 14px;
+    margin: 0 0 10px;
 }
