@@ -28,6 +28,7 @@ def calculate_rankings(province_data):
     return province_data
 
 def update_province_info(relations, input_file, election_file, output_file):
+    print("파일을 업데이트 중 . . .")
     province_data = []
 
     with open(input_file, 'r', encoding='utf-8') as file:
@@ -88,7 +89,7 @@ def main():
         raise FileNotFoundError(f"파일을 찾을 수 없습니다: {election_file}")
 
     update_province_info(province, province_info_file, election_file, output_file)
-    print("데이터 처리가 완료되었습니다.")
+    print("성공적으로 파일을 저장했습니다.")
 
 if __name__ == "__main__":
     main()

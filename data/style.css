@@ -71,13 +71,13 @@ text {
     position: absolute;
     top: 5px; /* 상단에 위치 */
     right: 8px; /* 우측에 위치 */
-    width: 200px;
+    width: 260px; /* 너비 설정 */
     height: auto; /* 높이를 자동으로 조정 */
     background-color: rgba(255, 255, 255, 0.8); /* 투명도 조절 */
     border: 1px solid #ccc;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    font-size: 11px;
+    font-size: 12px;
     overflow: hidden; /* 스크롤을 없앰 */
 }
 

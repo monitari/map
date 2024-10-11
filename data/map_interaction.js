@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     let populationToggleButton = document.getElementById('population-toggle'); // 인구 토글 버튼 가져오기
     let densityToggleButton = document.getElementById('density-toggle'); // 밀도 토글 버튼 가져오기
     let electionToggleButton = document.getElementById('election-toggle'); // 선거 토글 버튼 가져오기
-    let showLeadingPartyButton = document.getElementById('show-leading-party'); // 1등 정당 토글 버튼 가져오기
     let infoBox = document.getElementById('info-box'); // 정보 박스 가져오기
     let populationMode = false; // 인구 모드
     let densityMode = false; // 밀도 모드
@@ -21,39 +20,43 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     // 정당에 따라 색상 매핑
     const partyColors = {
         '중앙당': 'rgb(255, 223, 0)',           // 골드 (중도)
-        '개혁당': 'rgb(255, 165, 0)',           // 오렌지 (자유주의)
         '통합 트라야비야': 'rgb(0, 102, 204)',  // 로열 블루 (보수)
-        '자유민주연합': 'rgb(135, 206, 250)',   // 라이트 스카이 블루 (자유주의)
         '사회민주당': 'rgb(255, 182, 193)',     // 라이트 핑크 (진보)
-        '민주와 자유': 'rgb(10, 186, 181)',      // 피스톤 그린 (민주주의)
-        '진보를 외치다': 'rgb(255, 105, 180)',  // 핫 핑크 (진보)
-        '민주통합당': 'rgb(75, 0, 130)',        // 인디고 (중도좌파)
-        '청년당': 'rgb(147, 112, 219)',         // 미디엄 퍼플 (청년중심)
+        '자유민주연합': 'rgb(135, 206, 250)',   // 라이트 스카이 블루 (자유주의)
+    
+        '개혁당': 'rgb(255, 165, 0)',           // 오렌지 (자유주의)
         '국가를 위한 보수당': 'rgb(0, 51, 102)', // 다크 블루 (보수)
+        '국민자유전선': 'rgb(210, 105, 30)',     // 초콜릿 (보수-국수주의)
+        '민주시민모임': 'rgb(75, 0, 130)',        // 인디고 (중도좌파)
+        '녹색당': 'rgb(0, 128, 0)',              // 그린 (환경)
+        '새희망당': 'rgb(160, 82, 45)',         // 시에나 (보수-국수주의)
         '시민이 모였다!': 'rgb(240, 230, 140)', // 카키 (시민중심)
         '자유혁신당': 'rgb(255, 99, 71)',       // 토마토 (진보-개혁 성향)
-        '국민자유전선': 'rgb(210, 105, 30)',     // 초콜릿 (보수-국수주의)
-        '새희망당': 'rgb(160, 82, 45)',         // 시에나 (보수-국수주의)
+        '진보를 외치다': 'rgb(255, 105, 180)',  // 핫 핑크 (진보)
+        '청년당': 'rgb(147, 112, 219)',         // 미디엄 퍼플 (청년중심)
+    
+        '공산당': 'rgb(255, 0, 0)',             // 레드 (공산주의)
+        '과학기술당': 'rgb(64, 224, 208)',      // 터콰이즈 (과학기술)
+        '국민행동당': 'rgb(25, 25, 112)',       // 미드나잇 블루 (국수주의)
         '노동자당': 'rgb(255, 69, 0)',          // 오렌지 레드 (노동)
+        '보호하자 자연!': 'rgb(0, 128, 128)',   // 틸 (환경)
+        '농민당': 'rgb(139, 69, 19)',           // 새들 브라운 (농업)
+        '미래당': 'rgb(0, 206, 209)',           // 다크 터콰이즈 (혁신)
+        '보호하라!': 'rgb(255, 223, 0)',        // 골드 (보수-반이민)
+        '생명당': 'rgb(255, 105, 180)',         // 핫 핑크 (생명권)
+        '전사회당': 'rgb(255, 20, 147)',        // 딥 핑크 (사회주의)
+        '정의': 'rgb(186, 85, 211)',            // 미디엄 오키드 (사회정의)
+        '통일당': 'rgb(255, 140, 0)',           // 다크 오렌지 (통일)
         '특이점이 온다': 'rgb(70, 130, 180)',   // 스틸 블루 (기술관료)
         '평화': 'rgb(144, 238, 144)',           // 라이트 그린 (환경, 평화)
-        '녹색환경보호당': 'rgb(34, 139, 34)',   // 포레스트 그린 (환경)
-        '국민행동당': 'rgb(25, 25, 112)',       // 미드나잇 블루 (국수주의)
-        '정의': 'rgb(186, 85, 211)',            // 미디엄 오키드 (사회정의)
-        '미래당': 'rgb(0, 206, 209)',           // 다크 터콰이즈 (혁신)
-        '농민당': 'rgb(139, 69, 19)',           // 새들 브라운 (농업)
-        '통일당': 'rgb(255, 140, 0)',           // 다크 오렌지 (통일)
-        '과학기술당': 'rgb(64, 224, 208)',      // 터콰이즈 (과학기술)
-        '전사회당': 'rgb(255, 20, 147)',        // 딥 핑크 (사회주의)
-        '생명당': 'rgb(255, 105, 180)',         // 핫 핑크 (생명권)
-        '보호하라!': 'rgb(255, 223, 0)',        // 골드 (보수-반이민)
+    
         '그미즈리 민주당': 'rgb(100, 149, 237)', // 콘플라워 블루 (그미즈리 지역)
-        '하파차의 후예': 'rgb(153, 50, 204)',    // 다크 오키드 (하파차 지역)
         '도마니 연합': 'rgb(255, 165, 0)',       // 오렌지 (도마니 지역)
-        '테트라 인민당': 'rgb(140, 200, 0)',     // 옐로우 그린 (테트라 지역)
-        '세오어 보호당': 'rgb(205, 92, 92)',     // 인디안 레드 (세오어 지역)
-        '살기좋은 안텐시': 'rgb(0, 255, 127)',   // 스프링 그린 (안텐시 지역)
         '림덴시를 위하여': 'rgb(255, 99, 71)',   // 토마토 (림덴시 지역)
+        '살기좋은 안텐시': 'rgb(0, 255, 127)',   // 스프링 그린 (안텐시 지역)
+        '세오어 보호당': 'rgb(205, 92, 92)',     // 인디안 레드 (세오어 지역)
+        '테트라 인민당': 'rgb(140, 200, 0)',     // 옐로우 그린 (테트라 지역)
+        '하파차의 후예': 'rgb(153, 50, 204)',    // 다크 오키드 (하파차 지역)
     };
 
     // 마우스 휠로 확대/축소
@@ -84,7 +87,9 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             translateX = 0;
             translateY = 0;
         }
-        else map.style.transition = 'transform 0s'; // 이동 없음
+        else { 
+            map.style.transition = 'transform 0s'; // 이동 없음
+        }
 
         // CSS 변환 적용 (translate와 scale을 함께 적용)
         map.style.transformOrigin = '0 0'; // 고정
@@ -93,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     
     // 마우스 드래그로 지도 이동
     mapContainer.addEventListener('mousedown', (event) => {
+        map.style.transition = 'transform 0s'; // 이동 없음
         if (event.button === 0) { // 왼쪽 버튼
             isDragging = true;
             startX = event.clientX;
@@ -150,19 +156,26 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         let maxVote = 0;
         let secondMaxVote = 0;
         let leadingParty = '';
+
+        // 득표율을 비교하여 가장 높은 정당과 두 번째로 높은 득표율 계산
         for (let party in parties) {
             if (parties[party] > maxVote) {
                 secondMaxVote = maxVote;
                 maxVote = parties[party];
                 leadingParty = party;
-            } else if (parties[party] > secondMaxVote) {
-                secondMaxVote = parties[party];
-            }
+            } else if (parties[party] > secondMaxVote) secondMaxVote = parties[party];
         }
-        const voteGap = maxVote - secondMaxVote;
-        const opacity = Math.min(1, voteGap / 10); // 득표율 차이에 따라 투명도 설정 (최대 1)
-        const baseColor = partyColors[leadingParty] || 'rgb(255, 255, 255)'; // 기본 흰색
-        return baseColor.replace('rgb', 'rgba').replace(')', `, ${opacity})`); // 투명도 적용
+        // 예외 처리: 정당이 없거나 득표율이 동일한 경우 기본 흰색 반환
+        if (!leadingParty || maxVote === secondMaxVote) return 'rgba(255, 255, 255, 0.5)'; // 흰색과 투명도 0.5 기본 값
+
+        const voteGap = maxVote - secondMaxVote; 
+        // 투명도 계산: 득표율 차이가 작을수록 낮은 투명도, 득표율 차이가 커야 진해짐
+        const opacity = Math.min(1, Math.max(0.3, voteGap / 10)); // 최소 투명도 0.3, 더 큰 갭 필요
+        // 정당에 따라 기본 색상 설정, 없으면 흰색
+        const baseColor = partyColors[leadingParty] || 'rgb(255, 255, 255)';
+        
+        // rgba로 변환하고 투명도 적용
+        return baseColor.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
     }
 
     // 1등 정당을 가져오는 함수
@@ -264,9 +277,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
         resultHTML += `<p style="font-weight:bold; margin-top: 5px; margin-bottom: 2px; font-size: 1.2em;">총 의석수 | ${finaltotalSeats}석</p>`;
         infoBox.innerHTML = resultHTML;
-        } else {
-            infoBox.style.display = 'none'; // 정보 박스 숨김
-        }
+        } else infoBox.style.display = 'none'; // 정보 박스 숨김
     }
 
     // 클릭 이벤트 리스너를 추가하여 모드를 전환하는 함수
@@ -319,7 +330,6 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             let events = subdivision.getAttribute('data-events'); // 이벤트 정보 가져오기
             let parties = JSON.parse(subdivision.getAttribute('data-parties')); // 정당 정보 가져오기
             let invalid_votes = subdivision.getAttribute('data-invalid-votes'); // 무효표 가져오기
-            let total_votes = subdivision.getAttribute('data-total-votes'); // 총합 득표율 가져오기
                         
             function formatNumber(num) { // 숫자를 보기 좋게 포맷팅하는 함수 (억, 만 단위)
                 if (num >= 100000000) return (num / 100000000).toFixed(2) + '억';
@@ -335,7 +345,6 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             let sortedParties = Object.keys(parties).sort((a, b) => parseFloat(parties[b]) - parseFloat(parties[a]));            
             let otherParties = []; // 3% 미만 정당을 저장할 배열
             let counter = 0; // 카운터 추가
-            let totalPercentage = 0; // 총 득표율을 저장할 변수
             
             // 총 인구수 계산
             let totalPopulation = 0;
@@ -346,9 +355,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             // 각 정당의 득표 퍼센테이지 계산
             const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
             const partyPercentages = {};
-            for (let party in parties) {
-                partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
-            }
+            for (let party in parties) partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
             
             // 각 정당의 의석수 계산 (득표율이 3% 이상인 경우만)
             const seats = {};
@@ -359,42 +366,44 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                     if (seats[party] === 0) seats[party] = 1; // 의석수가 0인 경우 1로 설정 (최소 1석)
                 }
             }
-        
+            
+            // 정당별 득표율을 HTML로 변환
             for (let party of sortedParties) {
                 let value = parseFloat(parties[party]);
                 let color = partyColors[party] || 'rgb(200, 200, 200)'; // 기본 색상 설정
             
                 if (isNaN(value)) value = 0;
-                if (value < 3.0) {
-                    otherParties.push({ party, value });
-                } else {
-                    if (counter % 2 === 0) partiesHtml += '<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">';
-                    totalPercentage += value;
+                if (value < 3.0) otherParties.push({ party, value }); // 3% 미만 정당은 따로 저장
+                else {
+                    if (counter % 3 === 0) partiesHtml += '<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">';
                     partiesHtml += `
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
-                                text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px 0 4px;">
+                                text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px 0 4px; font-size: 12px;">
                         <div style="width: 12px; height: 12px; background-color: ${color}; margin-right: 5px; flex-shrink: 0;"></div>
                         ${party}: ${value.toFixed(3)}% (${seats[party]}석)
                     </div>`;
-                    if (counter % 2 === 1) partiesHtml += '</div>';
+                    if (counter % 3 === 2) partiesHtml += '</div>';
                     counter++;
                 }
-            }            
+            }
+            if (counter % 3 !== 0) partiesHtml += '</div>'; // 마지막 줄을 닫음
             
-            // 홀수 개의 정당이 있는 경우 마지막 줄 닫기
-            if (counter % 2 === 1) partiesHtml += '</div>';
-            
-            // 기타 정당을 회색으로 묶어서 표시
-            if (otherParties.length > 0) {
+            // 기타 정당과 무효표를 회색으로 묶어서 표시
+            let invalidVotesPercentage = parseFloat(invalid_votes);
+            if (otherParties.length > 0 || invalidVotesPercentage > 0) {
                 // 3% 미만 정당 득표율을 합산
                 let otherPartiesSum = otherParties.reduce((acc, cur) => acc + cur.value, 0);
-                totalPercentage += otherPartiesSum;
                 otherPartiesHtml += `
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
-                                    text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px 0 4px;">
+                                    text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px 0 5px; font-size: 12px;">
                             <div style="width: 12px; height: 12px; background-color: rgb(200, 200, 200); margin-right: 5px; flex-shrink: 0;"></div>
                             기타: ${otherPartiesSum.toFixed(3)}% (3% 미만)
+                        </div>
+                        <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
+                                    text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px 0 5px; font-size: 12px;">
+                            <div style="width: 12px; height: 12px; background-color: rgb(0, 0, 0); margin-right: 5px; flex-shrink: 0;"></div>
+                            무효표: ${invalidVotesPercentage.toFixed(3)}%
                         </div>
                     </div>`;
             }
@@ -411,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             
                 if (isNaN(value)) value = 0;
                 if (value >= 3.0) {
-                    let width = (value / totalPercentage) * 100;
+                    let width = value; // 득표율을 너비로 사용
                     barHtml += `<div style="background-color: ${color}; height: 20px; width: ${width}%;"></div>`;
                     cumulativePercentage += width;
                 }
@@ -420,14 +429,13 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             // 기타 정당 막대 추가
             if (otherParties.length > 0) {
                 let otherPartiesSum = otherParties.reduce((acc, cur) => acc + cur.value, 0);
-                let width = (otherPartiesSum / totalPercentage) * 100;
+                let width = otherPartiesSum; // 득표율을 너비로 사용
                 barHtml += `<div style="background-color: rgb(200, 200, 200); height: 20px; width: ${width}%;"></div>`;
             }
             
             // 무효표 막대 추가
-            let invalidVotesPercentage = parseFloat(invalid_votes);
             if (!isNaN(invalidVotesPercentage) && invalidVotesPercentage > 0) {
-                let width = (invalidVotesPercentage / totalPercentage) * 100;
+                let width = invalidVotesPercentage; // 득표율을 너비로 사용
                 barHtml += `<div style="background-color: black; height: 20px; width: ${width}%;"></div>`;
             }
             
@@ -444,12 +452,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                     margin-left: 5px;">(${rank_density} / ${province_cnt}위)</span></div>
                     <div style="font-size: 0.8em; color: gray; margin-top: 5px;">
                         <div style = "margin-top: 5px;"> 사건 | <span style="font-weight: bold;">${events}</span></div>
-                        <div style = "margin-top: 5px;"> 정당 득표율 | </div>
                         <div style="margin-left: 10px;">${finalHtml}</div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                            <div style="flex: 1; min-width: 20%;">무효표: ${invalidVotesPercentage.toFixed(3)}%</div>
-                            <div style="flex: 1; min-width: 20%;">총합: ${parseFloat(total_votes).toFixed(3)}%</div>
-                        </div>
                         <div style="display: flex; margin-top: 10px; height: 20px; border: 1px solid #ccc;">
                             ${barHtml}
                         </div>

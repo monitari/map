@@ -15,7 +15,7 @@ def add_data(row):
     
     return {
         "state": re.sub(r' 주$', '', row['province_state']).strip(),
-        "area": row['area'],#e
+        "area": row['area'],
         "population": row['population'],
         "density": row['density'],
         "rank-area": row['area_rank'],
@@ -49,6 +49,10 @@ def main():
 
     # 컨투어 추출
     contours_inside, _ = cv2.findContours(inside_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    # 컨투어 단순화
+    epsilon = 0.001 * cv2.arcLength(contours_inside[0], True)  # 정확도 설정
+    contours_inside = [cv2.approxPolyDP(contour, epsilon, True) for contour in contours_inside]
 
     # province_info_all.xlsx 파일에서 데이터 읽기
     df = pd.read_excel(r"data\province_info_all.xlsx")
