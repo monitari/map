@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 # 정치 성향
 alignments = [
     'Centrist', 'Center-left', 'Center-right', 'Far-left', 'Far-right', 'Left', 'Right', 
-    'Nationalism', 'Populism', 'Environmentalism', 'Single-issue', 'Religious', 'Progressive', 'Conservative', 
+    'Nationalism', 'Populism', 'Environmentalism', 'Single-issue', 'Religious', 'Progressive', 'Conervative', 
     'Social Democracy', 'Social Justice', 'Liberal', 'Libertarian', 'Technocratic', 'Agrarian', 
     'Federalist', 'Separatist', 'Traditionalist', 'Militarist', 'Pacifist', 'Secular', 'Theocratic',
     'Socialist', 'Capitalist', 'Regionalist', 'Industrialist', 'Protectionist', 'Free-market', 'Labor-rights', 'Individual-rights',
@@ -166,7 +166,7 @@ minor_parties = {
 
 # 지역 정당
 regional_parties = {
-    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Centrist', 'Right', 'Economic-development', 'Industrialist', 'Technocratic', 'Progressive']},
+    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Centrist', 'Center-left', 'Progressive', 'Social Justice', 'Environmentalism', 'Labor-rights']},
     '하파차의 후예': {'region': '하파차', 'ideology': ['Nationalism', 'Right', 'Conservative', 'Traditionalist', 'Regionalist', 'Protectionist']},
     '도마니 연합': {'region': '도마니', 'ideology': ['Centrist', 'Right', 'Conservative', 'Economic-development', 'Industrialist', 'Technocratic']},
     '테트라 인민당': {'region': '테트라', 'ideology':  ['Socialist', 'Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Labor-rights']},
@@ -195,8 +195,8 @@ party_preference_map = {
     "메르노": {"Conservative": 1.13, "Progressive": 0.87},
 
     # 그미즈리 주 (1급 행정구, 중공업, 교통 중심)
-    "오크모": {"Conservative": 1.12, "Progressive": 0.88},
-    "미톤노": {"Conservative": 1.15, "Progressive": 0.85},
+    "오크모": {"Conservative": 1.18, "Progressive": 0.82},
+    "미톤노": {"Conservative": 0.97, "Progressive": 1.03},
     "페아그": {"Conservative": 0.91, "Progressive": 1.09},
     "그미즈리": {"Conservative": 0.85, "Progressive": 1.15},
     "아센시": {"Conservative": 1.02, "Progressive": 0.98},
@@ -483,7 +483,7 @@ def calculate_vote_shares(event, state, row):
 
     if regional_party_found: # 지역 정당이 있는 경우
         while True:
-            ma, me, mi, reg = random.uniform(40.0, 60.0), random.uniform(20.0, 30.0), random.uniform(10.0, 20.0), random.uniform(0.0, 10.0)
+            ma, me, mi, reg = random.uniform(40.0, 60.0), random.uniform(20.0, 40.0), random.uniform(10.0, 20.0), random.uniform(10.0, 20.0)
             if 90 <= ma + me + mi + reg <= 110: break
         major_votes = [random.uniform(0, ma) for _ in range(len(major_parties))]
         medium_votes = [random.uniform(0, me) for _ in range(len(medium_parties))]
@@ -491,7 +491,7 @@ def calculate_vote_shares(event, state, row):
         reg_votes = [random.uniform(0, reg) for _ in range(len(relevant_regional_parties))]
     else: # 지역 정당이 없는 경우
         while True:
-            ma, me, mi, reg = random.uniform(40.0, 60.0), random.uniform(20.0, 30.0), random.uniform(0.0, 20.0), 0.0
+            ma, me, mi, reg = random.uniform(45.0, 65.0), random.uniform(30.0, 45.0), random.uniform(15.0, 30.0), 0.0
             if 90 <= ma + me + mi + reg <= 110: break
         major_votes = [random.uniform(0, ma) for _ in range(len(major_parties))]
         medium_votes = [random.uniform(0, ma) for _ in range(len(medium_parties))]
@@ -539,16 +539,16 @@ def process_data_with_indexes(province_info):
     data = [] # 결과 데이터를 저장할 리스트
     global_event = get_priority_event() # 전국적 사건 선택
     global_sub_event = random.choices(events[global_event]['subtypes']) # 전국적 사건의 세부 사건 선택
-    
+
     for state, cities in province_info.groupby('주'):
-        local_event = get_priority_event() # 주 단위 사건 선택
-        local_sub_event = random.choices(events[local_event]['subtypes']) # 주 단위 사건의 세부 사건 선택
+        #local_event = get_priority_event() # 주 단위 사건 선택
+        #local_sub_event = random.choices(events[local_event]['subtypes']) # 주 단위 사건의 세부 사건 선택
 
         # 우선 순위에 따라 사건 선택
-        if calculate_priority(events[local_event]) > calculate_priority(events[global_event]):
-            local_event, local_sub_event = global_event, global_sub_event
+        #if calculate_priority(events[local_event]) > calculate_priority(events[global_event]):
+        #   local_event, local_sub_event = global_event, global_sub_event
         # 사건이 같고 세부 사건이 다른 경우
-        if local_event == global_event: local_sub_event = global_sub_event # 세부 사건을 동일하게 설정
+        #if local_event == global_event: local_sub_event = global_sub_event # 세부 사건을 동일하게 설정
         for _, row in cities.iterrows(): # 주별 행정구역별로 반복
             result_row = {
                 '주': state,
@@ -556,13 +556,13 @@ def process_data_with_indexes(province_info):
                 '면적': row['면적'],
                 '인구': row['인구'],
                 '인구밀도': row['인구밀도'],
-                '사건': local_event + ' - ' + local_sub_event[0],
+                '사건': global_event + ' - ' + global_sub_event[0],
                 '도시지수': row['도시지수'],  # 계산된 도시지수 추가
                 '경제지수': row['경제지수']   # 계산된 경제지수 추가
             }
 
             # 투표율 계산 및 조정
-            vote_shares = calculate_vote_shares(local_event, state, row)  # row 인자 추가
+            vote_shares = calculate_vote_shares(global_event, state, row)  # row 인자 추가
             result_row.update(vote_shares)
             
             # 무효표

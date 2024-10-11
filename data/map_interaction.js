@@ -165,17 +165,17 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         return baseColor.replace('rgb', 'rgba').replace(')', `, ${opacity})`); // 투명도 적용
     }
 
-    // 1등 정당을 반환하는 함수
-    function getLeadingParty(parties) {
-        let maxVote = 0;
-        let leadingParty = '';
-        for (let party in parties) {
-            if (parties[party] > maxVote) {
-                maxVote = parties[party];
+    // 1등 정당을 가져오는 함수
+    function getLeadingParty(seats) {
+        let leadingParty = null;
+        let maxSeats = 0;
+        for (let party in seats) {
+            if (seats[party] > maxSeats) {
+                maxSeats = seats[party];
                 leadingParty = party;
             }
         }
-        return leadingParty; // 1등 정당 반환
+        return leadingParty;
     }
 
     // 색상을 적용하는 함수
@@ -208,46 +208,62 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                 // 각 정당의 득표 퍼센테이지 계산
                 const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
                 const partyPercentages = {};
-                for (let party in parties) partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
-    
+                for (let party in parties) {
+                    partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
+                }
+
+                // 총 인구수 계산
+                let totalPopulation = 0;
+                subdivisions.forEach(function (subdivision) {
+                    totalPopulation += parseInt(subdivision.getAttribute('data-population'), 10);
+                });
+
                 // 각 정당의 의석수 계산
                 const seats = {};
-                for (let party in partyPercentages) seats[party] = Math.round((partyPercentages[party] / 100) * (population / 100000)); // 의석수 계산 (100,000명당 1석)
-                results[subdivision.getAttribute('data-name')] = seats; // 선거 결과 저장
+                for (let party in partyPercentages) {
+                    if (partyPercentages[party] >= 3) {
+                        const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
+                        seats[party] = Math.round(votes * population / totalPopulation * 100); // 의석수 계산
+                        if (seats[party] === 0) seats[party] = 1; // 의석수가 0인 경우 1로 설정 (최소 1석)
+                    }
+                }
+
+                // 결과 저장
+                results[subdivision.getAttribute('data-name')] = seats;
             });
     
-            const partySeats = {}; // 정당별 의석수 저장 객체
-            const partyWins = {}; // 정당별 당선 횟수 저장 객체
-    
+            const partySeats = {}; // 정당별 의석수 저장 객체    
             // 각 행정구역의 정당별 의석수 합산
             for (const province in results) {
                 const seats = results[province]; 
                 for (let party in seats) {
-                    if (partySeats[party]) {
-                        partySeats[party] += seats[party];
-                        if (getLeadingParty(seats) === party) partyWins[party] += 1;
-                    } else {
-                        partySeats[party] = seats[party];
-                        if (getLeadingParty(seats) === party) partyWins[party] = 1;
-                        else partyWins[party] = 0;
-                    }
+                    if (partySeats[party]) partySeats[party] += seats[party];
+                    else partySeats[party] = seats[party];
                 }
             }
     
-            // 정보 박스에 선거 결과 표시 (내림차순 정렬)
-            let resultHTML = `<h3 style="margin-bottom: 12px;">선거 결과 <span style="font-size: 0.8em;">${event}</span></h3>`;
-            const sortedParties = Object.keys(partySeats).sort((a, b) => {
-                if (partySeats[b] === partySeats[a]) return a.localeCompare(b); // 개수가 같으면 가나다순으로 정렬
-                return partySeats[b] - partySeats[a]; // 내림차순 정렬
-            });
-            sortedParties.forEach(party => {
-                const colorBox = `<span style="display:inline-block;width:10px;height:10px;background-color:${partyColors[party]};margin-right:3px;"></span>`;
-                resultHTML += `<p style="line-height: 1.2; margin: 3px 0;">${colorBox}${party} ${partySeats[party]}석 (${partyWins[party]})</p>`;
-            });
-            // 총 의석수 계산
-            const finaltotalSeats = Object.values(partySeats).reduce((acc, cur) => acc + cur, 0);
-            resultHTML += `<p style="font-weight:bold; margin-top: 5px; margin-bottom: 2px; font-size: 1.2em;">총 의석수 | ${finaltotalSeats}석</p>`;
-            infoBox.innerHTML = resultHTML;
+        // 정보 박스에 선거 결과 표시 (내림차순 정렬)
+        let resultHTML = `<h3 style="margin-bottom: 12px;">선거 결과 <span style="font-size: 0.8em;">${event}</span></h3>`;
+        const sortedParties = Object.keys(partySeats).sort((a, b) => {
+            if (partySeats[b] === partySeats[a]) return a.localeCompare(b); // 개수가 같으면 가나다순으로 정렬
+            return partySeats[b] - partySeats[a]; // 내림차순 정렬
+        });
+
+        // 총 의석수 계산
+        const finaltotalSeats = Object.values(partySeats).reduce((acc, cur) => acc + cur, 0);
+
+        sortedParties.forEach(party => {
+            const colorBox = `<span style="display:inline-block;width:10px;height:10px;background-color:${partyColors[party]};margin-right:3px;"></span>`;
+            const percentage = ((partySeats[party] / finaltotalSeats) * 100).toFixed(2);
+            resultHTML += `
+                <div style="display: flex; align-items: center; margin: 3px 0;">
+                    <p style="line-height: 1.2; margin: 0; flex-grow: 1;">${colorBox}${party} ${partySeats[party]}석 (${percentage}%)</p>
+                    <div style="background-color: ${partyColors[party]}; height: 10px; width: ${percentage}%;"></div>
+                </div>`;
+        });
+
+        resultHTML += `<p style="font-weight:bold; margin-top: 5px; margin-bottom: 2px; font-size: 1.2em;">총 의석수 | ${finaltotalSeats}석</p>`;
+        infoBox.innerHTML = resultHTML;
         } else {
             infoBox.style.display = 'none'; // 정보 박스 숨김
         }
@@ -255,37 +271,34 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
     // 클릭 이벤트 리스너를 추가하여 모드를 전환하는 함수
     populationToggleButton.addEventListener('click', function () { 
-        populationMode = !populationMode; // 인구 모드 전환
+        populationMode = true; // 인구 모드 전환
         displayElectionResults(false); // 선거 결과 끄기
         densityMode = false; // 밀도 모드를 끔
+        electionMode = false; // 선거 모드를 끔
         applyColor(); // 색상 적용
+        document.getElementById('leading-party-toggle').style.display = 'none'; // 1등 정당 버튼 숨기기
     });
-
+    
     // 클릭 이벤트 리스너를 추가하여 모드를 전환하는 함수
     densityToggleButton.addEventListener('click', function () {
-        densityMode = !densityMode; // 밀도 모드 전환 
+        densityMode = true; // 밀도 모드 전환
         displayElectionResults(false); // 선거 결과 끄기
         populationMode = false; // 인구 모드를 끔
+        electionMode = false; // 선거 모드를 끔
         applyColor(); // 색상 적용
+        document.getElementById('leading-party-toggle').style.display = 'none'; // 1등 정당 버튼 숨기기
     });
-
+    
     // 클릭 이벤트 리스너를 추가하여 모드를 전환하는 함수
     electionToggleButton.addEventListener('click', function () {
-        electionMode = !electionMode;
+        electionMode = true; // 선거 모드 전환
         displayElectionResults(true); // 선거 결과 표시
         populationMode = false; // 인구 모드를 끔
         densityMode = false; // 밀도 모드를 끔
         applyColor();
+        document.getElementById('leading-party-toggle').style.display = 'block'; // 1등 정당 버튼 표시
     });
-
-    // "선거 결과" 버튼 클릭 시 "1등 정당" 버튼 표시/숨김
-    document.getElementById('election-toggle').addEventListener('click', function() {
-        const leadingPartyButton = document.getElementById('leading-party-toggle');
-        if (leadingPartyButton.style.display === 'none' || leadingPartyButton.style.display === '')
-            leadingPartyButton.style.display = 'block';
-        else leadingPartyButton.style.display = 'none';
-    });
-
+    
     // "1등 정당" 버튼 클릭 시 1등 정당 색상 모드 전환
     document.getElementById('leading-party-toggle').addEventListener('click', function () {
         showLeadingPartyMode = !showLeadingPartyMode; // 1등 정당 색상 모드 전환
@@ -324,6 +337,29 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             let counter = 0; // 카운터 추가
             let totalPercentage = 0; // 총 득표율을 저장할 변수
             
+            // 총 인구수 계산
+            let totalPopulation = 0;
+            subdivisions.forEach(function (subdivision) {
+                totalPopulation += parseInt(subdivision.getAttribute('data-population'), 10);
+            });
+            
+            // 각 정당의 득표 퍼센테이지 계산
+            const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
+            const partyPercentages = {};
+            for (let party in parties) {
+                partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
+            }
+            
+            // 각 정당의 의석수 계산 (득표율이 3% 이상인 경우만)
+            const seats = {};
+            for (let party in partyPercentages) {
+                if (partyPercentages[party] >= 3) {
+                    const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
+                    seats[party] = Math.round(votes * population / totalPopulation * 100); // 의석수 계산
+                    if (seats[party] === 0) seats[party] = 1; // 의석수가 0인 경우 1로 설정 (최소 1석)
+                }
+            }
+        
             for (let party of sortedParties) {
                 let value = parseFloat(parties[party]);
                 let color = partyColors[party] || 'rgb(200, 200, 200)'; // 기본 색상 설정
@@ -338,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
                                 text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px 0 4px;">
                         <div style="width: 12px; height: 12px; background-color: ${color}; margin-right: 5px; flex-shrink: 0;"></div>
-                        ${party}: ${value.toFixed(3)}%
+                        ${party}: ${value.toFixed(3)}% (${seats[party]}석)
                     </div>`;
                     if (counter % 2 === 1) partiesHtml += '</div>';
                     counter++;
