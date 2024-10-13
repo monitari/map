@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from data.province import province  # province 딕셔너리 가져오기
+from data.mashup.province import province  # province 딕셔너리 가져오기
 
 def calculate_rankings(province_data):
     # 인구 밀도 계산
@@ -77,17 +77,15 @@ def update_province_info(relations, input_file, election_file, output_file):
     df.to_excel(output_file, index=False)
 
 def main():
-    base_dir = os.path.dirname(__file__)  # 현재 파일의 디렉토리
-    province_info_file = os.path.join(base_dir, 'province_info.txt')
-    election_file = os.path.join(base_dir, 'election_result.xlsx')
-    output_file = os.path.join(base_dir, 'province_info_all.xlsx')
+    province_info_file = 'data/mashup/province_info.txt'
+    election_file = 'data/xlsx/election_result.xlsx'
+    output_file = 'data/xlsx/province_info_all.xlsx'
 
     if not os.path.exists(province_info_file):
-        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {province_info_file}")
-
+        raise FileNotFoundError(f"{province_info_file} 파일을 찾을 수 없습니다.")
     if not os.path.exists(election_file):
-        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {election_file}")
-
+        raise FileNotFoundError(f"{election_file} 파일을 찾을 수 없습니다.")
+    
     update_province_info(province, province_info_file, election_file, output_file)
     print("성공적으로 파일을 저장했습니다.")
 

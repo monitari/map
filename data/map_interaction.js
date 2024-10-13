@@ -20,45 +20,59 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     // 정당에 따라 색상 매핑
     const partyColors = {
         '중앙당': 'rgb(255, 223, 0)',           // 골드 (중도)
-        '통합 트라야비야': 'rgb(0, 102, 204)',  // 로열 블루 (보수)
-        '사회민주당': 'rgb(255, 182, 193)',     // 라이트 핑크 (진보)
-        '자유민주연합': 'rgb(135, 206, 250)',   // 라이트 스카이 블루 (자유주의)
-    
-        '개혁당': 'rgb(255, 165, 0)',           // 오렌지 (자유주의)
-        '국가를 위한 보수당': 'rgb(0, 51, 102)', // 다크 블루 (보수)
-        '국민자유전선': 'rgb(210, 105, 30)',     // 초콜릿 (보수-국수주의)
-        '민주시민모임': 'rgb(75, 0, 130)',        // 인디고 (중도좌파)
-        '녹색당': 'rgb(0, 128, 0)',              // 그린 (환경)
-        '새희망당': 'rgb(160, 82, 45)',         // 시에나 (보수-국수주의)
-        '시민이 모였다!': 'rgb(240, 230, 140)', // 카키 (시민중심)
-        '자유혁신당': 'rgb(255, 99, 71)',       // 토마토 (진보-개혁 성향)
+        '통합 트라야비야': 'rgb(0, 76, 153)',   // 미드나잇 블루 (보수, 민족주의)
+        '사회민주당': 'rgb(255, 160, 190)',     // 라이트 핑크 (진보)
+        '자유민주연합': 'rgb(102, 178, 255)',   // 라이트 스카이 블루 (자유주의)
+        '좌파연합': 'rgb(204, 51, 51)',         // 크림슨 레드 (좌파)
+        
+        '개혁당': 'rgb(255, 153, 51)',          // 소프트 오렌지 (혁신적 자유주의)
+        '국가를 위한 보수당': 'rgb(0, 51, 102)',// 다크 네이비 (보수)
+        '노동자당': 'rgb(255, 69, 0)',          // 오렌지 레드 (노동자 권리)
+        '녹색당': 'rgb(0, 153, 76)',            // 다크 그린 (환경)
+        '시민이 모였다!': 'rgb(255, 230, 128)', // 라이트 옐로우 (시민중심)
+        '연방공화당': 'rgb(153, 0, 0)',         // 다크 레드 (보수)
+        '자유혁신당': 'rgb(255, 87, 51)',       // 코랄 (진보적 개혁)
         '진보를 외치다': 'rgb(255, 105, 180)',  // 핫 핑크 (진보)
-        '청년당': 'rgb(147, 112, 219)',         // 미디엄 퍼플 (청년중심)
-    
+        '청년당': 'rgb(186, 85, 211)',          // 오키드 퍼플 (청년중심)
+        '특이점이 온다': 'rgb(70, 130, 180)',   // 스틸 블루 (특이점, 과학)
+        
+        'LGBT 평등당': 'rgb(255, 20, 147)',     // 딥 핑크 (LGBT)
         '공산당': 'rgb(255, 0, 0)',             // 레드 (공산주의)
-        '과학기술당': 'rgb(64, 224, 208)',      // 터콰이즈 (과학기술)
-        '국민행동당': 'rgb(25, 25, 112)',       // 미드나잇 블루 (국수주의)
-        '노동자당': 'rgb(255, 69, 0)',          // 오렌지 레드 (노동)
-        '보호하자 자연!': 'rgb(0, 128, 128)',   // 틸 (환경)
+        '공정무역당': 'rgb(102, 204, 255)',     // 스카이 블루 (공정무역)
+        '국가신성당': 'rgb(238, 130, 238)',     // 비올렛 (종교)
+        '국민자유전선': 'rgb(178, 85, 0)',     // 다크 초콜릿 (극우)
+        '국민행동당': 'rgb(0, 0, 102)',         // 다크 네이비 (국수주의)
+        '균형잡힌 미래': 'rgb(128, 128, 128)',   // 그레이 (균형)
+        '기본소득당': 'rgb(0, 255, 255)',        // 시안 (기본소득)
+        '노인당': 'rgb(128, 128, 0)',           // 올리브 (노인)
         '농민당': 'rgb(139, 69, 19)',           // 새들 브라운 (농업)
+        '단결하는 신앙당': 'rgb(255, 204, 204)', // 라이트 핑크 (종교)
+        '디지털 권리당': 'rgb(10, 50, 100)',    // 다크 블루 (디지털 권리)
+        '자연보호당': 'rgb(0, 153, 153)',   // 다크 틸 (환경 보호)
         '미래당': 'rgb(0, 206, 209)',           // 다크 터콰이즈 (혁신)
-        '보호하라!': 'rgb(255, 223, 0)',        // 골드 (보수-반이민)
-        '생명당': 'rgb(255, 105, 180)',         // 핫 핑크 (생명권)
-        '전사회당': 'rgb(255, 20, 147)',        // 딥 핑크 (사회주의)
-        '정의': 'rgb(186, 85, 211)',            // 미디엄 오키드 (사회정의)
+        '민주시민모임': 'rgb(102, 51, 153)',   // 인디고 (중도좌파)
+        '보호하라!': 'rgb(255, 204, 0)',        // 골드 (보수-반이민)
+        '복지추구당': 'rgb(255, 69, 0)',        // 오렌지 레드 (복지)
+        '새희망당': 'rgb(160, 82, 45)',         // 시에나 (보수-국수주의)
+        '생명당': 'rgb(255, 182, 193)',         // 라이트 핑크 (생명권)
+        '전사회당': 'rgb(255, 0, 255)',         // 마젠타 (좌익 보수)
+        '정의': 'rgb(128, 0, 128)',             // 퍼플 (사회정의)
         '통일당': 'rgb(255, 140, 0)',           // 다크 오렌지 (통일)
-        '특이점이 온다': 'rgb(70, 130, 180)',   // 스틸 블루 (기술관료)
-        '평화': 'rgb(144, 238, 144)',           // 라이트 그린 (환경, 평화)
-    
+        '평화': 'rgb(144, 238, 144)',           // 라이트 그린 (평화)
+        '우리는 안정을 추구한다': 'rgb(0, 128, 0)',             // 그린 (안정)
+        '우리는 페미니스트': 'rgb(255, 105, 180)', // 핫 핑크 (페미니즘)
+        '인권정의당': 'rgb(128, 0, 0)',         // 마룬 (인권)
+
         '그미즈리 민주당': 'rgb(100, 149, 237)', // 콘플라워 블루 (그미즈리 지역)
+        '그미즈리 국민당': 'rgb(0, 191, 255)', // 딥 스카이 블루 (그미즈리 지역)
         '도마니 연합': 'rgb(255, 165, 0)',       // 오렌지 (도마니 지역)
         '림덴시를 위하여': 'rgb(255, 99, 71)',   // 토마토 (림덴시 지역)
         '살기좋은 안텐시': 'rgb(0, 255, 127)',   // 스프링 그린 (안텐시 지역)
-        '세오어 보호당': 'rgb(205, 92, 92)',     // 인디안 레드 (세오어 지역)
-        '테트라 인민당': 'rgb(140, 200, 0)',     // 옐로우 그린 (테트라 지역)
+        '세오어 보호당': 'rgb(205, 92, 92)',     // 인디언 레드 (세오어 지역)
+        '테트라 인민당': 'rgb(173, 255, 47)',    // 라임 그린 (테트라 지역)
         '하파차의 후예': 'rgb(153, 50, 204)',    // 다크 오키드 (하파차 지역)
     };
-
+    
     // 마우스 휠로 확대/축소
     mapContainer.addEventListener('wheel', (event) => {
         event.preventDefault();
@@ -170,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
         const voteGap = maxVote - secondMaxVote; 
         // 투명도 계산: 득표율 차이가 작을수록 낮은 투명도, 득표율 차이가 커야 진해짐
-        const opacity = Math.min(1, Math.max(0.3, voteGap / 10)); // 최소 투명도 0.3, 더 큰 갭 필요
+        const opacity = Math.min(1, Math.max(0.1, voteGap / 10)); // 최소 0.1, 최대 1
         // 정당에 따라 기본 색상 설정, 없으면 흰색
         const baseColor = partyColors[leadingParty] || 'rgb(255, 255, 255)';
         
@@ -211,12 +225,19 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             infoBox.style.display = 'block'; // 정보 박스 표시
             const results = {}; // 선거 결과 저장 객체
             let event = ""; // 이벤트 정보 저장
+            let totalSeats = 0; // 총 의석수 저장 변수
                 
             subdivisions.forEach(function (subdivision) {
                 const population = parseInt(subdivision.getAttribute('data-population'), 10); // 인구 정보 가져오기
                 const events = subdivision.getAttribute('data-events'); // 이벤트 정보 가져오기
                 const parties = JSON.parse(subdivision.getAttribute('data-parties')); // 정당 정보 가져오기
                 event = events; // 이벤트 정보 저장
+
+                // 총 인구수 계산
+                let totalPopulation = 0;
+                subdivisions.forEach(function (subdivision) {
+                    totalPopulation += parseInt(subdivision.getAttribute('data-population'), 10);
+                });
     
                 // 각 정당의 득표 퍼센테이지 계산
                 const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
@@ -225,20 +246,13 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                     partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
                 }
 
-                // 총 인구수 계산
-                let totalPopulation = 0;
-                subdivisions.forEach(function (subdivision) {
-                    totalPopulation += parseInt(subdivision.getAttribute('data-population'), 10);
-                });
-
                 // 각 정당의 의석수 계산
                 const seats = {};
                 for (let party in partyPercentages) {
-                    if (partyPercentages[party] >= 3) {
-                        const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
-                        seats[party] = Math.round(votes * population / totalPopulation * 100); // 의석수 계산
-                        if (seats[party] === 0) seats[party] = 1; // 의석수가 0인 경우 1로 설정 (최소 1석)
-                    }
+                    const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
+                    seats[party] = Math.round(votes * population / totalPopulation * 100); // 의석수 계산
+                    //if (getLeadingParty(parties) === party && seats[party] === 0) seats[party] = 1; // 1등 정당은 최소 1석 보장
+                    totalSeats += seats[party]; // 총 의석수 계산
                 }
 
                 // 결과 저장
@@ -250,20 +264,41 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             for (const province in results) {
                 const seats = results[province]; 
                 for (let party in seats) {
-                    if (partySeats[party]) partySeats[party] += seats[party];
-                    else partySeats[party] = seats[party];
+                    if (seats[party] > 0) { // 의석수가 0보다 큰 경우만
+                        if (partySeats[party]) partySeats[party] += seats[party];
+                        else partySeats[party] = seats[party];
+                    }
                 }
             }
-    
+
+            // 1% 미만 정당을 버리기
+            for (let party in partySeats) {
+                if (partySeats[party] / totalSeats < 0.01) delete partySeats[party];
+            }
+
+        // 총 의석수 계산
+        const semitotalSeats = Object.values(partySeats).reduce((a, b) => a + b, 0);
+        const targetSeats = 4500; // 총 의석수 (4500석, 정확한 수치는 아님)
+        const adjustedPartySeats = {}; // 조정된 의석수 저장 객체
+        for (let party in partySeats) {
+            const percentage = partySeats[party] / semitotalSeats;
+            adjustedPartySeats[party] = Math.round(percentage * targetSeats); // 의석수 조정
+        }
+        // 기존 partySeats 객체를 업데이트
+        Object.keys(partySeats).forEach(party => delete partySeats[party]);
+        Object.assign(partySeats, adjustedPartySeats);
+
+
         // 정보 박스에 선거 결과 표시 (내림차순 정렬)
-        let resultHTML = `<h3 style="margin-bottom: 12px;">선거 결과 <span style="font-size: 0.8em;">${event}</span></h3>`;
+        let resultHTML = `<h3 style="margin-bottom: 5px;">선거 결과 <span style="font-size: 0.8em;">${event}</span></h3>`;
+        resultHTML += `<div style="font-size: 0.8em; margin-bottom: 5px;">1% 이상 득표율을 얻지 못한 정당은 의석을 얻을 수 없음</div>`;
         const sortedParties = Object.keys(partySeats).sort((a, b) => {
             if (partySeats[b] === partySeats[a]) return a.localeCompare(b); // 개수가 같으면 가나다순으로 정렬
             return partySeats[b] - partySeats[a]; // 내림차순 정렬
         });
 
         // 총 의석수 계산
-        const finaltotalSeats = Object.values(partySeats).reduce((acc, cur) => acc + cur, 0);
+        const finaltotalSeats = Object.values(partySeats).reduce((a, b) => a + b, 0);
 
         sortedParties.forEach(party => {
             const colorBox = `<span style="display:inline-block;width:10px;height:10px;background-color:${partyColors[party]};margin-right:3px;"></span>`;
@@ -339,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
             // 정당 정보를 유동적으로 추가
             let partiesHtml = '';
-            let otherPartiesHtml = ''; // 3% 미만 정당을 저장할 변수
+            let otherPartiesHtml = ''; // 2% 미만 정당을 저장할 변수
             
             // 정당을 득표율에 따라 정렬
             let sortedParties = Object.keys(parties).sort((a, b) => parseFloat(parties[b]) - parseFloat(parties[a]));            
@@ -353,19 +388,25 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
             });
             
             // 각 정당의 득표 퍼센테이지 계산
-            const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
-            const partyPercentages = {};
-            for (let party in parties) partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
+            //const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
+            //const partyPercentages = {};
+            //for (let party in parties) partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
             
             // 각 정당의 의석수 계산 (득표율이 3% 이상인 경우만)
-            const seats = {};
-            for (let party in partyPercentages) {
-                if (partyPercentages[party] >= 3) {
-                    const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
-                    seats[party] = Math.round(votes * population / totalPopulation * 100); // 의석수 계산
-                    if (seats[party] === 0) seats[party] = 1; // 의석수가 0인 경우 1로 설정 (최소 1석)
-                }
-            }
+            // const seats = {};
+            // const seatswS = {};
+            //for (let party in partyPercentages) {
+            //    if (partyPercentages[party] >= 5.0) { // 5% 이상인 경우만
+            //        const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
+            //         seats[party] = (Math.round(votes * population / totalPopulation * 100)); // 의석수 계산
+            //         if (getLeadingParty(parties) === party && seats[party] === 0) {
+            //             seats[party] = 1; // 1등 정당은 최소 1석 보장
+            //             seatswS[party] = `(${seats[party]}석)`; // 의석수가 0인 경우 1석으로 설정
+            //         }
+            //         else if (seats[party] === 0) seatswS[party] = ''; // 의석수가 0인 경우 공백으로 설정
+            //         else seatswS[party] = `(${seats[party]}석)`; // 의석수가 0이 아닌 경우 의석수를 표시
+            //     }
+            // }
             
             // 정당별 득표율을 HTML로 변환
             for (let party of sortedParties) {
@@ -380,8 +421,8 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
                                 text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px 0 4px; font-size: 12px;">
                         <div style="width: 12px; height: 12px; background-color: ${color}; margin-right: 5px; flex-shrink: 0;"></div>
-                        ${party}: ${value.toFixed(3)}% (${seats[party]}석)
-                    </div>`;
+                        ${party}: ${value.toFixed(3)}% </div>`; //${seatswS[party]}
+                    //</div>`;
                     if (counter % 3 === 2) partiesHtml += '</div>';
                     counter++;
                 }

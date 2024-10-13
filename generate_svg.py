@@ -55,7 +55,7 @@ def main():
     contours_inside = [cv2.approxPolyDP(contour, epsilon, True) for contour in contours_inside]
 
     # province_info_all.xlsx 파일에서 데이터 읽기
-    df = pd.read_excel(r"data\province_info_all.xlsx")
+    df = pd.read_excel(r"data\xlsx\province_info_all.xlsx")
 
     # 데이터 처리
     province_data = {row['province']: add_data(row) for _, row in df.iterrows()}
@@ -105,7 +105,7 @@ def main():
         css_content = css_file.read()
 
     # HTML 템플릿 불러오기
-    with open("dummy/template.txt", "r", encoding='utf-8') as template_file:
+    with open("data/template.txt", "r", encoding='utf-8') as template_file:
         html_content = template_file.read()
 
     # SVG 컨텐츠 추가
