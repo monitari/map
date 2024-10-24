@@ -99,13 +99,20 @@ main_alignments = [
     'Posthumanism',  # 포스트휴머니즘
 ]
 
+# 초대형 정당
+super_major_parties = {
+    '사회민주당': ['Center-left', 'Left', 'Social Democracy', 'Progressive', 'Social Justice', 'Welfare State', 'Civil Liberties'],
+    '자유민주연합': ['Center-right', 'Right', 'Conservatism', 'Market Economy', 'Republicanism', 'Nationalism', 'Authoritarianism'],
+    '중앙당': ['Centrist', 'Social Democracy', 'Progressive', 'Republicanism', 'Mixed Economy', 'Civil Liberties'],
+}
+
 # 주요 대형 정당
 major_parties = {
-    '중앙당': ['Centrist', 'Center-right', 'Center-left', 'Social Democracy', 'Progressive', 'Republicanism', 'Mixed Economy', 'Civil Liberties'],
-    '통합 트라야비야': ['Right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Authoritarianism'],
-    '사회민주당': ['Center-left', 'Left', 'Social Democracy', 'Progressive', 'Social Justice', 'Welfare State', 'Civil Liberties'],
-    '자유민주연합': ['Center-right', 'Right', 'Conservatism', 'Liberalism', 'Republicanism', 'Market Economy', 'Social Justice'],
+    '개혁당': ['Liberalism', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
+    '국가를 위한 보수당': ['Nationalism', 'Right', 'Far-right', 'Conservatism', 'Traditionalism', 'Protectionist'],
+    '노동자당': ['Left', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Welfare State', 'Socialism'],
     '좌파연합': ['Left', 'Socialism', 'Progressive', 'Labor-rights', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
+    '통합 트라야비야': ['Right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Authoritarianism'],
 }
 
 for party, ideologies in major_parties.items():
@@ -116,10 +123,7 @@ for party, ideologies in major_parties.items():
 
 # 중형 규모 정당
 medium_parties = {
-    '개혁당': ['Liberalism', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice'],
-    '국가를 위한 보수당': ['Nationalism', 'Right', 'Far-right', 'Conservatism', 'Traditionalism', 'Protectionist'],
     '기본소득당': ['Progressive', 'Social Justice', 'Welfare State', 'Universal Basic Income', 'Labor-rights'],
-    '노동자당': ['Left', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Welfare State', 'Socialism'],
     '녹색당': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability', 'Animal Rights', 'Climate Justice'],
     '시민이 모였다!': ['Centrist', 'Anti-corruption', 'Progressive', 'Social Justice', 'Direct Democracy', 'Civic Engagement'],
     '연방공화당': ['Republicanism', 'Conservatism', 'Right', 'Nationalism', 'Protectionist', 'Authoritarianism'],
@@ -172,14 +176,18 @@ for party, ideologies in minor_parties.items():
 
 # 지역 정당
 regional_parties = {
-    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Center-left', 'Progressive', 'Social Justice', 'Environmentalism', 'Regionalist']},
     '그미즈리 국민당': {'region': '그미즈리', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
-    '도마니 연합': {'region': '도마니', 'ideology': ['Center-right', 'Conservatism', 'Technocratic', 'Innovation', 'Regionalist']},
+    '그미즈리 녹색당': {'region': '그미즈리', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability', 'Regionalist']},
+    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Centrist', 'Center-left', 'Progressive', 'Social Justice', 'Regionalist']},
+    '그미즈리 사회당': {'region': '그미즈리', 'ideology': ['Socialism', 'Left', 'Progressive', 'Labor-rights', 'Regionalist']},
+    '그미즈리 자유당': {'region': '그미즈리', 'ideology': ['Liberalism', 'Center-right', 'Progressive', 'Market Economy', 'Regionalist']},
+    #'도마니 연합': {'region': '도마니', 'ideology': ['Center-right', 'Conservatism', 'Technocratic', 'Innovation', 'Regionalist']},
     '림덴시를 위하여': {'region': '림덴시', 'ideology': ['Rural Development', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
-    '살기좋은 안텐시': {'region': '안텐시', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Centrist', 'Left', 'Regionalist']},
+    #'살기좋은 안텐시': {'region': '안텐시', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Centrist', 'Left', 'Regionalist']},
     '세오어 보호당': {'region': '그라나데, 포어', 'ideology': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
-    '테트라 인민당': {'region': '테트라', 'ideology': ['Socialism', 'Left', 'Progressive', 'Labor-rights', 'Regionalist']},
+    '테트라 인민당': {'region': '테트라', 'ideology': ['Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Anti-globalization', 'Regionalist']},
     '하파차의 후예': {'region': '하파차', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
+    '하파차 민주연합': {'region': '하파차', 'ideology': ['Center-left', 'Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Regionalist']},
 }
 
 for party, data in regional_parties.items():

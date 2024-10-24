@@ -3,7 +3,7 @@ ideological_spectrum = ['Far-left', 'Left', 'Center-left', 'Centrist', 'Center-r
 
 party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진보주의: 0.0})
     # 아이리카 주
-    "메초오비카": {"Conservative": 1.10, "Progressive": 0.90},
+    "메초오비카": {"Conservative": 1.16, "Progressive": 0.84},
     "아브레": {"Conservative": 0.86, "Progressive": 1.14},
     "피에트라": {"Conservative": 0.83, "Progressive": 1.17},
     "아이리카": {"Conservative": 1.00, "Progressive": 1.00},
@@ -33,10 +33,10 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "오브니": {"Conservative": 0.92, "Progressive": 1.08},
     "바스바드": {"Conservative": 1.07, "Progressive": 0.93},
     "케릴티": {"Conservative": 0.91, "Progressive": 1.09},
-    "메고기": {"Conservative": 1.04, "Progressive": 0.96},
+    "메고기": {"Conservative": 1.12, "Progressive": 0.88},
     "에링고": {"Conservative": 0.95, "Progressive": 1.05},
     "커피": {"Conservative": 0.95, "Progressive": 1.05},
-    "즈조이": {"Conservative": 1.01, "Progressive": 0.99},
+    "즈조이": {"Conservative": 1.05, "Progressive": 0.95},
     "가안": {"Conservative": 0.92, "Progressive": 1.08},
     "브고홀": {"Conservative": 1.20, "Progressive": 0.80},
     "모옹홀": {"Conservative": 1.21, "Progressive": 0.79},
@@ -56,7 +56,7 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "라토카": {"Conservative": 1.08, "Progressive": 0.92},
     "세오고": {"Conservative": 0.90, "Progressive": 1.10},
     "시안": {"Conservative": 0.84, "Progressive": 1.16},
-    "보어": {"Conservative": 1.02, "Progressive": 0.98},
+    "보어": {"Conservative": 1.09, "Progressive": 0.91},
 
     # 메세기 주
     "크라나": {"Conservative": 0.91, "Progressive": 1.09},

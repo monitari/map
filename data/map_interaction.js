@@ -19,15 +19,16 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
     let startX, startY; // 드래그 시작 좌표
     // 정당에 따라 색상 매핑
     const partyColors = {
-        '중앙당': 'rgb(255, 223, 0)',           // 골드 (중도)
-        '통합 트라야비야': 'rgb(0, 76, 153)',   // 미드나잇 블루 (보수, 민족주의)
         '사회민주당': 'rgb(255, 160, 190)',     // 라이트 핑크 (진보)
         '자유민주연합': 'rgb(102, 178, 255)',   // 라이트 스카이 블루 (자유주의)
-        '좌파연합': 'rgb(204, 51, 51)',         // 크림슨 레드 (좌파)
+        '중앙당': 'rgb(255, 223, 0)',           // 골드 (중도)
         
         '개혁당': 'rgb(255, 153, 51)',          // 소프트 오렌지 (혁신적 자유주의)
         '국가를 위한 보수당': 'rgb(0, 51, 102)',// 다크 네이비 (보수)
         '노동자당': 'rgb(255, 69, 0)',          // 오렌지 레드 (노동자 권리)
+        '좌파연합': 'rgb(204, 51, 51)',         // 크림슨 레드 (좌파)
+        '통합 트라야비야': 'rgb(0, 76, 153)',   // 미드나잇 블루 (보수, 민족주의)
+        
         '녹색당': 'rgb(0, 153, 76)',            // 다크 그린 (환경)
         '시민이 모였다!': 'rgb(255, 230, 128)', // 라이트 옐로우 (시민중심)
         '연방공화당': 'rgb(153, 0, 0)',         // 다크 레드 (보수)
@@ -63,14 +64,21 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         '우리는 페미니스트': 'rgb(255, 105, 180)', // 핫 핑크 (페미니즘)
         '인권정의당': 'rgb(128, 0, 0)',         // 마룬 (인권)
 
-        '그미즈리 민주당': 'rgb(100, 149, 237)', // 콘플라워 블루 (그미즈리 지역)
-        '그미즈리 국민당': 'rgb(0, 191, 255)', // 딥 스카이 블루 (그미즈리 지역)
-        '도마니 연합': 'rgb(255, 165, 0)',       // 오렌지 (도마니 지역)
+        '그미즈리 국민당': 'rgb(0, 123, 255)', // 브라이트 블루 (그미즈리 지역)
+        '그미즈리 녹색당': 'rgb(0, 150, 136)', // 티얼 그린 (그미즈리 지역)
+        '그미즈리 민주당': 'rgb(255, 193, 7)', // 아마레로 (그미즈리 지역)
+        '그미즈리 사회당': 'rgb(100, 149, 237)', // 콘플라워 블루 (그미즈리 지역)
+        '그미즈리 자유당': 'rgb(75, 0, 130)', // 인디고 (그미즈리 지역)
+        
+        //'도마니 연합': 'rgb(255, 69, 0)',       // 오렌지 레드 (도마니 지역)
         '림덴시를 위하여': 'rgb(255, 99, 71)',   // 토마토 (림덴시 지역)
-        '살기좋은 안텐시': 'rgb(0, 255, 127)',   // 스프링 그린 (안텐시 지역)
+        //'살기좋은 안텐시': 'rgb(0, 255, 127)',   // 스프링 그린 (안텐시 지역)
         '세오어 보호당': 'rgb(205, 92, 92)',     // 인디언 레드 (세오어 지역)
         '테트라 인민당': 'rgb(173, 255, 47)',    // 라임 그린 (테트라 지역)
-        '하파차의 후예': 'rgb(153, 50, 204)',    // 다크 오키드 (하파차 지역)
+
+        '하파차의 자유민주시민': 'rgb(75, 0, 130)', // 인디고 (하파차 지역)
+        '하파차의 후예': 'rgb(138, 43, 226)',    // 블루 바이올렛 (하파차 지역)
+        '하파차 민주연합': 'rgb(147, 112, 219)',  // 미디엄 퍼플 (하파차 지역)
     };
     
     // 마우스 휠로 확대/축소
@@ -271,14 +279,14 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                 }
             }
 
-            // 1% 미만 정당을 버리기
+            // 0.5% 미만 정당을 버리기
             for (let party in partySeats) {
-                if (partySeats[party] / totalSeats < 0.01) delete partySeats[party];
+                if (partySeats[party] / totalSeats < 0.005) delete partySeats[party];
             }
 
         // 총 의석수 계산
         const semitotalSeats = Object.values(partySeats).reduce((a, b) => a + b, 0);
-        const targetSeats = 4500; // 총 의석수 (4500석, 정확한 수치는 아님)
+        const targetSeats = 4500; // 목표 의석수(4500석, 가상의 수)
         const adjustedPartySeats = {}; // 조정된 의석수 저장 객체
         for (let party in partySeats) {
             const percentage = partySeats[party] / semitotalSeats;
@@ -291,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
         // 정보 박스에 선거 결과 표시 (내림차순 정렬)
         let resultHTML = `<h3 style="margin-bottom: 5px;">선거 결과 <span style="font-size: 0.8em;">${event}</span></h3>`;
-        resultHTML += `<div style="font-size: 0.8em; margin-bottom: 5px;">1% 이상 득표율을 얻지 못한 정당은 의석을 얻을 수 없음</div>`;
+        resultHTML += `<div style="font-size: 0.8em; margin-bottom: 5px;">0.5% 이상 득표율을 얻지 못한 정당은 의석을 얻을 수 없음</div>`;
         const sortedParties = Object.keys(partySeats).sort((a, b) => {
             if (partySeats[b] === partySeats[a]) return a.localeCompare(b); // 개수가 같으면 가나다순으로 정렬
             return partySeats[b] - partySeats[a]; // 내림차순 정렬
@@ -374,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
             // 정당 정보를 유동적으로 추가
             let partiesHtml = '';
-            let otherPartiesHtml = ''; // 2% 미만 정당을 저장할 변수
+            let otherPartiesHtml = ''; // 3% 미만 정당을 저장할 변수
             
             // 정당을 득표율에 따라 정렬
             let sortedParties = Object.keys(parties).sort((a, b) => parseFloat(parties[b]) - parseFloat(parties[a]));            

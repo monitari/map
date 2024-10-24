@@ -22,6 +22,7 @@ events = alevent.events # 사건 목록
 event_impact = alevent.event_impact # 사건 영향력
 
 # 정당 추가
+super_major_parties = party.super_major_parties
 major_parties = party.major_parties
 medium_parties = party.medium_parties
 minor_parties = party.minor_parties
@@ -87,7 +88,10 @@ def logistic_function(x, L=2, k=0.05, x0=50):
     # 로지스틱 함수: x가 증가할수록 0과 L 사이의 값을 반환 (k는 기울기 조절)
     exponent = -k * (x - x0)
     exponent = min(max(exponent, -100), 100)  # 지수 함수 오버플로 방지
-    return (L / (1 + np.exp(exponent))) / 10 + 1 # 0.1 배수 + 1
+    returning = (L / (1 + np.exp(exponent))) / 10 + 1 # 0과 L 사이의 값을 1과 L 사이의 값으로 변환
+    if returning < 1.0: returning / 1.08 # 1.0보다 작은 경우 1.08를 나눔 (더 작은 값으로 조정)
+    else: returning * 1.08 # 1.0보다 큰 경우 1.08를 곱함 (더 큰 값으로 조정)
+    return returning
 
 def adjust_alignment_with_indexes(vote_shares, province_info_row, event):
     city_index = province_info_row['도시지수'] # 주별 도시 및 경제 지수를 기반으로 정당별 투표율 조정
@@ -121,7 +125,7 @@ def adjust_alignment_with_indexes(vote_shares, province_info_row, event):
 
     # 정당별 투표율에 정렬 영향 반영
     for party in vote_shares.keys():
-        all_parties = {**major_parties, **medium_parties, **minor_parties, **regional_parties}
+        all_parties = {**super_major_parties, **major_parties, **medium_parties, **minor_parties, **regional_parties}
         if party in all_parties:
             if party in regional_parties: vote_shares[party] *= 15.0 # 지역 정당의 투표율 15배 증가
             for alignment in all_parties[party]:
@@ -141,42 +145,59 @@ def calculate_vote_shares(event, state, row):
     regional_party_found = False  # 지역 정당 존재 여부 확인
     relevant_regional_parties = {}  # 해당 주의 지역 정당만 포함
 
-    for party, party_state in regional_parties.items():
+    for party, party_state in regional_parties.items(): # 해당 주의 지역 정당 찾기
         if party_state['region'].find(',') != -1:  # 여러 지역에 걸쳐 있는 경우
             regions = party_state['region'].split(', ')
             formatted_state = state.strip().lower()
             if any((region.strip() + " 주").lower() == formatted_state for region in regions):
                 regional_party_found = True
                 relevant_regional_parties[party] = party_state
-        else:
+        else: # 한 지역에 속하는 경우
             formatted_party_state = (party_state['region'] + " 주").strip().lower()
             formatted_state = state.strip().lower()
             if formatted_party_state == formatted_state:
                 regional_party_found = True
                 relevant_regional_parties[party] = party_state
 
-    if regional_party_found: # 지역 정당이 있는 경우
+    if regional_party_found and (state == "그미즈리 주"): # 그미즈리 주의 경우 지역 정당만 존재
+        reglen = len(relevant_regional_parties)
+        smajor_votes = [0.0 for _ in range(len(super_major_parties))]
+        major_votes = [0.0 for _ in range(len(major_parties))] 
+        medium_votes = [0.0 for _ in range(len(medium_parties))]
+        minor_votes = [0.0 for _ in range(len(minor_parties))]
+        
+        # 각 정당에 대해 최소 및 최대 투표율 설정
+        min_vote = 0.0
+        max_vote = 50.0
+        
+        # 랜덤한 투표율을 할당하고 합이 100이 되도록 조정
         while True:
-            ma, me, mi, reg = random.uniform(60.0, 80.0), random.uniform(20.0, 40.0), random.uniform(5.0, 25.0), random.uniform(10.0, 30.0)
-            if 90.0 < ma + me + mi + reg < 110.0: break
-        major_votes = [random.uniform(30, ma) for _ in range(len(major_parties))]
-        medium_votes = [random.uniform(0, me) for _ in range(len(medium_parties))]
-        minor_votes = [random.uniform(0, mi) for _ in range(len(minor_parties))]
-        reg_votes = [random.uniform(0, reg) for _ in range(len(relevant_regional_parties))]
+            reg_votes = [random.uniform(min_vote, max_vote) for _ in range(reglen)]
+            total_reg_votes = sum(reg_votes)
+            if 90.0 < total_reg_votes < 110.0: # 투표율 합이 100이 되도록 조정
+                reg_votes = [vote * (100 / total_reg_votes) for vote in reg_votes]
+                break
+
+    elif regional_party_found: # 지역 정당이 있는 경우
+        smajor_votes = [random.uniform(75.0, 150.0) for _ in range(len(super_major_parties))]
+        major_votes = [random.uniform(20.0, 40.0) for _ in range(len(major_parties))]
+        medium_votes = [random.uniform(2.0, 15.0) for _ in range(len(medium_parties))]
+        minor_votes = [random.uniform(0, 10.0) for _ in range(len(minor_parties))]
+        reg_votes = [random.uniform(3.0, 20.0) for _ in range(len(relevant_regional_parties))]
+            
     else: # 지역 정당이 없는 경우
-        while True:
-            ma, me, mi, reg = random.uniform(60.0, 80.0), random.uniform(20.0, 40.0), random.uniform(5.0, 25.0), 0.0
-            if 90.0 < ma + me + mi + reg < 110.0: break
-        major_votes = [random.uniform(30, ma) for _ in range(len(major_parties))]
-        medium_votes = [random.uniform(0, me) for _ in range(len(medium_parties))]
-        minor_votes = [random.uniform(0, mi) for _ in range(len(minor_parties))]
-        reg_votes = [random.uniform(0, reg) for _ in range(len(relevant_regional_parties))]
+        smajor_votes = [random.uniform(75.0, 150.0) for _ in range(len(super_major_parties))]
+        major_votes = [random.uniform(20.0, 40.0) for _ in range(len(major_parties))]
+        medium_votes = [random.uniform(2.0, 15.0) for _ in range(len(medium_parties))]
+        minor_votes = [random.uniform(0, 10.0) for _ in range(len(minor_parties))]
+        reg_votes = [random.uniform(0.0, 0.0) for _ in range(len(relevant_regional_parties))]
 
     # 정당별 투표율 할당
     vote_shares = {}
 
     # 대형 정당, 중형 정당, 소수 정당, 지역 정당 순으로 반복
     all_parties = [
+        (super_major_parties, smajor_votes),
         (major_parties, major_votes),
         (medium_parties, medium_votes),
         (minor_parties, minor_votes),
@@ -189,8 +210,9 @@ def calculate_vote_shares(event, state, row):
             total_impact = 0
             for ideology in parties[party]: 
                 total_impact += event_impact.get(event, {}).get(ideology, 1.0)
-            party_impact = total_impact / len(parties[party])
-            vote_shares[party] = round(votes[i] * party_impact, 3)
+            party_impact = total_impact / len(parties[party])  # 사건 영향력 반영
+            adjusted_vote = votes[i] * party_impact
+            vote_shares[party] = round(adjusted_vote, 3)  # 투표율 반영
             # 지역 정당 vote_shares 출력
             #if party in relevant_regional_parties:
                 #print(f"{party} 지역 정당의 투표율: {vote_shares[party]}")
@@ -285,8 +307,8 @@ def main():
 
         # 열 순서 정리
         columns_order = ['주', '행정구역', '면적', '인구', '인구밀도', '도시지수', '경제지수', '사건'] + \
-                       list(major_parties.keys()) + list(medium_parties.keys()) + list(minor_parties.keys()) + \
-                       list(regional_parties.keys()) + ['무효표', '총합']
+                        list(super_major_parties.keys()) + list(major_parties.keys()) + list(medium_parties.keys()) + \
+                       list(minor_parties.keys()) + list(regional_parties.keys()) + ['무효표', '총합']
         
         df = df[columns_order]
         df.to_excel('data/xlsx/election_result.xlsx', index=False)
