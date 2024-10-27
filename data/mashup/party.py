@@ -102,7 +102,7 @@ main_alignments = [
 # 초대형 정당
 super_major_parties = {
     '사회민주당': ['Center-left', 'Left', 'Social Democracy', 'Progressive', 'Social Justice', 'Welfare State', 'Civil Liberties'],
-    '자유민주연합': ['Center-right', 'Right', 'Conservatism', 'Market Economy', 'Republicanism', 'Nationalism', 'Authoritarianism'],
+    '자유민주연합': ['Center-right', 'Right', 'Conservatism', 'Republicanism', 'Market Economy', 'Nationalism'],
     '중앙당': ['Centrist', 'Social Democracy', 'Progressive', 'Republicanism', 'Mixed Economy', 'Civil Liberties'],
 }
 
@@ -177,13 +177,15 @@ for party, ideologies in minor_parties.items():
 # 지역 정당
 regional_parties = {
     '그미즈리 국민당': {'region': '그미즈리', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
+    '그미즈리 노동당': {'region': '그미즈리', 'ideology': ['Left', 'Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Regionalist']},
     '그미즈리 녹색당': {'region': '그미즈리', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability', 'Regionalist']},
     '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Centrist', 'Center-left', 'Progressive', 'Social Justice', 'Regionalist']},
+    '그미즈리 보수당': {'region': '그미즈리', 'ideology': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
     '그미즈리 사회당': {'region': '그미즈리', 'ideology': ['Socialism', 'Left', 'Progressive', 'Labor-rights', 'Regionalist']},
     '그미즈리 자유당': {'region': '그미즈리', 'ideology': ['Liberalism', 'Center-right', 'Progressive', 'Market Economy', 'Regionalist']},
-    #'도마니 연합': {'region': '도마니', 'ideology': ['Center-right', 'Conservatism', 'Technocratic', 'Innovation', 'Regionalist']},
+    '그미즈리 통합당': {'region': '그미즈리', 'ideology': ['Centrist', 'Center-right', 'Progressive', 'Social Justice', 'Regionalist']},
+    '그미즈리 혁신당': {'region': '그미즈리', 'ideology': ['Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Regionalist']},
     '림덴시를 위하여': {'region': '림덴시', 'ideology': ['Rural Development', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
-    #'살기좋은 안텐시': {'region': '안텐시', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Centrist', 'Left', 'Regionalist']},
     '세오어 보호당': {'region': '그라나데, 포어', 'ideology': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
     '테트라 인민당': {'region': '테트라', 'ideology': ['Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Anti-globalization', 'Regionalist']},
     '하파차의 후예': {'region': '하파차', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
@@ -195,5 +197,3 @@ for party, data in regional_parties.items():
         # if ideology not in ae.main_alignments and ideology not in ae.ideological_spectrum:
         #     raise ValueError(f"지역 정당 '{party}'의 정치 이념 '{ideology}'이 alignments_events.py에 없습니다.")
         pass
-        
-print("모든 정당의 정치 이념이 정상적으로 확인되었습니다.")

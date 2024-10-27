@@ -3,6 +3,7 @@ import numpy as np
 import re
 import pandas as pd
 import json
+import os
 
 import data.make as make
 import data.election as elect
@@ -30,8 +31,14 @@ def add_data(row):
     }
 
 def main():
-    # 이미지 경로
+    # 파일 경로 정의
     image_path = r'map\TRAYAVIYA_o.png'
+    style_path = r'data\style.css'
+    template_path = r'data\template.txt'
+    province_info_path = r'data\xlsx\province_info_all.xlsx'
+
+    # 최종 파일 경로
+    output_path = "vector_map.html"
 
     # 이미지 로드 및 확인
     image = cv2.imread(image_path)
@@ -55,7 +62,7 @@ def main():
     contours_inside = [cv2.approxPolyDP(contour, epsilon, True) for contour in contours_inside]
 
     # province_info_all.xlsx 파일에서 데이터 읽기
-    df = pd.read_excel(r"data\xlsx\province_info_all.xlsx")
+    df = pd.read_excel(province_info_path)
 
     # 데이터 처리
     province_data = {row['province']: add_data(row) for _, row in df.iterrows()}
@@ -101,11 +108,13 @@ def main():
     """
 
     # CSS 파일 불러오기
-    with open("data/style.css", "r", encoding='utf-8') as css_file:
+    with open(style_path, "r", encoding='utf-8') as css_file:
+        print(f"CSS 파일을 불러오는 중입니다: {style_path}")
         css_content = css_file.read()
 
     # HTML 템플릿 불러오기
-    with open("data/template.txt", "r", encoding='utf-8') as template_file:
+    with open(template_path, "r", encoding='utf-8') as template_file:
+        print(f"HTML 템플릿을 불러오는 중입니다: {template_path}")
         html_content = template_file.read()
 
     # SVG 컨텐츠 추가
@@ -115,12 +124,12 @@ def main():
     html_content = html_content.replace("/* CSS_CONTENT */", css_content)
 
     # 파일 저장
-    with open("vector_map.html", "w", encoding='utf-8') as file:
-        file.write(html_content)
-
-    print("SVG 맵이 생성되어 'vector_map.html' 파일로 저장되었습니다.")
+    with open(output_path, "w", encoding='utf-8') as output_file:
+        output_file.write(html_content)
+        print(f"{output_path} | SVG 맵이 생성되었습니다. Live Server를 사용하여 확인하세요.")
 
 if __name__ == "__main__":
+    os.system('cls' if os.name == 'nt' else 'clear') # 화면 지우기
     elect.main()
     make.main()
     main()

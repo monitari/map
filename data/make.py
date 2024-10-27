@@ -28,7 +28,7 @@ def calculate_rankings(province_data):
     return province_data
 
 def update_province_info(relations, input_file, election_file, output_file):
-    print("파일을 업데이트 중 . . .")
+    print(f"지역 정보를 읽고 선거 데이터를 추가합니다: {input_file}, {election_file}")
     province_data = []
 
     with open(input_file, 'r', encoding='utf-8') as file:
@@ -75,6 +75,7 @@ def update_province_info(relations, input_file, election_file, output_file):
 
     # Excel 파일로 쓰기
     df.to_excel(output_file, index=False)
+    print(f"지역 정보를 업데이트하고 {output_file}에 저장했습니다.")
 
 def main():
     province_info_file = 'data/mashup/province_info.txt'
@@ -87,7 +88,6 @@ def main():
         raise FileNotFoundError(f"{election_file} 파일을 찾을 수 없습니다.")
     
     update_province_info(province, province_info_file, election_file, output_file)
-    print("성공적으로 파일을 저장했습니다.")
 
 if __name__ == "__main__":
     main()

@@ -55,8 +55,8 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "보빈": {"Conservative": 0.88, "Progressive": 1.12},
     "라토카": {"Conservative": 1.08, "Progressive": 0.92},
     "세오고": {"Conservative": 0.90, "Progressive": 1.10},
-    "시안": {"Conservative": 0.84, "Progressive": 1.16},
-    "보어": {"Conservative": 1.09, "Progressive": 0.91},
+    "시안": {"Conservative": 1.10, "Progressive": 0.90},
+    "보어": {"Conservative": 1.21, "Progressive": 0.79},
 
     # 메세기 주
     "크라나": {"Conservative": 0.91, "Progressive": 1.09},
@@ -160,8 +160,8 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "파시벤토": {"Conservative": 0.95, "Progressive": 1.05},
     "오고이모": {"Conservative": 1.03, "Progressive": 0.97},
     "미느리오": {"Conservative": 0.92, "Progressive": 1.08},
-    "산세오": {"Conservative": 1.11, "Progressive": 0.89},
-    "아스타나": {"Conservative": 1.02, "Progressive": 0.98},
+    "산세오": {"Conservative": 1.15, "Progressive": 0.85},
+    "아스타나": {"Conservative": 1.07, "Progressive": 0.93},
     "티레니오": {"Conservative": 0.94, "Progressive": 1.06},
     "비엥고": {"Conservative": 1.12, "Progressive": 0.88},
     "아린키고": {"Conservative": 1.21, "Progressive": 0.79},
