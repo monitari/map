@@ -99,115 +99,122 @@ main_alignments = [
     'Posthumanism',  # 포스트휴머니즘
 ]
 
+# 사건 목록
 events = {
-    '자연재해': { 'impact': 0.15, 'frequency': 0.06, 'importance': 8.0, 'subtypes': ['대지진', '태풍', '홍수', '가뭄', '화산폭발'] },
-    '경제위기': { 'impact': 0.45, 'frequency': 0.08, 'importance': 9.0, 'subtypes': ['금융위기', '무역전쟁', '인플레이션', '실업률급증', '산업붕괴'] },
-    '안보위기': { 'impact': 0.30, 'frequency': 0.05, 'importance': 9.5, 'subtypes': ['전쟁위협', '테러', '사이버공격', '국경분쟁', '내전'] },
-    '사회문제': { 'impact': 0.60, 'frequency': 0.18, 'importance': 8.5, 'subtypes': ['불평등심화', '교육위기', '고령화', '저출산', '주거난'] },
-    '환경위기': { 'impact': 0.75, 'frequency': 0.14, 'importance': 8.2, 'subtypes': ['기후변화', '대기오염', '수질오염', '생태계파괴', '자원고갈'] },
-    '정치스캔들': { 'impact': 1.05, 'frequency': 0.13, 'importance': 6.5, 'subtypes': ['부패', '권력남용', '선거조작', '정보유출', '정치자금비리'] },
-    '기술혁신': { 'impact': 2.25, 'frequency': 0.18, 'importance': 7.0, 'subtypes': ['AI혁명', '우주개발', '신재생에너지', '바이오기술', '양자컴퓨팅'] },
-    '외교마찰': { 'impact': 1.20, 'frequency': 0.10, 'importance': 7.8, 'subtypes': ['국경분쟁', '국제갈등', '동맹붕괴', '국제제재', '국제사법소송'] },
-    '정상상태': { 'impact': 1.50, 'frequency': 0.24, 'importance': 5.0, 'subtypes': ['안정기', '성장기', '조정기', '전환기', '회복기'] },
-    # 추가된 이벤트
-    '의료혁신': { 'impact': 2.40, 'frequency': 0.072, 'importance': 8.5, 'subtypes': ['신약개발', '원격의료', '유전자치료', '맞춤형의학', '의료AI'] },
-    '문화현상': { 'impact': 1.80, 'frequency': 0.216, 'importance': 6.5, 'subtypes': ['대중문화열풍', '문화다양성', '예술혁신', '전통부활', '문화교류'] },
-    '교육혁신': { 'impact': 2.10, 'frequency': 0.120, 'importance': 7.8, 'subtypes': ['온라인학습', '평생교육', 'STEM교육', '국제교류', '교육평등'] },
-    '사회운동': { 'impact': 1.95, 'frequency': 0.168, 'importance': 7.0, 'subtypes': ['인권운동', '환경운동', '노동운동', '여성운동', '시민운동'] },
-    '경제호황': { 'impact': 2.55, 'frequency': 0.072, 'importance': 8.0, 'subtypes': ['경제성장', '일자리창출', '창업붐', '투자활성화', '소비증가'] },
-    '기후변화': { 'impact': 0.90, 'frequency': 0.096, 'importance': 8.2, 'subtypes': ['온난화', '해빙', '해수면 상승', '극지반응', '기후재앙'] },
-    '인구변화': { 'impact': 0.60, 'frequency': 0.072, 'importance': 8.0, 'subtypes': ['이민', '출산율 감소', '노령화', '도시화', '인구 이동'] },
-    '팬데믹': { 'impact': 1.35, 'frequency': 0.06, 'importance': 9.5, 'subtypes': ['COVID-19', '전염병 대유행', '백신 개발', '공중 보건 위기', '사회적 거리 두기'] },
+    '자연재해': { 'impact': 0.15, 'frequency': 0.06, 'importance': 8.0, 'subtypes': ['지진', '태풍', '홍수', '가뭄', '화산폭발'] },
+    '이민': { 'impact': 0.25, 'frequency': 0.08, 'importance': 7.5, 'subtypes': ['난민', '이주 노동자', '불법 이민'] },
+    '반이민': { 'impact': 0.3, 'frequency': 0.08, 'importance': 8.0, 'subtypes': ['이주자 규제', '난민 반대', '국경 통제'] },
+    '경제 불황': { 'impact': 0.4, 'frequency': 0.12, 'importance': 9.0, 'subtypes': ['실업률 증가', '물가 상승', '소득 불평등'] },
+    '사회 운동': { 'impact': 0.3, 'frequency': 0.10, 'importance': 8.5, 'subtypes': ['시위', '파업', '청년 운동'] },
+    '노동 문제': { 'impact': 0.35, 'frequency': 0.07, 'importance': 8.0, 'subtypes': ['최저임금', '근로시간', '노동 환경'] },
+    '안보 위협': { 'impact': 0.5, 'frequency': 0.05, 'importance': 9.5, 'subtypes': ['테러', '국제 갈등', '군사 공격'] },
+    '빈부격차 감소': { 'impact': 0.3, 'frequency': 0.05, 'importance': 8.2, 'subtypes': ['복지 정책 강화', '진보적 세금 정책'] },
+    '기업 성장': { 'impact': 0.4, 'frequency': 0.07, 'importance': 8.5, 'subtypes': ['혁신', '산업 성장', '투자 증가'] },
+    '국가 안보 강화': { 'impact': 0.35, 'frequency': 0.04, 'importance': 9.0, 'subtypes': ['국경 통제 강화', '군사 훈련', '방위 산업 발전'] },
+    '환경 보호': { 'impact': 0.25, 'frequency': 0.06, 'importance': 9.3, 'subtypes': ['온실가스 감축', '재생 에너지', '지속 가능성'] },
+    '사회 복지 확대': { 'impact': 0.35, 'frequency': 0.08, 'importance': 8.8, 'subtypes': ['공공 의료', '주거 지원', '교육 기회 제공'] },
+    '전통적 가치 강조': { 'impact': 0.2, 'frequency': 0.05, 'importance': 7.8, 'subtypes': ['가족 중심 정책', '종교 교육', '보수적 규범'] },
+    '소수자 권리 강화': { 'impact': 0.3, 'frequency': 0.08, 'importance': 8.7, 'subtypes': ['성소수자 권리', '인종 평등', '장애인 권리'] },
+    '경제 자유화': { 'impact': 0.4, 'frequency': 0.07, 'importance': 8.5, 'subtypes': ['자유무역 협정', '시장 규제 완화', '세금 인하'] },
+    '반세계화 운동': { 'impact': 0.3, 'frequency': 0.05, 'importance': 7.6, 'subtypes': ['무역 제한', '국가 자립성 강화', '다국적 기업 규제'] },
+    '청년 참여 증진': { 'impact': 0.25, 'frequency': 0.06, 'importance': 8.4, 'subtypes': ['정치 교육', '청년 투표율 증가', '청년 정책'] },
+    '정상': {'impact': 0.0, 'frequency': 0.20, 'importance': 10.0, 'subtypes': ['정치적 안정', '사회적 안정', '경제적 안정']},
 }
 
-# 사건 영향 (1보다 큰 값은 영향력이 높음을 의미, 1보다 작은 값은 영향력이 낮음을 의미)
+# 사건 영향
 event_impact = {
     '자연재해': {
+        'Far-left': 1.5, 'Left': 1.4, 'Center-left': 1.3, 'Centrist': 1.1, 'Center-right': 1.0, 'Right': 0.9, 'Far-right': 0.5,
         'Liberalism': 1.1, 'Republicanism': 1.0, 'Socialism': 1.4, 'Communism': 1.5, 'Anarchism': 0.7, 'Fascism': 0.5,
-        'Social Democracy': 1.3, 'Green Politics': 1.9, 'Libertarianism': 0.8, 'Capitalist': 0.9, 'Mixed Economy': 1.2, 
-        'Welfare State': 1.6, 'Market Economy': 0.8, 'Environmentalism': 1.8, 'Social Justice': 1.5, 'Labor-rights': 1.4, 
+        'Social Democracy': 1.3, 'Green Politics': 1.9, 'Libertarianism': 0.8, 'Capitalist': 0.9, 'Mixed Economy': 1.2,
+        'Welfare State': 1.6, 'Market Economy': 0.8, 'Environmentalism': 1.8, 'Social Justice': 1.5, 'Labor-rights': 1.4,
         'Civil Liberties': 1.0, 'Anti-racism': 1.2, 'Public Health': 1.0, 'Urban Development': 1.2, 'Disability Rights': 1.3
     },
-    '경제위기': {
-        'Conservatism': 1.1, 'Republicanism': 1.0, 'Socialism': 1.6, 'Communism': 1.8, 'Fascism': 0.4, 'Social Democracy': 1.5,
-        'Libertarianism': 0.6, 'Capitalist': 0.7, 'Mixed Economy': 1.1, 'Welfare State': 1.4, 'Keynesianism': 1.8, 'Innovation': 1.3,
-        'Universal Basic Income': 1.4, 'Protectionist': 1.3, 'Free-market': 1.0, 'Cooperative Economics': 1.1, 'Monetarism': 0.8
+    '이민': {
+        'Far-left': 1.2, 'Left': 1.3, 'Center-left': 1.1, 'Centrist': 1.0, 'Center-right': 0.8, 'Right': 0.6, 'Far-right': 0.5,
+        'Liberalism': 1.2, 'Conservatism': 0.6, 'Republicanism': 0.7, 'Socialism': 1.4, 'Anarchism': 1.0, 'Nationalism': 0.5,
+        'Social Justice': 1.3, 'Labor-rights': 1.1, 'Individual-rights': 1.2, 'Civil Liberties': 1.1, 'Anti-racism': 1.5
     },
-    '안보위기': {
-        'Centrist': 0.8, 'Center-left': 0.7, 'Center-right': 1.3, 'Far-left': 0.6, 'Far-right': 1.4, 'Populism': 1.5,
-        'Nationalism': 1.6, 'Authoritarianism': 1.5, 'Technocratic': 1.0, 'Civil Liberties': 0.5, 'Public Health': 1.1,
-        'Globalism': 1.2, 'Regionalist': 1.1, 'Direct Democracy': 0.9, 'Federalism': 0.6, 'Decentralization': 0.7
+    '반이민': {
+        'Far-left': 0.8, 'Left': 0.9, 'Center-left': 1.0, 'Centrist': 1.1, 'Center-right': 1.3, 'Right': 1.5, 'Far-right': 1.8,
+        'Nationalism': 1.7, 'Populism': 1.6, 'Authoritarianism': 1.5, 'Conservatism': 1.4, 'Republicanism': 1.3, 'Anti-globalization': 1.2,
     },
-    '사회문제': {
-        'Liberalism': 1.4, 'Socialism': 1.7, 'Communism': 1.6, 'Feminism': 1.8, 'LGBT Rights': 1.9, 'Anti-racism': 1.7, 
-        'Civil Liberties': 1.5, 'Social Justice': 1.6, 'Mental Health Advocacy': 1.5, 'Environmentalism': 1.8, 'Labor-rights': 1.7, 
-        'Individual-rights': 1.5, 'Religious': 1.4, 'Secularism': 1.4
+    '경제 불황': {
+        'Far-left': 1.5, 'Left': 1.4, 'Center-left': 1.3, 'Centrist': 1.1, 'Center-right': 1.0, 'Right': 0.9, 'Far-right': 0.8,
+        'Socialism': 1.6, 'Communism': 1.5, 'Libertarianism': 0.7, 'Capitalist': 1.0, 'Mixed Economy': 1.3, 'Welfare State': 1.4,
+        'Public Health': 1.2, 'Labor-rights': 1.6, 'Universal Basic Income': 1.4, 'Free-market': 0.8, 'Keynesianism': 1.5
     },
-    '환경위기': {
-        'Green Politics': 2.0, 'Environmentalism': 1.9, 'Social Democracy': 1.6, 'Socialism': 1.5, 'Liberalism': 1.4, 
-        'Climate Justice': 1.8, 'Sustainability': 1.7,
+    '사회 운동': {
+        'Far-left': 1.7, 'Left': 1.5, 'Center-left': 1.3, 'Centrist': 1.0, 'Center-right': 0.8, 'Right': 0.7, 'Far-right': 0.6,
+        'Social Justice': 1.8, 'Labor-rights': 1.5, 'Civil Liberties': 1.4, 'Environmentalism': 1.2, 'Anti-corruption': 1.3,
+        'Feminism': 1.6, 'Youth Politics': 1.4, 'Elderly Rights': 1.1
     },
-    '정치스캔들': {
-        'Populism': 1.2, 'Anti-corruption': 1.3, 'Nationalism': 0.5, 'Authoritarianism': 0.3, 'Civil Liberties': 0.4, 
-        'Social Justice': 1.1, 'Totalitarianism': 1.5, 'Decentralization': 1.2, 'Direct Democracy': 1.0, 'Federalism': 0.8, 
-        'Globalism': 1.3, 'Regionalist': 1.2,
+    '노동 문제': {
+        'Far-left': 1.6, 'Left': 1.5, 'Center-left': 1.3, 'Centrist': 1.1, 'Center-right': 0.9, 'Right': 0.8, 'Far-right': 0.7,
+        'Labor-rights': 1.9, 'Social Justice': 1.7, 'Welfare State': 1.4, 'Universal Basic Income': 1.2, 'Protectionist': 1.0,
+        'Civil Liberties': 1.1, 'Free-market': 0.7, 'Innovation': 1.3
     },
-    '기술혁신': {
-        'Libertarianism': 1.5, 'Social Democracy': 1.3, 'Technocratic': 1.8, 'Progressive': 1.6, 'Innovation': 1.9, 
-        'Artificial Intelligence Ethics': 1.4, 'Blockchain Governance': 1.7, 'Techno-progressivism': 1.6, 
-        'Posthumanism': 1.8, 'Transhumanism': 1.9, 'Post-scarcity Economics': 1.7, 'Youth Politics': 1.3, 
-        'Elderly Rights': 1.1, 'Space Exploration Advocacy': 1.5, 'Digital Rights': 1.4, 'Animal Rights': 1.2, 
-        'Civic Engagement': 1.1,
+    '안보 위협': {
+        'Far-left': 0.7, 'Left': 0.8, 'Center-left': 1.0, 'Centrist': 1.2, 'Center-right': 1.4, 'Right': 1.5, 'Far-right': 1.8,
+        'Nationalism': 1.7, 'Authoritarianism': 1.6, 'Republicanism': 1.4, 'Conservatism': 1.5, 'Militarism': 1.9,
+        'Public Health': 1.1, 'Civil Liberties': 0.8, 'Individual-rights': 0.9, 'Federalism': 1.2, 'Populism': 1.3
     },
-    '외교마찰': {
-        'Nationalism': 1.4, 'Populism': 1.3, 'Conservatism': 1.1, 'Far-right': 1.2, 'Republicanism': 1.0, 
-        'Technocratic': 1.1, 'Authoritarianism': 1.5, 'Totalitarianism': 1.6, 'Decentralization': 1.2, 
-        'Direct Democracy': 1.0, 'Federalism': 0.9, 'Globalism': 1.3, 'Regionalist': 1.2, 
-        'Interfaith Dialogue': 1.1, 'Civic Engagement': 1.1, 'Urban Development': 1.2, 'Rural Development': 1.0,
+    '빈부격차 감소': {
+        'Far-left': 1.7, 'Left': 1.5, 'Center-left': 1.4, 'Centrist': 1.2, 'Center-right': 0.9, 'Right': 0.7, 'Far-right': 0.5,
+        'Socialism': 1.6, 'Social Democracy': 1.5, 'Welfare State': 1.7, 'Social Justice': 1.8, 'Anti-racism': 1.4,
+        'Labor-rights': 1.6, 'Civil Liberties': 1.3
     },
-    '정상상태': {
-        'Centrist': 1.0, 'Liberalism': 1.1, 'Conservatism': 1.0, 'Social Democracy': 1.1, 'Green Politics': 1.2, 
-        'Libertarianism': 1.0, 'Progress': 1.2, 'Innovation': 1.0, 'Sustainability': 1.3, 'Public Health': 1.2, 
-        'Social Entrepreneurship': 1.0, 'Interfaith Dialogue': 1.0, 'Civic Engagement': 1.1,
+    '기업 성장': {
+        'Far-left': 0.6, 'Left': 0.8, 'Center-left': 1.0, 'Centrist': 1.3, 'Center-right': 1.4, 'Right': 1.5, 'Far-right': 1.6,
+        'Capitalist': 1.8, 'Free-market': 1.6, 'Libertarianism': 1.3, 'Conservatism': 1.5, 'Republicanism': 1.4, 'Innovation': 1.7
     },
-    '의료혁신': {
-        'Social Democracy': 1.6, 'Welfare State': 1.5, 'Progressive': 1.8, 'Liberalism': 1.4, 'Public Health': 1.9, 
-        'Mental Health Advocacy': 1.7, 'Disability Rights': 1.5, 'Environmentalism': 1.7, 'Civil Liberties': 1.6, 
-        'Anti-racism': 1.4, 'LGBT Rights': 1.5, 'Feminism': 1.3
+    '국가 안보 강화': {
+        'Far-left': 0.5, 'Left': 0.7, 'Center-left': 0.9, 'Centrist': 1.1, 'Center-right': 1.3, 'Right': 1.5, 'Far-right': 1.8,
+        'Nationalism': 1.8, 'Authoritarianism': 1.7, 'Militarism': 1.9, 'Republicanism': 1.4, 'Federalism': 1.2, 'Public Health': 1.1
     },
-    '문화현상': {
-        'Liberalism': 1.2, 'Feminism': 1.3, 'Environmentalism': 1.5, 'Social Justice': 1.4, 'LGBT Rights': 1.6, 
-        'Progressive': 1.5, 'Civil Liberties': 1.2, 'Public Health': 1.3, 'Anti-racism': 1.2, 'Interfaith Dialogue': 1.2, 
-        'Civic Engagement': 1.3, 'Urban Development': 1.1,
+    '환경 보호': {
+        'Far-left': 1.5, 'Left': 1.7, 'Center-left': 1.6, 'Centrist': 1.3, 'Center-right': 1.1, 'Right': 0.9, 'Far-right': 0.7,
+        'Green Politics': 1.9, 'Social Justice': 1.8, 'Environmentalism': 1.8, 'Liberalism': 1.3, 'Welfare State': 1.2,
+        'Anti-globalization': 1.1, 'Labor-rights': 1.2, 'Public Health': 1.4
     },
-    '교육혁신': {
-        'Progressive': 1.5, 'Liberalism': 1.4, 'Social Democracy': 1.6, 'Innovation': 1.3, 'Universal Basic Income': 1.2, 
-        'Youth Politics': 1.5, 'Elderly Rights': 1.1, 'Feminism': 1.2, 'LGBT Rights': 1.3, 'Anti-racism': 1.0, 
-        'Social Justice': 1.4, 'Civil Liberties': 1.3, 'Public Health': 1.2,
+    '사회 복지 확대': {
+        'Far-left': 1.6, 'Left': 1.5, 'Center-left': 1.4, 'Centrist': 1.1, 'Center-right': 1.0, 'Right': 0.9, 'Far-right': 0.5,
+        'Socialism': 1.8, 'Welfare State': 1.7, 'Social Justice': 1.6, 'Environmentalism': 1.3, 'Public Health': 1.5,
+        'Civil Liberties': 1.2, 'Labor-rights': 1.4, 'Youth Politics': 1.1
     },
-    '사회운동': {
-        'Feminism': 1.7, 'LGBT Rights': 1.8, 'Anti-racism': 1.6, 'Social Justice': 1.5, 'Civil Liberties': 1.4, 
-        'Public Health': 1.2, 'Youth Politics': 1.5, 'Elderly Rights': 1.3, 'Environmentalism': 1.6, 'Disability Rights': 1.7, 
-        'Indigenous Rights': 1.8, 'Digital Rights': 1.9, 'Animal Rights': 1.6, 'Interfaith Dialogue': 1.5, 
-        'Civic Engagement': 1.4, 'Urban Development': 1.3, 'Rural Development': 1.2
+    '전통적 가치 강조': {
+        'Far-left': 0.4, 'Left': 0.6, 'Center-left': 0.7, 'Centrist': 0.9, 'Center-right': 1.1, 'Right': 1.5, 'Far-right': 1.7,
+        'Conservatism': 1.7, 'Nationalism': 1.5, 'Fascism': 1.6, 'Authoritarianism': 1.5, 'Populism': 1.4, 'Religious_right': 1.7
     },
-    '경제호황': {
-        'Capitalist': 1.6, 'Conservatism': 1.1, 'Republicanism': 1.0, 'Libertarianism': 1.3, 'Mixed Economy': 1.4, 
-        'Social Democracy': 1.5, 'Progressive': 1.2, 'Innovation': 1.4, 'Social Justice': 1.2, 'Environmentalism': 1.1, 
-        'Sustainability': 1.3, 'Welfare State': 1.4, 'Civic Engagement': 1.1, 'Public Health': 1.2, 'Labor-rights': 1.2
+    '소수자 권리 강화': {
+        'Far-left': 1.6, 'Left': 1.5, 'Center-left': 1.4, 'Centrist': 1.1, 'Center-right': 1.0, 'Right': 0.8, 'Far-right': 0.5,
+        'Socialism': 1.5, 'Liberalism': 1.6, 'Green Politics': 1.5, 'Social Justice': 1.7, 'Civil Liberties': 1.6, 'Youth Politics': 1.4
     },
-    '기후변화': {
-        'Green Politics': 2.1, 'Environmentalism': 2.0, 'Socialism': 1.6, 'Social Democracy': 1.5, 'Progressive': 1.7, 
-        'Climate Justice': 1.8, 'Sustainability': 1.6, 'Capitalist': 0.9, 'Welfare State': 1.4, 'Public Health': 1.3,
+    '경제 자유화': {
+        'Far-left': 0.5, 'Left': 0.6, 'Center-left': 0.8, 'Centrist': 1.0, 'Center-right': 1.3, 'Right': 1.5, 'Far-right': 1.8,
+        'Capitalism': 1.8, 'Free-market': 1.7, 'Libertarianism': 1.5, 'Conservatism': 1.4, 'Republicanism': 1.2, 'Neoliberalism': 1.6
     },
-    '인구변화': {
-        'Nationalism': 1.2, 'Liberalism': 1.1, 'Feminism': 1.4, 'Social Justice': 1.3, 'Anti-racism': 1.2, 
-        'Civic Engagement': 1.4, 'Public Health': 1.0, 'Environmentalism': 1.1, 'Labor-rights': 1.2, 
-        'Direct Democracy': 1.3, 'Federalism': 1.0, 'Regionalist': 1.1, 'Youth Politics': 1.4,
+    '반세계화 운동': {
+        'Far-left': 1.3, 'Left': 1.2, 'Center-left': 1.1, 'Centrist': 1.0, 'Center-right': 0.8, 'Right': 0.7, 'Far-right': 1.5,
+        'Nationalism': 1.6, 'Populism': 1.5, 'Protectionism': 1.4, 'Socialism': 1.3, 'Fascism': 1.5, 'Labor-rights': 1.1
     },
-    '팬데믹': {
-        'Public Health': 2.0, 'Social Democracy': 1.6, 'Civil Liberties': 1.2, 'Environmentalism': 1.3, 
-        'Anti-racism': 1.1, 'Civic Engagement': 1.4, 'Mental Health Advocacy': 1.5, 'Disability Rights': 1.4,
-        'Globalism': 1.2, 'Decentralization': 1.1, 'Regionalist': 1.0
-    }
+    '청년 참여 증진': {
+        'Far-left': 1.4, 'Left': 1.3, 'Center-left': 1.2, 'Centrist': 1.1, 'Center-right': 0.9, 'Right': 0.7, 'Far-right': 0.6,
+        'Youth Politics': 1.5, 'Social Justice': 1.3, 'Civil Liberties': 1.2, 'Labor-rights': 1.4, 'Public Health': 1.1,
+        'Environmentalism': 1.3
+    },
+    '정상': {
+        'Far-left': 1.0,  # 안정된 사회적 조건을 통한 평화로운 변화 가능성
+        'Left': 1.1,  # 사회적 안정 속에서 정책 추진 가능성
+        'Center-left': 1.2,  # 일상적 상황에서 변화의 필요성 인식
+        'Centrist': 1.3,  # 사회적 안정 속에서 균형 잡힌 접근
+        'Center-right': 1.2,  # 경제적 안정성 유지
+        'Right': 1.1,  # 개인의 책임 강조, 안정적인 사회 환경
+        'Far-right': 1.0,  # 전통적 가치 유지, 안정 중시
+        'Liberalism': 1.3,  # 개인의 자유와 권리가 존중되는 사회
+        'Capitalism': 1.2,  # 경제적 성장과 안정의 조화
+        'Welfare State': 1.2,  # 복지 제도의 안정적 운영
+        'Environmentalism': 1.1,  # 환경 문제의 점진적 개선
+        'Social Justice': 1.2,  # 공정한 기회 제공을 위한 환경 조성
+    },
 }

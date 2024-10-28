@@ -8,7 +8,7 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "피에트라": {"Conservative": 0.83, "Progressive": 1.17},
     "아이리카": {"Conservative": 1.00, "Progressive": 1.00},
     "메르네": {"Conservative": 0.85, "Progressive": 1.15},
-    "츠비키": {"Conservative": 0.92, "Progressive": 1.08},
+    "츠비키": {"Conservative": 1.02, "Progressive": 0.98},
     "하르바트": {"Conservative": 1.07, "Progressive": 0.93},
 
     # 그라나데 주
@@ -59,13 +59,13 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "보어": {"Conservative": 1.21, "Progressive": 0.79},
 
     # 메세기 주
-    "크라나": {"Conservative": 0.91, "Progressive": 1.09},
-    "나다이": {"Conservative": 0.92, "Progressive": 1.08},
-    "옹피오": {"Conservative": 1.02, "Progressive": 0.98},
+    "크라나": {"Conservative": 1.03, "Progressive": 0.97},
+    "나다이": {"Conservative": 0.95, "Progressive": 1.05},
+    "옹피오": {"Conservative": 1.21, "Progressive": 0.79},
     "메세기": {"Conservative": 0.95, "Progressive": 1.05},
     "포크란": {"Conservative": 0.79, "Progressive": 1.21},
     "크레이": {"Conservative": 0.93, "Progressive": 1.07},
-    "안파기": {"Conservative": 1.04, "Progressive": 0.96},
+    "안파기": {"Conservative": 1.12, "Progressive": 0.88},
 
     # 미네바 주
     "아리나": {"Conservative": 0.79, "Progressive": 1.21},
@@ -225,6 +225,6 @@ def define_party_preference(conservative, progressive):
     center_index = list(preference_scores.keys()).index(max_preference)
     for i, key in enumerate(preference_scores.keys()):
         distance = abs(center_index - i)
-        distribution[key] = max(0.1, 1 - 0.18 * distance)  # 거리마다 0.18씩 감소
+        distribution[key] = max(0.1, 1 - 0.1 * distance) + 0.5
     
     return distribution

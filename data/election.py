@@ -28,7 +28,8 @@ medium_parties = party.medium_parties
 minor_parties = party.minor_parties
 regional_parties = party.regional_parties
 
-# 정당 선호도
+# 정당 선호도 및 이념 스펙트럼 추가
+ideological_spectrum = pp.ideological_spectrum
 party_preference_map = pp.party_preference
 
 def get_priority_event():
@@ -43,17 +44,11 @@ def calculate_population_density(province_info):
     return density
 
 def calculate_party_preference_index(province_info_row):
-    # 주 및 행정구역에 따른 개인 선호 정당 지수 계산
-    state = province_info_row['주']
+    #행정구역에 따른 개인 선호 정당 지수 계산
     district = province_info_row['행정구역']
 
     # 각 주와 행정구역에 대한 정치적 성향을 기반으로 선호 지수 설정
     preference_index = {'Conservative': 1.0, 'Progressive': 1.0}
-
-    # 주에 대한 선호 지수 반영
-    if state in party_preference_map:
-        for party, impact in party_preference_map[state].items():
-            preference_index[party] *= impact
 
     # 행정구역에 대한 선호 지수 반영
     if district in party_preference_map:
@@ -88,9 +83,14 @@ def logistic_function(x, L=2, k=0.05, x0=50):
     # 로지스틱 함수: x가 증가할수록 0과 L 사이의 값을 반환 (k는 기울기 조절)
     exponent = -k * (x - x0)
     exponent = min(max(exponent, -100), 100)  # 지수 함수 오버플로 방지
-    returning = (L / (1 + np.exp(exponent))) / 10 + 1 # 0과 L 사이의 값을 1과 L 사이의 값으로 변환
-    if returning < 1.0: returning / 2.0 # 1.0보다 작은 경우 0.5배로 나눔 (더 작은 값으로 조정)
-    else: returning * 2.0 # 1.0보다 큰 경우 2배로 곱함 (더 큰 값으로 조정)
+    returning = (L / (1 + np.exp(exponent))) / 10 + 1
+    
+    # factor: 정규 분포로 0.95 ~ 1.25 사이의 값을 랜덤하게 생성
+    factor = np.random.normal(1.1, 0.05)
+    factor = max(0.95, min(factor, 1.25))
+    
+    if returning > 1.0: returning *= factor  # 1.0을 초과하는 경우 추가 조정
+    else: returning /= factor  # 1.0을 초과하지 않는 경우 추가 조정
     return returning
 
 def adjust_alignment_with_indexes(vote_shares, province_info_row, event):
@@ -131,11 +131,9 @@ def adjust_alignment_with_indexes(vote_shares, province_info_row, event):
             for alignment in all_parties[party]:
                 if alignment in alignment_impact:
                     alignment_score = alignment_impact.get(alignment, 1.0)
-                    #print(f"{party} 정당의 정렬 {alignment}에 대한 영향: {alignment_score}")
                     vote_shares[party] *= alignment_score
                 if alignment in party_preference_index:
                     preference_score = party_preference_index.get(alignment, 1.0)
-                    #print(f"{party} 정당의 선호도 {alignment}에 대한 영향: {preference_score}")
                     vote_shares[party] *= preference_score
         else: raise ValueError(f"정당 {party}에 대한 정치 성향이 없습니다.")
     return vote_shares
@@ -165,9 +163,11 @@ def calculate_vote_shares(event, state, row):
         medium_votes = [random.uniform(2.0, 15.0) for _ in range(len(medium_parties))]
         minor_votes = [random.uniform(0, 10.0) for _ in range(len(minor_parties))]
         if state == "그미즈리 주": # 그미즈리 주의 경우
-            reg_votes = [random.uniform(0.0, 400.0) for _ in range(len(relevant_regional_parties))]
+            reg_votes = [random.uniform(800.0, 2000.0) if party == "그미즈리 국민당" or party == "그미즈리 민주당"
+                else (random.uniform(0.0, 400.0) if party == "그미즈리 녹색당" or party == "그미즈리 혁신당" or party == "그미즈리 통합당"
+                else random.uniform(0.0, 80.0)) for party in relevant_regional_parties]
         elif state == "테트라 주": # 테트라 주의 경우
-            reg_votes = [random.uniform(250.0, 500.0) for _ in range(len(relevant_regional_parties))]
+            reg_votes = [random.uniform(300.0, 600.0) for _ in range(len(relevant_regional_parties))]
         else: reg_votes = [random.uniform(5.0, 25.0) for _ in range(len(relevant_regional_parties))]
             
     else: # 지역 정당이 없는 경우
@@ -192,20 +192,17 @@ def calculate_vote_shares(event, state, row):
     # 정당별 투표율 계산 (event_impact 반영)
     for parties, votes in all_parties:
         for i, party in enumerate(parties.keys()):
-            total_impact = 0
+            total_impact = 1.0
             for ideology in parties[party]: 
-                total_impact += event_impact.get(event, {}).get(ideology, 1.0)
-            party_impact = total_impact / len(parties[party])  # 사건 영향력 반영
-            adjusted_vote = votes[i] * party_impact
+                e = event_impact.get(event, {}).get(ideology, 1.0) # 사건 영향력
+                total_impact *= e
+            if total_impact > 1.5: total_impact = 1.5
+            elif total_impact < 0.75: total_impact = 0.75
+            adjusted_vote = votes[i] * total_impact
             vote_shares[party] = round(adjusted_vote, 3)  # 투표율 반영
-            # 지역 정당 vote_shares 출력
-            #if party in relevant_regional_parties:
-                #print(f"{party} 지역 정당의 투표율: {vote_shares[party]}")
 
     # 투표율 계산 후 정당 성향 및 도시/경제 지수 반영
     vote_shares = adjust_alignment_with_indexes(vote_shares, row, event)
-
-    #print("조정된 상위 4개 정당의 투표율:", sorted(vote_shares.items(), key=lambda x: x[1], reverse=True)[:4])
 
     # 투표율이 95% 미만인 경우 조정
     total_votes = sum(vote_shares.values())

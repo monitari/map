@@ -137,12 +137,10 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         if (isDragging) {
             const dx = event.clientX - startX;
             const dy = event.clientY - startY;
-    
+
             translateX += dx;
             translateY += dy;
-    
             map.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-    
             startX = event.clientX;
             startY = event.clientY;
         }
@@ -196,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
 
         const voteGap = maxVote - secondMaxVote; 
         // 투명도 계산: 득표율 차이가 작을수록 낮은 투명도, 득표율 차이가 커야 진해짐
-        const opacity = Math.min(1, Math.max(0.1, voteGap / 10)); // 최소 0.1, 최대 1
+        const opacity = Math.min(1, Math.max(0.2, (voteGap / 20))); // 최소 0.2, 최대 1
         // 정당에 따라 기본 색상 설정, 없으면 흰색
         const baseColor = partyColors[leadingParty] || 'rgb(255, 255, 255)';
         
@@ -283,9 +281,9 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
                 }
             }
 
-            // 0.5% 미만 정당을 버리기
+            // 0.3% 미만 정당을 버리기
             for (let party in partySeats) {
-                if (partySeats[party] / totalSeats < 0.005) delete partySeats[party];
+                if (partySeats[party] / totalSeats < 0.003) delete partySeats[party];
             }
 
         // 총 의석수 계산
@@ -300,10 +298,9 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지가 로�
         Object.keys(partySeats).forEach(party => delete partySeats[party]);
         Object.assign(partySeats, adjustedPartySeats);
 
-
         // 정보 박스에 선거 결과 표시 (내림차순 정렬)
         let resultHTML = `<h3 style="margin-bottom: 5px;">선거 결과 <span style="font-size: 0.8em;">${event}</span></h3>`;
-        resultHTML += `<div style="font-size: 0.8em; margin-bottom: 5px;">0.5% 이상 득표율을 얻지 못한 정당은 의석을 얻을 수 없음</div>`;
+        resultHTML += `<div style="font-size: 0.8em; margin-bottom: 5px;">0.3% 이상 득표율을 얻지 못한 정당은 의석을 얻을 수 없음</div>`;
         const sortedParties = Object.keys(partySeats).sort((a, b) => {
             if (partySeats[b] === partySeats[a]) return a.localeCompare(b); // 개수가 같으면 가나다순으로 정렬
             return partySeats[b] - partySeats[a]; // 내림차순 정렬

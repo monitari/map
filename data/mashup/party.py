@@ -109,10 +109,10 @@ super_major_parties = {
 # 주요 대형 정당
 major_parties = {
     '개혁당': ['Liberalism', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
-    '국가를 위한 보수당': ['Nationalism', 'Right', 'Far-right', 'Conservatism', 'Traditionalism', 'Protectionist'],
+    '국가를 위한 보수당': ['Nationalism', 'Far-right', 'Conservatism', 'Traditionalism', 'Protectionist', 'Authoritarianism'],
     '노동자당': ['Left', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Welfare State', 'Socialism'],
     '좌파연합': ['Left', 'Socialism', 'Progressive', 'Labor-rights', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
-    '통합 트라야비야': ['Right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Authoritarianism'],
+    '통합 트라야비야': ['Right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist'],
 }
 
 for party, ideologies in major_parties.items():
