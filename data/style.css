@@ -37,6 +37,12 @@ html, body {
     z-index: 1000;
     font-size: 12px;
     display: none;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+#tooltip.show {
+    opacity: 1;
 }
 
 /* SVG 텍스트를 선택할 수 없게 설정 */
