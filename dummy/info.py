@@ -36,7 +36,7 @@ province_data = {}
 total_population = 0
 
 # 데이터 읽기
-with open("data/province_info.txt", "r", encoding='utf-8') as file:
+with open("data/mashup/province_info.txt", "r", encoding='utf-8') as file:
     lines = file.readlines()
     for line in lines:
         # 각 줄을 읽어서 이름, 면적, 인구로 나누기
@@ -159,3 +159,5 @@ with open("dummy/output.txt", "w", encoding='utf-8') as output_file:
                 output_file.write(f"{rank + 1}위: {pro} ({format_number(int(province_data[pro]['area']))}A) (주 : {p})\n")
 
     output_file.write("\n")
+
+print("완료되었습니다.")

@@ -115,12 +115,6 @@ major_parties = {
     '통합 트라야비야': ['Right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist'],
 }
 
-for party, ideologies in major_parties.items():
-    for ideology in ideologies:
-        # if ideology not in ae.main_alignments and ideology not in ae.ideological_spectrum:
-        #     raise ValueError(f"주요 대형 정당 '{party}'의 정치 이념 '{ideology}'이 alignments_events.py에 없습니다.")
-        pass
-
 # 중형 규모 정당
 medium_parties = {
     '기본소득당': ['Progressive', 'Social Justice', 'Welfare State', 'Universal Basic Income', 'Labor-rights'],
@@ -130,14 +124,9 @@ medium_parties = {
     '자유혁신당': ['Center-left', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
     '진보를 외치다': ['Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption', 'Globalism'],
     '청년당': ['Progressive', 'Innovation', 'Social Justice', 'Center-left', 'Civic Engagement', 'Youth Politics'],
-    '특이점이 온다': ['Technocratic', 'Innovation', 'Progressive', 'Artificial Intelligence Ethics', 'Transhumanism', 'Techno-progressivism'],
+    '특이점이 온다': ['Centrist', 'Progressive', 'Social Justice', 'Technocratic', 'Innovation', 'Digital Rights',
+                'Artificial Intelligence Ethics', 'Blockchain Governance', 'Techno-progressivism', 'Posthumanism', 'Transhumanism'],
 }
-
-for party, ideologies in medium_parties.items():
-    for ideology in ideologies:
-        # if ideology not in ae.main_alignments and ideology not in ae.ideological_spectrum:
-        #     raise ValueError(f"중형 규모 정당 '{party}'의 정치 이념 '{ideology}'이 alignments_events.py에 없습니다.")
-        pass
 
 # 소수 정당
 minor_parties = {
@@ -145,7 +134,7 @@ minor_parties = {
     '공산당': ['Socialism', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Communism'],
     '공정무역당': ['Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption', 'Globalism'],
     '국가신성당': ['Religious', 'Right', 'Traditionalism', 'Nationalism', 'Authoritarianism'],
-    '국민자유전선': ['Far-right', 'Facism', 'Nationalism', 'Conservatism', 'Traditionalism', 'Authoritarianism'],
+    '국민자유전선': ['Far-right', 'Fascism', 'Nationalism', 'Conservatism', 'Traditionalism', 'Authoritarianism'],
     '국민행동당': ['Populism', 'Right', 'Nationalism', 'Anti-corruption', 'Conservatism'],
     '균형잡힌 미래': ['Centrist', 'Center-right', 'Progressive', 'Social Justice', 'Mixed Economy'],
     '노인당': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Rural Development', 'Elderly Rights'],
@@ -168,12 +157,7 @@ minor_parties = {
     '인권정의당': ['Individual-rights', 'Social Justice', 'Progressive', 'Centrist', 'Feminism'],
 }
 
-for party, ideologies in minor_parties.items():
-    for ideology in ideologies:
-        # if ideology not in ae.main_alignments and ideology not in ae.ideological_spectrum:
-        #     raise ValueError(f"소수 정당 '{party}'의 정치 이념 '{ideology}'이 alignments_events.py에 없습니다.")
-        pass
-
+        
 # 지역 정당
 regional_parties = {
     '그미즈리 국민당': {'region': '그미즈리', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
@@ -185,15 +169,11 @@ regional_parties = {
     '그미즈리 자유당': {'region': '그미즈리', 'ideology': ['Liberalism', 'Center-right', 'Progressive', 'Market Economy', 'Regionalist']},
     '그미즈리 통합당': {'region': '그미즈리', 'ideology': ['Centrist', 'Center-right', 'Progressive', 'Social Justice', 'Regionalist']},
     '그미즈리 혁신당': {'region': '그미즈리', 'ideology': ['Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Regionalist']},
+    '도마니 연합': {'region': '도마니', 'ideology': ['Centrist', 'Center-left', 'Progressive', 'Social Justice', 'Civic Engagement', 'Regionalist']},
     '림덴시를 위하여': {'region': '림덴시', 'ideology': ['Rural Development', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
+    '살기좋은 안텐시': {'region': '안텐시', 'ideology': ['Centrist', 'Center-right', 'Progressive', 'Rural Development', 'Urban Development', 'Regionalist']},
     '세오어 보호당': {'region': '그라나데, 포어', 'ideology': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
     '테트라 인민당': {'region': '테트라', 'ideology': ['Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Anti-globalization', 'Regionalist']},
     '하파차의 후예': {'region': '하파차', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
     '하파차 민주연합': {'region': '하파차', 'ideology': ['Center-left', 'Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Regionalist']},
 }
-
-for party, data in regional_parties.items():
-    for ideology in data['ideology']:
-        # if ideology not in ae.main_alignments and ideology not in ae.ideological_spectrum:
-        #     raise ValueError(f"지역 정당 '{party}'의 정치 이념 '{ideology}'이 alignments_events.py에 없습니다.")
-        pass

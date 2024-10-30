@@ -67,21 +67,47 @@ text {
     display: none; /* 처음에는 숨김 */
 }
 
+#minimize-button {
+    position: absolute;
+    top: 7px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    color: gray;
+    z-index: 10;
+}
+
 #info-box {
     position: absolute;
-    top: 5px; /* 상단에 위치 */
-    right: 8px; /* 우측에 위치 */
-    width: 260px; /* 너비 설정 */
-    height: auto; /* 높이를 자동으로 조정 */
-    background-color: rgba(255, 255, 255, 0.8); /* 투명도 조절 */
+    top: 5px;
+    right: 8px;
+    width: 500px;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid #ccc;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-size: 12px;
-    overflow: hidden; /* 스크롤을 없앰 */
+    overflow: hidden;
+    display: none;
+    transition: width 0.3s, height 0.3s, padding 0.3s;
 }
 
-#info-box h3 {
-    font-size: 14px;
-    margin: 0 0 10px;
+#info-box.minimized {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
+
+#info-box.minimized h3,
+#info-box.minimized #info-content,
+#info-box.minimized div,
+#info-box.minimized div p {
+    display: none;
+}
+
+#info-box.minimized h3 {
+    font-size: 0; /* 최소화된 상태에서 제목 숨기기 */
 }

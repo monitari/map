@@ -1,7 +1,9 @@
+import numpy as np
+
 # 기본 이념 스펙트럼
 ideological_spectrum = ['Far-left', 'Left', 'Center-left', 'Centrist', 'Center-right', 'Right','Far-right']
 
-party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진보주의: 0.0})
+province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진보주의: 0.0})
     # 아이리카 주
     "메초오비카": {"Conservative": 1.16, "Progressive": 0.84},
     "아브레": {"Conservative": 0.86, "Progressive": 1.14},
@@ -44,10 +46,10 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
 
     # 림덴시 주
     "파미즈": {"Conservative": 0.89, "Progressive": 1.11},
-    "스피가": {"Conservative": 0.90, "Progressive": 1.10},
+    "스피가": {"Conservative": 0.95, "Progressive": 1.05},
     "아르고": {"Conservative": 0.79, "Progressive": 1.21},
     "모리고": {"Conservative": 0.78, "Progressive": 1.22},
-    "펜보드": {"Conservative": 0.97, "Progressive": 1.03},
+    "펜보드": {"Conservative": 1.00, "Progressive": 1.00},
     "메바치": {"Conservative": 0.92, "Progressive": 1.08},
     "모호카": {"Conservative": 1.20, "Progressive": 0.80},
     "린토카": {"Conservative": 1.12, "Progressive": 0.88},
@@ -99,10 +101,10 @@ party_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진�
     "마링고": {"Conservative": 1.11, "Progressive": 0.89},
 
     # 베고차 주
-    "모베이": {"Conservative": 1.02, "Progressive": 0.98},
+    "모베이": {"Conservative": 1.04, "Progressive": 0.96},
     "트롱페이": {"Conservative": 1.11, "Progressive": 0.89},
     "바티아": {"Conservative": 0.91, "Progressive": 1.09},
-    "이베이": {"Conservative": 1.03, "Progressive": 0.97},
+    "이베이": {"Conservative": 1.09, "Progressive": 0.91},
     "페린": {"Conservative": 1.12, "Progressive": 0.88},
     "리안토": {"Conservative": 0.99, "Progressive": 1.01},
     "오고소": {"Conservative": 0.94, "Progressive": 1.06},
@@ -193,24 +195,24 @@ def define_party_preference(conservative, progressive):
     }
     
     if score >= 0.6:
-        preference_scores['Far-left'] = 1 - abs(score - 0.6)
+        preference_scores['Far-left'] = 1 - (score - 0.6)
     elif score >= 0.3:
-        preference_scores['Left'] = 1 - abs(score - 0.3)
+        preference_scores['Left'] = 1 - (score - 0.3)
     elif score >= 0.1:
-        preference_scores['Center-left'] = 1 - abs(score - 0.1)
+        preference_scores['Center-left'] = 1 - (score - 0.1)
     elif score >= -0.1:
         preference_scores['Centrist'] = 1 - abs(score)
     elif score >= -0.3:
-        preference_scores['Center-right'] = 1 - abs(score + 0.1)
+        preference_scores['Center-right'] = 1 - (-0.1 - score)
     elif score >= -0.6:
-        preference_scores['Right'] = 1 - abs(score + 0.3)
+        preference_scores['Right'] = 1 - (-0.3 - score)
     else:
-        preference_scores['Far-right'] = 1 - abs(score + 0.6)
+        preference_scores['Far-right'] = 1 - (-0.6 - score)
         
     # 가장 높은 점수를 가진 성향을 찾습니다.
     max_preference = max(preference_scores, key=preference_scores.get)
     
-    # 확률 분포를 생성합니다.
+    # 정규 분포를 생성합니다.
     distribution = {
         'Far-left': 0,
         'Left': 0,
@@ -221,10 +223,15 @@ def define_party_preference(conservative, progressive):
         'Far-right': 0
     }
     
-    # 중심 성향을 기준으로 확률 분포를 만듭니다.
+    # 중심 성향을 기준으로 정규 분포를 만듭니다.
     center_index = list(preference_scores.keys()).index(max_preference)
+    x = np.arange(len(preference_scores))
+    mean = center_index
+    std_dev = 1.0  # 표준 편차를 조정하여 분포의 폭을 조절할 수 있습니다.
+    gaussian_distribution = np.exp(-0.5 * ((x - mean) / std_dev) ** 2)
+    gaussian_distribution /= gaussian_distribution.sum()  # 정규화
+    
     for i, key in enumerate(preference_scores.keys()):
-        distance = abs(center_index - i)
-        distribution[key] = max(0.1, 1 - 0.1 * distance) + 0.5
+        distribution[key] = gaussian_distribution[i] * 2 + 1 
     
     return distribution
