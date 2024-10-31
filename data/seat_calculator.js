@@ -57,13 +57,13 @@ export function calculateSeats(subdivisions) {
         }
     });
 
-    // 0.5% 미만 정당을 버리기
+    // 0.1% 미만 정당을 버리기
     for (let party in partySeats) 
-        if (partySeats[party] / percentage < 0.005) delete partySeats[party];
+        if (partySeats[party] / percentage < 0.001) delete partySeats[party];
 
     // 비례대표 의석수 계산
     const semitotalSeats = Object.values(partySeats).reduce((a, b) => a + b, 0);
-    const proportionalSeats = 1000 - subdivisions.length; // 비례대표 의석수
+    const proportionalSeats = 2000 - subdivisions.length; // 비례대표 의석수
     const proportionalPartySeats = {}; // 비례대표 의석수 저장 객체
     for (let party in partySeats) {
         const percentage = partySeats[party] / semitotalSeats;

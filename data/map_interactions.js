@@ -2,7 +2,7 @@
 
 export function initializeMapInteractions(mapContainer, map) { // 지도 상호작용 초기화
     const MIN_SCALE = 1; // 최소 확대 배율
-    const MAX_SCALE = 5; // 최대 확대 배율
+    const MAX_SCALE = 7; // 최대 확대 배율
     const SCALE_STEP = 0.2; // 확대 배율 증감량
     const TRANSITION_DURATION = '0.1s'; // 변환 효과 지속 시간
     const NO_TRANSITION = '0s'; // 변환 효과 없음

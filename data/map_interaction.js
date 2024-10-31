@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
             else if (densityMode) subdivision.style.fill = getDensityColor(population, area); // 인구 밀도 모드일 경우
             else if (electionMode && showLeadingPartyMode) subdivision.style.fill = partyColors[getLeadingParty(parties)]; // 1등 정당 표시 모드일 경우
             else if (electionMode) subdivision.style.fill = getElectionColor(parties); // 선거 결과 모드일 경우
-            else subdivision.style.fill = '#989898'; // 기본 색상
+            else subdivision.style.fill = 'rgb(200, 200, 200)'; // 그 외 회색
         });
     }
 
@@ -106,14 +106,14 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
         if (showDisplay) { // 선거 결과 표시 모드일 경우
             infoBox.style.display = 'block'; // 정보 박스 표시
             const event = subdivisions[0].getAttribute('data-events'); // 사건
-            const { finalSeats, proportionalPartySeats, localPartySeats } = calculateSeats(subdivisions); // 의석 계산 (비례대표 의석, 지역구 의석)
+            const { finalSeats, proportionalPartySeats, localPartySeats } = calculateSeats(subdivisions);
 
             let resultHTML = `
                 <button id="minimize-button" onclick="toggleMinimize()">▲</button>
                 <h3 style="margin-bottom: 5px; margin-top: -5px;">선거 결과
                 <span style="font-size: 0.8em; margin-left: 5px; color: gray; font-weight: normal;">${event}</span>
             </h3>
-            <div style="font-size: 0.8em; margin-bottom: 5px;">0.5% 이상 득표율을 얻지 못한 정당은 비례대표 의석을 받지 못합니다.</div>`;
+            <div style="font-size: 0.8em; margin-bottom: 5px;">0.1% 이상 득표율을 얻지 못한 정당은 비례대표 의석을 받지 못합니다.</div>`;
 
             const sortedParties = Object.keys(finalSeats).sort((a, b) => finalSeats[b] - finalSeats[a] || a.localeCompare(b));
             const finalTotalSeats = Object.values(finalSeats).reduce((a, b) => a + b, 0);
@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
     }
 
     function generateTooltipContent(subdivision) { // 툴팁 내용 생성 함수
+        const subname = subdivision.getAttribute('data-subname'); // 세부 이름
         const name = subdivision.getAttribute('data-name'); // 이름
         const area = subdivision.getAttribute('data-area'); // 면적
         const population = subdivision.getAttribute('data-population'); // 인구수
@@ -176,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
         const rankArea = subdivision.getAttribute('data-rank-area'); // 면적 순위
         const rankPopulation = subdivision.getAttribute('data-rank-population'); // 인구 순위
         const rankDensity = subdivision.getAttribute('data-rank-density'); // 인구 밀도 순위
-        const provinceCnt = subdivision.getAttribute('data-all-province'); // 전체 지역 수
         const events = subdivision.getAttribute('data-events'); // 사건
         const parties = JSON.parse(subdivision.getAttribute('data-parties')); // 정당별 받은 투표율
         const invalidVotes = subdivision.getAttribute('data-invalid-votes'); // 무효표
@@ -248,15 +248,15 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
 
         return `
             <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 3px; margin-left: 3px;">
-                ${name} <span style="font-size: 0.6em; color: gray;">${state}</span>
+                ${subname}<span style="font-size: 0.6em; color: gray; margin-left: 5px;">${name}, ${state} 주</span>
             </div>
             <div style="font-size: 1em; margin-left: 3px;">
                 <div>면적 | ${formatNumber(area)}A <span style="font-size: 0.8em; color: gray; 
-                margin-left: 5px;">(${rankArea} / ${provinceCnt}위)</span></div>
+                margin-left: 5px;">(${rankArea} / ${subdivisions.length}위)</span></div>
                 <div>인구 | ${formatNumber(population)}명 <span style="font-size: 0.8em; color: gray; 
-                margin-left: 5px;">(${rankPopulation} / ${provinceCnt}위)</span></div>
+                margin-left: 5px;">(${rankPopulation} / ${subdivisions.length}위)</span></div>
                 <div>인구 밀도 | ${(population / area).toFixed(3)}명/A <span style="font-size: 0.8em; color: gray; 
-                margin-left: 5px;">(${rankDensity} / ${provinceCnt}위)</span></div>
+                margin-left: 5px;">(${rankDensity} / ${subdivisions.length}위)</span></div>
                 <div style="font-size: 0.8em; color: gray; margin-top: 2px;">사건 | ${events}</span></div>
                 <div style="margin-left: 10px; margin-top: 2px;">${finalHtml}</div>
                 <div style="display: flex; margin-top: 10px; height: 20px; border: 1px solid #ccc;">

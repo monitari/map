@@ -5,6 +5,9 @@ import numpy as np
 import random
 import warnings
 
+province_info_path = 'data/mashup/province_info.txt' # 행정구역 정보 파일 경로
+election_result_path = 'data/xlsx/election_result.xlsx' # 선거 결과 파일 경로
+
 # 모듈 경로 추가
 sys.path.append(os.path.join(os.path.dirname(__file__), 'mashup'))
 
@@ -65,9 +68,8 @@ def logistic_function(x, L=2, k=0.05, x0=50): # 로지스틱 함수
     exponent = min(max(exponent, -100), 100) # 지수 범위 제한
     returning = (L / (1 + np.exp(exponent))) / 10 + 1 # 로지스틱 함수 계산
     
-    factor = np.random.normal(1.05, 0.05) # 요인 계산
-    factor = max(min(factor, 1.15), 0.95) # 요인 범위 제한 (0.95 ~ 1.15)
-    
+    factor = np.random.normal(1.1, 0.1) # 요인 (평균: 1.1, 표준편차: 0.1)
+    factor = min(max(factor, 0.9), 1.3) # 요인 범위 제한 (0.9 ~ 1.3)
     if returning > 1.0: returning *= factor # 로지스틱 함수 값 조정
     else: returning /= factor # 로지스틱 함수 값 조정
     return returning
@@ -100,7 +102,7 @@ def adjust_alignment_with_indexes(vote_shares, province_info_row): # 정렬 및 
     all_parties = {**super_major_parties, **major_parties, **medium_parties, **minor_parties, **regional_parties} # 모든 정당
     for party in vote_shares.keys():
         if party in all_parties:
-            if party in regional_parties: vote_shares[party] *= 15.0 # 지역 정당 가중치 (15배)
+            if party in regional_parties: vote_shares[party] *= 5.0 # 지역 정당의 경우 투표율 증가
             for alignment in all_parties[party]: # 정렬에 따라 정당 선호도 지수 조정
                 if alignment in alignment_impact: # 정렬이 정렬 영향도에 있는 경우
                     vote_shares[party] *= alignment_impact[alignment] # 정당 선호도 지수 조정
@@ -110,52 +112,44 @@ def adjust_alignment_with_indexes(vote_shares, province_info_row): # 정렬 및 
     return vote_shares
 
 def calculate_vote_shares(event, state, row): # 투표율 계산
-    regional_party_found = False # 지역 정당 여부
+    regional_party_found = False # 지역 정당 발견 여부
     relevant_regional_parties = {} # 관련 지역 정당
 
-    for party, party_state in regional_parties.items(): # 지역 정당 확인
+    formatted_state = state.strip().lower() # 주 이름 포맷팅
+    for party, party_state in regional_parties.items():
         regions = party_state['region'].split(', ')
-        formatted_state = state.strip().lower()
-        if any((region.strip() + " 주").lower() == formatted_state for region in regions): # 지역 정당이 있는 경우
-            regional_party_found = True # 지역 정당 여부 설정
-            relevant_regional_parties[party] = party_state # 관련 지역 정당 추가
+        if formatted_state in regions: # 주 이름이 지역 정당에 있는 경우
+            regional_party_found = True
+            relevant_regional_parties[party] = party_state
 
     state_vote_ranges = { # 주별 투표율 범위
-        "그미즈리 주": { # 그미즈리 주 투표율 범위
+        "그미즈리": {
             "그미즈리 국민당": (800.0, 2000.0), "그미즈리 민주당": (800.0, 2000.0),
             "그미즈리 녹색당": (0.0, 400.0), "그미즈리 혁신당": (0.0, 400.0), "그미즈리 통합당": (0.0, 400.0), "default": (0.0, 80.0)
         },
-        "테트라 주": (1000.0, 1500.0), "그라나데 주": (200.0, 500.0), "포어 주": (100.0, 250.0), "도마니 주": (100.0, 250.0),
-        "안텐시 주": (25.0, 100.0), "림덴시 주": (25.0, 100.0), "하파차 주": (25.0, 100.0), "default": (5.0, 50.0)
+        "테트라": (1000.0, 1500.0), "그라나데": (200.0, 500.0), "포어": (100.0, 250.0), "도마니": (100.0, 250.0),
+        "안텐시": (25.0, 100.0), "림덴시": (25.0, 100.0), "하파차": (25.0, 100.0), "default": (5.0, 50.0)
     }
 
-    if regional_party_found: # 지역 정당이 있는 경우
-        smajor_votes = [random.uniform(70.0, 250.0) for _ in range(len(super_major_parties))]
-        major_votes = [random.uniform(20.0, 50.0) for _ in range(len(major_parties))]
-        medium_votes = [random.uniform(2.0, 25.0) for _ in range(len(medium_parties))]
-        minor_votes = [random.uniform(0, 10.0) for _ in range(len(minor_parties))]
-        if state in state_vote_ranges: # 주별 투표율 범위가 있는 경우
-            if state == "그미즈리 주": # 그미즈리 주인 경우
-                reg_votes = [
-                    random.uniform(*state_vote_ranges[state].get(party, state_vote_ranges[state]["default"]))
+    if regional_party_found:
+        smajor_votes = np.random.uniform(20.0, 200.0, len(super_major_parties))
+        major_votes = np.random.uniform(20.0, 100.0, len(major_parties))
+        medium_votes = np.random.uniform(2.0, 25.0, len(medium_parties))
+        minor_votes = np.random.uniform(0, 10.0, len(minor_parties))
+        if state in state_vote_ranges: # 주 이름이 주별 투표율 범위에 있는 경우
+            if state == "그미즈리": # 그미즈리의 경우
+                reg_votes = np.array([
+                    np.random.uniform(*state_vote_ranges[state].get(party, state_vote_ranges[state]["그미즈리 국민당"]) if party in state_vote_ranges[state] else state_vote_ranges[state]["default"])
                     for party in relevant_regional_parties
-                ]
-            else: # 그외 주인 경우
-                reg_votes = [
-                    random.uniform(*state_vote_ranges[state])
-                    for _ in range(len(relevant_regional_parties))
-                ]
-        else: # 그외 주인 경우
-            reg_votes = [
-                random.uniform(*state_vote_ranges["default"])
-                for _ in range(len(relevant_regional_parties))
-            ]
+                ])
+            else: reg_votes = np.random.uniform(*state_vote_ranges[state], len(relevant_regional_parties)) # 그 외의 경우
+        else: reg_votes = np.random.uniform(*state_vote_ranges["default"], len(relevant_regional_parties)) # 기본 범위로 설정
     else: # 지역 정당이 없는 경우
-        smajor_votes = [random.uniform(75.0, 150.0) for _ in range(len(super_major_parties))]
-        major_votes = [random.uniform(20.0, 50.0) for _ in range(len(major_parties))]
-        medium_votes = [random.uniform(2.0, 25.0) for _ in range(len(medium_parties))]
-        minor_votes = [random.uniform(0, 10.0) for _ in range(len(minor_parties))]
-        reg_votes = [random.uniform(0.0, 0.0) for _ in range(len(relevant_regional_parties))]
+        smajor_votes = np.random.uniform(20.0, 200.0, len(super_major_parties))
+        major_votes = np.random.uniform(20.0, 100.0, len(major_parties))
+        medium_votes = np.random.uniform(2.0, 25.0, len(medium_parties))
+        minor_votes = np.random.uniform(0, 10.0, len(minor_parties))
+        reg_votes = np.zeros(len(relevant_regional_parties))
 
     vote_shares = {} # 투표율
     all_parties = [ # 모든 정당
@@ -165,27 +159,20 @@ def calculate_vote_shares(event, state, row): # 투표율 계산
         (minor_parties, minor_votes),
         (relevant_regional_parties, reg_votes)
     ]
-    
-    for parties, votes in all_parties: # 모든 정당에 대해
-        for i, party in enumerate(parties.keys()):
-            total_impact = 1.0 # 총 영향도
-            for ideology in parties[party]: # 정당의 정치 성향에 대해
-                e = event_impact.get(event, {}).get(ideology, 1.0) # 사건 영향도
-                total_impact *= e # 총 영향도 계산 (사건 영향도 곱하기)
-            total_impact = min(max(total_impact, 0.5), 2.0) # 총 영향도 범위 제한 (0.5 ~ 2.0)
-            vote_shares[party] = round(votes[i] * total_impact, 3)
 
+    for parties, votes in all_parties:
+        for i, party in enumerate(parties.keys()):
+            total_impact = np.prod([event_impact.get(event, {}).get(ideology, 1.0) for ideology in parties[party]])
+            total_impact = np.clip(total_impact, 0.5, 2.0) # 영향도 범위 제한
+            vote_shares[party] = round(votes[i] * total_impact, 3)
+    
     vote_shares = adjust_alignment_with_indexes(vote_shares, row) # 정렬 및 지수 조정
 
     total_votes = sum(vote_shares.values())
-    while total_votes < random.uniform(95, 98): # 투표율이 95 ~ 98% 사이가 될 때까지
-        for party in vote_shares.keys(): vote_shares[party] *= 1.001
-        total_votes = sum(vote_shares.values())
+    target_votes = np.random.uniform(95, 98) # 목표 투표율
+    adjustment_factor = target_votes / total_votes # 조정 계수
 
-    total_votes = sum(vote_shares.values())
-    while total_votes > random.uniform(95, 98): # 투표율이 95 ~ 98% 사이가 될 때까지
-        for party in vote_shares.keys(): vote_shares[party] /= 1.001
-        total_votes = sum(vote_shares.values())
+    for party in vote_shares.keys(): vote_shares[party] *= adjustment_factor # 투표율 조정
 
     return vote_shares
 
@@ -204,7 +191,8 @@ def process_data_with_indexes(province_info): # 지수를 이용한 데이터 �
         for _, row in cities.iterrows():
             result_row = { # 결과 행
                 '주': state,
-                '행정구역': row['행정구역'],
+                '행정구역': row['행정구역'].strip(),
+                '세부행정구역': row['세부행정구역'],
                 '면적': row['면적'],
                 '인구': row['인구'],
                 '인구밀도': row['인구밀도'],
@@ -228,22 +216,18 @@ def process_data_with_indexes(province_info): # 지수를 이용한 데이터 �
             sys.stdout.flush()
 
     sys.stdout.write("\r" + " " * (bar_length + 21) + "\r") # 진행 상황 초기화
-    sys.stdout.write("선거 결과 데이터 생성 완료!\n")
+    sys.stdout.write(f"선거 결과 데이터 생성 완료! {election_result_path}에 저장합니다.\n") # 선거 결과 데이터 생성 완료 메시지 출력
     sys.stdout.flush()
     return data
 
 def read_province_info(file_path): # 행정구역 정보 읽기
     try: # 파일 읽기 시도
-        province_info = pd.read_csv(file_path, sep=',', names=['행정구역', '주', '면적', '인구'])
+        province_info = pd.read_csv(file_path, sep=',', names=['세부행정구역', '행정구역', '주', '면적', '인구'])
         province_info['인구밀도'] = province_info['인구'] / province_info['면적']
-        print(f"{file_path} 파일을 성공적으로 불러왔습니다.") # 파일 불러오기 성공 메시지 출력
         return province_info
     except Exception as e: raise ValueError(f"파일을 읽는 중 오류 발생: {e}") # 파일 불러오기 실패 시 오류 메시지 출력
 
 def main(): # 메인 함수
-    province_info_path = 'data/mashup/province_info.txt' # 행정구역 정보 파일 경로
-    election_result_path = 'data/xlsx/election_result.xlsx' # 선거 결과 파일 경로
-
     province_info = read_province_info(province_info_path) # 행정구역 정보 읽기
     province_info['주'] = province_info['주'].str.strip() # 주 정보 공백 제거
 
@@ -251,13 +235,12 @@ def main(): # 메인 함수
         data = process_data_with_indexes(province_info) # 지수를 이용한 데이터 처리
         df = pd.DataFrame(data) # 데이터프레임 생성
 
-        columns_order = ['주', '행정구역', '면적', '인구', '인구밀도', '도시지수', '경제지수', '사건'] + \
+        columns_order = ['주', '행정구역', '세부행정구역', '면적', '인구', '인구밀도', '도시지수', '경제지수', '사건'] + \
                         list(super_major_parties.keys()) + list(major_parties.keys()) + list(medium_parties.keys()) + \
                        list(minor_parties.keys()) + list(regional_parties.keys()) + ['무효표', '총합']
-        
+
         df = df[columns_order]
         df.to_excel(election_result_path, index=False) # 선거 결과 저장
-        print(f"선거 결과를 {election_result_path}에 저장했습니다.")
 
 if __name__ == "__main__":
     main()
