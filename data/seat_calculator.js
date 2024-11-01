@@ -57,10 +57,6 @@ export function calculateSeats(subdivisions) {
         }
     });
 
-    // 0.1% 미만 정당을 버리기
-    for (let party in partySeats) 
-        if (partySeats[party] / percentage < 0.001) delete partySeats[party];
-
     // 비례대표 의석수 계산
     const semitotalSeats = Object.values(partySeats).reduce((a, b) => a + b, 0);
     const proportionalSeats = 2000 - subdivisions.length; // 비례대표 의석수

@@ -2,8 +2,8 @@ import { calculateSeats } from './seat_calculator.js';
 import { initializeMapInteractions } from './map_interactions.js';
 import partyColors from './mashup/party_color.js';
 
-const MIN_POP = 100000; // 최소 인구수
-const MAX_POP = 10000000; // 최대 인구수
+const MIN_POP = 20000; // 최소 인구수
+const MAX_POP = 5000000; // 최대 인구수
 const MIN_DENSITY = 1; // 최소 인구 밀도
 const MAX_DENSITY = 1000; // 최대 인구 밀도
 const MIN_OPACITY = 0.15; // 최소 투명도
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
                 <h3 style="margin-bottom: 5px; margin-top: -5px;">선거 결과
                 <span style="font-size: 0.8em; margin-left: 5px; color: gray; font-weight: normal;">${event}</span>
             </h3>
-            <div style="font-size: 0.8em; margin-bottom: 5px;">0.1% 이상 득표율을 얻지 못한 정당은 비례대표 의석을 받지 못합니다.</div>`;
+            <div style="font-size: 0.8em; margin-bottom: 5px;">비례대표 의석수는 2000석(이론적)에서 지역구 의석수를 뺀 값입니다.</div>`;
 
             const sortedParties = Object.keys(finalSeats).sort((a, b) => finalSeats[b] - finalSeats[a] || a.localeCompare(b));
             const finalTotalSeats = Object.values(finalSeats).reduce((a, b) => a + b, 0);

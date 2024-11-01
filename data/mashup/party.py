@@ -163,7 +163,7 @@ regional_parties = {
     '그미즈리 국민당': {'region': '그미즈리', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
     '그미즈리 노동당': {'region': '그미즈리', 'ideology': ['Left', 'Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Regionalist']},
     '그미즈리 녹색당': {'region': '그미즈리', 'ideology': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability', 'Regionalist']},
-    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Centrist', 'Center-left', 'Progressive', 'Social Justice', 'Regionalist']},
+    '그미즈리 민주당': {'region': '그미즈리', 'ideology': ['Center-left', 'Progressive', 'Social Justice', 'Regionalist']},
     '그미즈리 보수당': {'region': '그미즈리', 'ideology': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
     '그미즈리 사회당': {'region': '그미즈리', 'ideology': ['Socialism', 'Left', 'Progressive', 'Labor-rights', 'Regionalist']},
     '그미즈리 자유당': {'region': '그미즈리', 'ideology': ['Liberalism', 'Center-right', 'Progressive', 'Market Economy', 'Regionalist']},
