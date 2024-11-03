@@ -9,7 +9,6 @@ import sys
 import data.make as make
 import data.election as elect
 import data.mashup.province_color as pcolor
-import data.mashup.province as p
 
 # 주별 색상 정보
 province_colors = pcolor.province_colors
@@ -24,7 +23,6 @@ def add_data(row):
     ]}
     
     state = re.sub(r' 주$', '', row['province_state']).strip()
-    province = row['province']
     return {
         "subprovince": row['subprovince'],
         "province": row['province'],
@@ -166,7 +164,6 @@ def main():
 
 if __name__ == "__main__":
     os.system('cls' if os.name == 'nt' else 'clear')
-    #p.main()
     elect.main()
     make.main()
     main()

@@ -42,7 +42,6 @@ main_alignments = [
 events = {
     '자연재해': { 'impact': 0.15, 'frequency': 0.06, 'importance': 8.0, 'subtypes': ['지진', '태풍', '홍수', '가뭄', '화산폭발'] },
     '이민': { 'impact': 0.25, 'frequency': 0.08, 'importance': 7.5, 'subtypes': ['난민', '이주 노동자', '불법 이민'] },
-    '반이민': { 'impact': 0.3, 'frequency': 0.08, 'importance': 8.0, 'subtypes': ['이주자 규제', '난민 반대', '국경 통제', '강제 송환'] },
     '경제 불황': { 'impact': 0.4, 'frequency': 0.12, 'importance': 9.0, 'subtypes': ['실업률 증가', '물가 상승', '소득 불평등'] },
     '사회 운동': { 'impact': 0.3, 'frequency': 0.10, 'importance': 8.5, 'subtypes': ['시위', '파업', '청년 운동', '폭력 사태', '시민 운동'] },
     '노동 문제': { 'impact': 0.35, 'frequency': 0.07, 'importance': 8.0, 'subtypes': ['최저임금', '근로시간', '노동 환경', '노동조합'] },
@@ -71,13 +70,8 @@ event_impact = {
         'Urban Development': 1.2, 'Disability Rights': 1.3
     },
     '이민': {
-        'Far-left': 1.2, 'Left': 1.3, 'Center-left': 1.1, 'Centrist': 1.0, 'Center-right': 0.8, 'Right': 0.6, 'Far-right': 0.5,
-        'Liberalism': 1.2, 'Conservatism': 0.6, 'Republicanism': 0.7, 'Socialism': 1.4, 'Anarchism': 1.0, 'Nationalism': 0.5,
-        'Social Justice': 1.3, 'Labor-rights': 1.1, 'Individual-rights': 1.2, 'Civil Liberties': 1.1, 'Anti-racism': 1.5
-    },
-    '반이민': {
         'Far-left': 0.8, 'Left': 0.9, 'Center-left': 1.0, 'Centrist': 1.1, 'Center-right': 1.3, 'Right': 1.5, 'Far-right': 1.8,
-        'Nationalism': 1.7, 'Populism': 1.6, 'Authoritarianism': 1.5, 'Conservatism': 1.4, 'Republicanism': 1.3, 'Anti-globalization': 1.2
+        'Nationalism': 1.7, 'Populism': 1.6, 'Authoritarianism': 1.5, 'Conservatism': 1.4, 'Republicanism': 1.3, 'Anti-globalization': 1.2,
     },
     '경제 불황': {
         'Far-left': 1.5, 'Left': 1.4, 'Center-left': 1.3, 'Centrist': 1.1, 'Center-right': 1.0, 'Right': 0.9, 'Far-right': 0.8,

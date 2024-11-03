@@ -1,1 +1,2 @@
-투
+
+        subdivision_id = 0

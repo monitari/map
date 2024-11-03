@@ -42,16 +42,16 @@ def calculate_population_density(province_info): # 인구밀도 계산
     return province_info['인구'] / province_info['면적'] 
 
 def calculate_party_preference_index(province_info_row): # 정당 선호도 계산
-    district = province_info_row['행정구역'] # 행정구역
+    district = province_info_row['행정구역'].strip() # 행정구역
     preference_index = {'Conservative': 1.0, 'Progressive': 1.0} # 보수주의, 진보주의 선호도 지수 초기화
 
-    if district in province_preference: # 행정구역이 선호도 데이터에 있는 경우
+    if district in province_preference: # 선호도 데이터가 있는 경우
         for party, impact in province_preference[district].items(): # 선호도 데이터에 따라 선호도 지수 조정
             preference_index[party] *= impact # 선호도 지수 조정
 
     return pp.define_party_preference(preference_index['Conservative'], preference_index['Progressive']) # 선호도 지수 반환
 
-def calculate_indexes(province_info): # 지수 계산
+def calculate_indexes(province_info): # 도시지수, 경제지수 계산
     province_info['도시지수'] = province_info['인구밀도'] / province_info['인구밀도'].max() * 100 # 도시지수 계산
     economic_indexes = province_info.groupby('주').apply( # 경제지수 계산
         lambda x: (x['인구'].sum() / x['면적'].sum()) / (province_info['인구'].sum() / province_info['면적'].sum()) * 100
@@ -74,7 +74,7 @@ def logistic_function(x, L=2, k=0.05, x0=50): # 로지스틱 함수
     else: returning /= factor # 로지스틱 함수 값 조정
     return returning
 
-def adjust_alignment_with_indexes(vote_shares, province_info_row): # 정렬 및 지수 조정
+def adjust_alignment_with_indexes(vote_shares, province_info_row): # 도시지수, 경제지수, 정당 선호도 지수에 따라 정렬 조정
     city_index = province_info_row['도시지수'] # 도시지수
     economic_index = province_info_row['경제지수'] # 경제지수
     party_preference_index = calculate_party_preference_index(province_info_row) # 정당 선호도 지수
@@ -102,7 +102,7 @@ def adjust_alignment_with_indexes(vote_shares, province_info_row): # 정렬 및 
     all_parties = {**super_major_parties, **major_parties, **medium_parties, **minor_parties, **regional_parties} # 모든 정당
     for party in vote_shares.keys():
         if party in all_parties:
-            if party in regional_parties: vote_shares[party] *= 5.0 # 지역 정당의 경우 투표율 증가
+            if party in regional_parties: vote_shares[party] *= 10.0 # 지역 정당의 경우 투표율 증가
             for alignment in all_parties[party]: # 정렬에 따라 정당 선호도 지수 조정
                 if alignment in alignment_impact: # 정렬이 정렬 영향도에 있는 경우
                     vote_shares[party] *= alignment_impact[alignment] # 정당 선호도 지수 조정
@@ -124,11 +124,11 @@ def calculate_vote_shares(event, state, row): # 투표율 계산
 
     state_vote_ranges = { # 주별 투표율 범위
         "그미즈리": {
-            "그미즈리 국민당": (800.0, 2000.0), "그미즈리 민주당": (800.0, 2000.0),
+            "그미즈리 국민당": (1000.0, 2000.0), "그미즈리 민주당": (1000.0, 2000.0),
             "그미즈리 녹색당": (0.0, 400.0), "그미즈리 혁신당": (0.0, 400.0), "그미즈리 통합당": (0.0, 400.0), "default": (0.0, 80.0)
         },
-        "테트라": (1000.0, 1500.0), "그라나데": (200.0, 500.0), "포어": (100.0, 250.0), "도마니": (100.0, 250.0),
-        "안텐시": (25.0, 100.0), "림덴시": (25.0, 100.0), "하파차": (25.0, 100.0), "default": (5.0, 50.0)
+        "테트라": (1000.0, 1500.0), "그라나데": (200.0, 500.0), "포어": (100.0, 300.0), "도마니": (100.0, 300.0),
+        "안텐시": (25.0, 100.0), "림덴시": (25.0, 100.0), "하파차": (50.0, 250.0), "default": (5.0, 50.0)
     }
 
     if regional_party_found:
@@ -162,11 +162,10 @@ def calculate_vote_shares(event, state, row): # 투표율 계산
 
     for parties, votes in all_parties:
         for i, party in enumerate(parties.keys()):
-            total_impact = np.prod([event_impact.get(event, {}).get(ideology, 1.0) for ideology in parties[party]])
-            total_impact = np.clip(total_impact, 0.5, 2.0) # 영향도 범위 제한
+            total_impact = np.prod([event_impact.get(event, {}).get(ideology, 1.0) for ideology in parties[party]]) / 10 + 1 # 사건 영향도
             vote_shares[party] = round(votes[i] * total_impact, 3)
     
-    vote_shares = adjust_alignment_with_indexes(vote_shares, row) # 정렬 및 지수 조정
+    vote_shares = adjust_alignment_with_indexes(vote_shares, row) # 도시지수, 경제지수, 정당 선호도 지수에 따라 정렬 조정
 
     total_votes = sum(vote_shares.values())
     target_votes = np.random.uniform(95, 98) # 목표 투표율
@@ -177,7 +176,7 @@ def calculate_vote_shares(event, state, row): # 투표율 계산
     return vote_shares
 
 def process_data_with_indexes(province_info): # 지수를 이용한 데이터 처리
-    province_info = calculate_indexes(province_info) # 지수 계산
+    province_info = calculate_indexes(province_info) # 도시지수, 경제지수 계산
     data = [] # 데이터 (투표 결과)
     global_event = get_priority_event() # 우선순위 사건 선택
     global_sub_event = random.choice(events[global_event]['subtypes']) # 사건 하위 유형 선택

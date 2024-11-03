@@ -227,11 +227,11 @@ def define_party_preference(conservative, progressive):
     center_index = list(preference_scores.keys()).index(max_preference)
     x = np.arange(len(preference_scores))
     mean = center_index
-    std_dev = 1.0  # 표준 편차를 조정하여 분포의 폭을 조절할 수 있습니다.
-    gaussian_distribution = np.exp(-0.5 * ((x - mean) / std_dev) ** 2)
+    std_dev = 2.0 # 표준 편차를 조정하여 분포의 폭을 조절할 수 있습니다.
+    gaussian_distribution = np.exp(-((x - mean) ** 2) / (2 * std_dev ** 2))
     gaussian_distribution /= gaussian_distribution.sum()  # 정규화
     
     for i, key in enumerate(preference_scores.keys()):
-        distribution[key] = gaussian_distribution[i] * 2 + 1 
+        distribution[key] = gaussian_distribution[i] * 5 + 1
     
     return distribution

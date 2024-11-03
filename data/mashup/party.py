@@ -112,7 +112,7 @@ major_parties = {
     '국가를 위한 보수당': ['Nationalism', 'Far-right', 'Conservatism', 'Traditionalism', 'Protectionist', 'Authoritarianism'],
     '노동자당': ['Left', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Welfare State', 'Socialism'],
     '좌파연합': ['Left', 'Socialism', 'Progressive', 'Labor-rights', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
-    '통합 트라야비야': ['Right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist'],
+    '통합 트라야비야': ['Right', 'Conservatism', 'Nationalism', 'Market Economy', 'Authoritarianism', 'Federalism'],
 }
 
 # 중형 규모 정당

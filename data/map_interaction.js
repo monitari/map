@@ -2,10 +2,10 @@ import { calculateSeats } from './seat_calculator.js';
 import { initializeMapInteractions } from './map_interactions.js';
 import partyColors from './mashup/party_color.js';
 
-const MIN_POP = 20000; // 최소 인구수
-const MAX_POP = 5000000; // 최대 인구수
+const MIN_POP = 10000; // 최소 인구수
+const MAX_POP = 2000000; // 최대 인구수
 const MIN_DENSITY = 1; // 최소 인구 밀도
-const MAX_DENSITY = 1000; // 최대 인구 밀도
+const MAX_DENSITY = 5000; // 최대 인구 밀도
 const MIN_OPACITY = 0.15; // 최소 투명도
 const MAX_OPACITY = 1; // 최대 투명도
 const VOTE_GAP_DIVISOR = 30; // 표차 비율
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
             </div>`; // 툴팁 내용 반환
     }
 
-    function handleMouseEnter(event) {
+    function handleMouseEnter(event) { // 마우스가 들어왔을 때 실행되는 함수
         const subdivision = event.currentTarget;
         tooltip.innerHTML = generateTooltipContent(subdivision);
     
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
         tooltip.classList.add('show'); // 애니메이션 클래스 추가
     
         subdivision.style.stroke = 'yellow';
-        subdivision.style.strokeWidth = '5px';
+        subdivision.style.strokeWidth = '3px';
     }
 
     function handleMouseMove(event) { // 마우스가 움직일 때 실행되는 함수
