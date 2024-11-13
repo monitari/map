@@ -1,5 +1,5 @@
 # data/province_info.txt에서 데이터를 읽는다.
-# 각 행은 이름, 면적, 인구로 구성되어 있다.
+# 각 행은 세부행정구역, 행정구역, 주, 면적, 인구로 구성되어 있다.
 # 인구의 총 합을 계산하고, 각 행정구역의 인구 비율을 계산하고 출력
 
 # 숫자를 출력할 때 억, 만 단위로 표시하는 함수 (예: 1234567 -> 123만 4567)
@@ -39,9 +39,9 @@ total_population = 0
 with open("data/mashup/province_info.txt", "r", encoding='utf-8') as file:
     lines = file.readlines()
     for line in lines:
-        # 각 줄을 읽어서 이름, 면적, 인구로 나누기
-        name, state, area, population = line.strip().split(", ")
-        province_data[name] = {"area": area.strip(), "population": population.strip()}
+        # 각 줄을 읽어서 세부행정구역, 행정구역, 주, 면적, 인구로 나누기
+        sub_region, name, state, area, population = line.strip().split(", ")
+        province_data[sub_region] = {"name": name.strip(), "state": state.strip(), "area": area.strip(), "population": population.strip()}
         total_population += int(population)
 
 # 결과를 파일에 쓰기
@@ -57,13 +57,21 @@ with open("dummy/output.txt", "w", encoding='utf-8') as output_file:
     
     output_file.write("-" * 128 + "\n")
 
-    # 각 주에 대해 반복하며 데이터 출력
+   # 각 주에 대해 반복하며 데이터 출력
     for pro in province:
         output_file.write(f"{pro} 주의 행정구역 수: {len(province[pro])}개\n")
-        output_file.write(f"{pro} 주의 면적: " + format_number(sum([int(province_data[p]['area']) for p in province[pro]])) + "A\n")
-        output_file.write(f"{pro} 주의 인구: " + format_number(sum([int(province_data[p]['population']) for p in province[pro]])) + "명\n")
-        output_file.write(f"{pro} 주의 인구 밀도: {sum([int(province_data[p]['population']) for p in province[pro]]) / sum([int(province_data[p]['area']) for p in province[pro]]):.2f}명/A\n")
-        output_file.write(f"{pro} 주의 전체 대비 인구 비율: {sum([int(province_data[p]['population']) for p in province[pro]]) / total_population:.2%}\n\n")
+        total_area = sum([int(province_data[p]['area']) for p in province[pro] if p in province_data])
+        total_population_pro = sum([int(province_data[p]['population']) for p in province[pro] if p in province_data])
+        
+        output_file.write(f"{pro} 주의 면적: " + format_number(total_area) + "A\n")
+        output_file.write(f"{pro} 주의 인구: " + format_number(total_population_pro) + "명\n")
+        
+        if total_area > 0:
+            output_file.write(f"{pro} 주의 인구 밀도: {total_population_pro / total_area:.2f}명/A\n")
+        else:
+            output_file.write(f"{pro} 주의 인구 밀도: 계산 불가 (면적이 0)\n")
+        
+        output_file.write(f"{pro} 주의 전체 대비 인구 비율: {total_population_pro / total_population:.2%}\n\n")
 
     output_file.write("-" * 128 + "\n")
 
@@ -75,14 +83,14 @@ with open("dummy/output.txt", "w", encoding='utf-8') as output_file:
     output_file.write(f"총 인구 밀도: {total_population / sum([int(province_data[p]['area']) for p in province_data]):.2f}명/A\n\n")
 
     # 주 정보 (인구가 가장 많은 주, 가장 적은 주, 인구 밀도가 가장 높은 주, 낮은 주)
-    max_population = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]))
-    max_population_num = sum([int(province_data[p]['population']) for p in province[max_population]])
-    min_population = min(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]))
-    min_population_num = sum([int(province_data[p]['population']) for p in province[min_population]])
-    max_density = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]) / sum([int(province_data[p]['area']) for p in province[x]]))
-    max_density_ratio = sum([int(province_data[p]['population']) for p in province[max_density]]) / sum([int(province_data[p]['area']) for p in province[max_density]])
-    min_density = min(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]) / sum([int(province_data[p]['area']) for p in province[x]]))
-    min_density_ratio = sum([int(province_data[p]['population']) for p in province[min_density]]) / sum([int(province_data[p]['area']) for p in province[min_density]])
+    max_population = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]))
+    max_population_num = sum([int(province_data[p]['population']) for p in province[max_population] if p in province_data])
+    min_population = min(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]))
+    min_population_num = sum([int(province_data[p]['population']) for p in province[min_population] if p in province_data])
+    max_density = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[x] if p in province_data]))
+    max_density_ratio = sum([int(province_data[p]['population']) for p in province[max_density] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[max_density] if p in province_data])
+    min_density = min(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[x] if p in province_data]))
+    min_density_ratio = sum([int(province_data[p]['population']) for p in province[min_density] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[min_density] if p in province_data])
 
     output_file.write(f"인구가 가장 많은 주: {max_population} ({format_number(max_population_num)}명)\n")
     output_file.write(f"인구가 가장 적은 주: {min_population} ({format_number(min_population_num)}명)\n")
@@ -107,18 +115,18 @@ with open("dummy/output.txt", "w", encoding='utf-8') as output_file:
     output_file.write("-" * 128 + "\n")
 
     # 주별 인구 순위
-    population_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]), reverse=True)
+    population_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]), reverse=True)
     output_file.write("\n주별 인구 순위\n")
     for rank, pro in enumerate(population_rank):
-        output_file.write(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['population']) for p in province[pro]]))}명)\n")
+        output_file.write(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['population']) for p in province[pro] if p in province_data]))}명)\n")
 
     output_file.write("\n")
 
     # 주별 인구 밀도 순위
-    density_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x]]) / sum([int(province_data[p]['area']) for p in province[x]]), reverse=True)
+    density_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[x] if p in province_data]), reverse=True)
     output_file.write("주별 인구 밀도 순위\n")
     for rank, pro in enumerate(density_rank):
-        output_file.write(f"{rank + 1}위: {pro} ({sum([int(province_data[p]['population']) for p in province[pro]]) / sum([int(province_data[p]['area']) for p in province[pro]]):>6.2f}명/A)\n")
+        output_file.write(f"{rank + 1}위: {pro} ({sum([int(province_data[p]['population']) for p in province[pro] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[pro] if p in province_data]):>6.2f}명/A)\n")
 
     output_file.write("\n")
 
@@ -143,10 +151,10 @@ with open("dummy/output.txt", "w", encoding='utf-8') as output_file:
     output_file.write("\n")
 
     # 주별 면적 순위
-    area_rank = sorted(province, key=lambda x: sum([int(province_data[p]['area']) for p in province[x]]), reverse=True)
+    area_rank = sorted(province, key=lambda x: sum([int(province_data[p]['area']) for p in province[x] if p in province_data]), reverse=True)
     output_file.write("주별 면적 순위\n")
     for rank, pro in enumerate(area_rank):
-        output_file.write(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['area']) for p in province[pro]]))}A)\n")
+        output_file.write(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['area']) for p in province[pro] if p in province_data]))}A)\n")
     
     output_file.write("\n")
 

@@ -11,7 +11,7 @@ import data.election as elect
 import data.mashup.province_color as pcolor
 
 # 주별 색상 정보
-province_colors = pcolor.province_colors
+province_colors = {key: [int(value[i:i+2], 16) for i in (5, 3, 1)] for key, value in pcolor.province_colors.items()}
 
 def hex_to_bgr(hex_color):
     return [int(hex_color[i:i+2], 16) for i in (5, 3, 1)]
@@ -52,58 +52,50 @@ def main():
     # 이미지 로드 및 확인
     image = cv2.imread(image_path)
     if image is None:
-        raise FileNotFoundError(f"이미지를 불러오지 못했습니다: {image_path}")
+        raise FileNotFoundError(f"이미지가 없는데요? {image_path} 🖼️🚫 어딨니, 내 사랑스러운 이미지야? 😢")
+    else:
+        sys.stdout.write(f"이미지를 불러왔어요: {image_path} 🖼️👍 이미지를 분석하고 있어요! 🔍\n")
+        sys.stdout.flush()
 
     # province_info_all.xlsx 파일에서 데이터 읽기
     df = pd.read_excel(province_info_path)
 
-    # 바 초기화
+    # 진행 상황 표시 바 초기화
     total_rows = len(df)
-    processed_rows = 0
     bar_length = 40
 
+    # province_data 생성
     province_data = {}
-    for _, row in df.iterrows():
+    for i, (index, row) in enumerate(df.iterrows()):
         province_data[row['subprovince']] = add_data(row)
-        processed_rows += 1
-        progress = processed_rows / total_rows
-        block = int(bar_length * progress)
-        bar = '█' * block + '-' * (bar_length - block)
-        sys.stdout.write(f"\r진행 상황: [{bar}] {processed_rows}/{total_rows}")
-        sys.stdout.flush()
+        
+        # 진행 상황 표시 바 업데이트
+        if (i + 1) % 10 == 0 or (i + 1) == total_rows:
+            progress = (i + 1) / total_rows
+            bar = '█' * int(bar_length * progress) + '-' * (bar_length - int(bar_length * progress))
+            sys.stdout.write(f"\r데이터를 처리중: [{bar}] {i + 1}/{total_rows} - 거북이가 빨리 달려가고 있어요! 🐢💨")
+            sys.stdout.flush()
 
-    sys.stdout.write("\r" + " " * (bar_length + 21) + "\r")
-    sys.stdout.write("데이터를 처리했습니다. SVG 맵을 생성합니다.\n")
+    sys.stdout.write("\r" + " " * (bar_length + 70) + "\r")
+    sys.stdout.write("이제 SVG 요소를 생성하고 있어요! 🧙✨")
     sys.stdout.flush()
-
+    
     # SVG 요소 초기화
     svg_elements = []
 
-    # 바 초기화
-    processed_rows = 0
-    total_rows = len(province_colors)
-    bar_length = 40
-
     # 색상 정의 및 범위 설정
-    for key, value in province_colors.items():
-        province_colors[key] = hex_to_bgr(value)        
+    for key, bgr_color in province_colors.items():
         tolerance = 0
-        lower_bound = [max(c - tolerance, 0) for c in province_colors[key]]
-        upper_bound = [min(c + tolerance, 255) for c in province_colors[key]]
+        lower_bound = [max(c - tolerance, 0) for c in bgr_color]
+        upper_bound = [min(c + tolerance, 255) for c in bgr_color]
         inside_mask = cv2.inRange(image, np.array(lower_bound, dtype=np.uint8), np.array(upper_bound, dtype=np.uint8))
 
         # 컨투어 추출 및 단순화
         contours_inside, _ = cv2.findContours(inside_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         if not contours_inside:
-            print(f"컨투어를 찾을 수 없습니다: {key}")
-            continue
-
-        progress = processed_rows / total_rows
-        bar = '█' * int(bar_length * progress) + '-' * (bar_length - int(bar_length * progress))
-        sys.stdout.write(f"\r진행 상황: [{bar}] {processed_rows}/{total_rows}")
-        sys.stdout.flush()
-
+            raise ValueError(f"컨투어가 어디 갔죠? {key} 주가 숨바꼭질 중인가 봐요! 🙈")
+        
         # 주별 SVG 요소 생성
         province_svg_elements = []
         subdivision_id = 0
@@ -131,11 +123,9 @@ def main():
         </svg>
         """
         svg_elements.append(province_svg_content)
-        processed_rows += 1
 
-    sys.stdout.write("\r" + " " * (bar_length + 21) + "\r")
-    sys.stdout.write(f"SVG 요소를 생성했습니다. HTML 파일을 작성합니다.\n")
-    sys.stdout.flush()
+    sys.stdout.write("\r" + " " * 100 + "\r")
+    sys.stdout.write("이제 HTML 파일을 생성하고 있어요! 🧙✨\n")
 
     # 전체 SVG 컨텐츠 생성
     svg_content = f"""
@@ -160,7 +150,7 @@ def main():
     # 파일 저장
     with open(output_path, "w", encoding='utf-8') as output_file:
         output_file.write(html_content)
-        print(f"{output_path} | SVG 맵이 생성되었습니다. Live Server를 사용하여 확인하세요.")
+        print(f"{output_path} 맵이 생성되었어요. 이제 지도를 탐험할 시간입니다! 🗺️🔍")
 
 if __name__ == "__main__":
     os.system('cls' if os.name == 'nt' else 'clear')

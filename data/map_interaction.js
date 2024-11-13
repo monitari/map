@@ -2,13 +2,14 @@ import { calculateSeats } from './seat_calculator.js';
 import { initializeMapInteractions } from './map_interactions.js';
 import partyColors from './mashup/party_color.js';
 
-const MIN_POP = 10000; // 최소 인구수
-const MAX_POP = 2000000; // 최대 인구수
+const MIN_POP = 50000; // 최소 인구수
+const MAX_POP = 3000000; // 최대 인구수
 const MIN_DENSITY = 1; // 최소 인구 밀도
 const MAX_DENSITY = 5000; // 최대 인구 밀도
 const MIN_OPACITY = 0.15; // 최소 투명도
 const MAX_OPACITY = 1; // 최대 투명도
-const VOTE_GAP_DIVISOR = 30; // 표차 비율
+const VOTE_GAP_DIVISOR = 40; // 표차 비율
+const MINVOTE = 1; // 기타 정당 득표율 최소값
 
 window.toggleMinimize = function () { // 최소화 버튼 클릭 시 실행되는 함수
     const infoBox = document.getElementById('info-box');
@@ -106,19 +107,20 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
         if (showDisplay) { // 선거 결과 표시 모드일 경우
             infoBox.style.display = 'block'; // 정보 박스 표시
             const event = subdivisions[0].getAttribute('data-events'); // 사건
-            const { finalSeats, proportionalPartySeats, localPartySeats } = calculateSeats(subdivisions);
+            const { SEAT, PER, finalSeats, proportionalPartySeats, localPartySeats } = calculateSeats(subdivisions);
+
+            const sortedParties = Object.keys(finalSeats).sort((a, b) => finalSeats[b] - finalSeats[a] || a.localeCompare(b));
+            const finalTotalSeats = Object.values(finalSeats).reduce((a, b) => a + b, 0);
+            const totalProportionalSeats = Object.values(proportionalPartySeats).reduce((a, b) => a + b, 0);
+            const totalLocalSeats = Object.values(localPartySeats).reduce((a, b) => a + b, 0);
 
             let resultHTML = `
                 <button id="minimize-button" onclick="toggleMinimize()">▲</button>
                 <h3 style="margin-bottom: 5px; margin-top: -5px;">선거 결과
                 <span style="font-size: 0.8em; margin-left: 5px; color: gray; font-weight: normal;">${event}</span>
             </h3>
-            <div style="font-size: 0.8em; margin-bottom: 5px;">비례대표 의석수는 2000석(이론적)에서 지역구 의석수를 뺀 값입니다.</div>`;
-
-            const sortedParties = Object.keys(finalSeats).sort((a, b) => finalSeats[b] - finalSeats[a] || a.localeCompare(b));
-            const finalTotalSeats = Object.values(finalSeats).reduce((a, b) => a + b, 0);
-            const totalProportionalSeats = Object.values(proportionalPartySeats).reduce((a, b) => a + b, 0);
-            const totalLocalSeats = Object.values(localPartySeats).reduce((a, b) => a + b, 0);
+            <div style="font-size: 0.8em; margin-bottom: 5px;">비례대표 의석수는 전체 ${SEAT}석에서 지역구 의석수를 제외한 
+            ${SEAT-totalLocalSeats}석(이론치) 중에서 ${PER * 100}% 이상을 받은 정당에게 배분됩니다.</div>`;
 
             sortedParties.forEach(party => { // 정당별 의석수 표시
                 const colorBox = `<span style="display:inline-block;width:10px;height:10px;background-color:${partyColors[party]};margin-right:3px;"></span>`;
@@ -127,14 +129,14 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
                     <div style="display: flex; align-items: center; margin: 3px 0;">
                         <p style="line-height: 1.2; margin: 0; flex-grow: 1;">
                             ${colorBox}${party} ${finalSeats[party]}석
-                            <span style="font-size: 0.7em;">${percentage}% (비례 ${proportionalPartySeats[party] || 0} | 지역구 ${localPartySeats[party] || 0})</span>
+                            <span style="font-size: 0.7em;">${percentage}% (${proportionalPartySeats[party] || 0} + ${localPartySeats[party] || 0})</span>
                         </p>
                         <div style="background-color: ${partyColors[party]}; height: 10px; width: ${percentage}%;"></div>
                     </div>`;
             });
 
             resultHTML += `<p style="font-weight:bold; margin-top: 5px; margin-bottom: 2px; font-size: 1.2em;">
-                            ${finalTotalSeats}석 <span style="font-size: 1em;">(비례 ${totalProportionalSeats}석 | 지역구 ${totalLocalSeats}석)</span></p>`;
+                            ${finalTotalSeats}석 <span style="font-size: 1em;">(비례 ${totalProportionalSeats}석 + 지역구 ${totalLocalSeats}석)</span></p>`;
             infoBox.innerHTML = resultHTML; // 정보 박스에 선거 결과 표시
         } 
         else infoBox.style.display = 'none'; // 선거 결과 표시 모드가 아닐 경우 정보 박스 숨김
@@ -192,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
             const color = partyColors[party] || 'rgb(200, 200, 200)'; // 정당 색상 (없을 경우 회색)
 
             if (isNaN(value)) return; // 득표율이 숫자가 아닐 경우
-            if (value < 1.0) otherParties.push({ party, value }); // 기타 정당에 추가 (정당별 득표율 1% 미만)
+            if (value < MINVOTE) otherParties.push({ party, value }); // 기타 정당에 추가 (정당별 득표율 1% 미만)
             else {
                 if (counter % 3 === 0) partiesHtml += '<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">';
                 partiesHtml += `
@@ -214,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
                                 text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px 0 5px; font-size: 12px;">
                         <div style="width: 12px; height: 12px; background-color: rgb(200, 200, 200); margin-right: 5px; flex-shrink: 0;"></div>
-                        기타<span style="color: gray; margin-left: 5px;">${otherPartiesSum.toFixed(3)}% (1% 미만)</span>
+                        기타<span style="color: gray; margin-left: 5px;">${otherPartiesSum.toFixed(3)}% (${MINVOTE}% 미만)</span>
                     </div>
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
                                 text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px 0 5px; font-size: 12px;">
@@ -232,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () { // DOM(Document Obje
             const value = parseFloat(parties[party]); // 득표율
             const color = partyColors[party] || 'rgb(200, 200, 200)'; // 정당 색상 (없을 경우 회색)
 
-            if (isNaN(value) || value < 1.0) return; // 득표율이 숫자가 아니거나 1% 미만일 경우
+            if (isNaN(value) || value < MINVOTE) return; // 득표율이 숫자가 아니거나 1% 미만일 경우
             barHtml += `<div style="background-color: ${color}; height: 20px; width: ${value}%;"></div>`; // 막대 추가
             cumulativePercentage += value; // 누적 비율 증가
         });

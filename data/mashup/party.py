@@ -108,41 +108,41 @@ super_major_parties = {
 
 # 주요 대형 정당
 major_parties = {
-    '개혁당': ['Liberalism', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
     '국가를 위한 보수당': ['Nationalism', 'Far-right', 'Conservatism', 'Traditionalism', 'Protectionist', 'Authoritarianism'],
-    '노동자당': ['Left', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Welfare State', 'Socialism'],
+    '녹색당': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability', 'Animal Rights', 'Climate Justice'],
+    '만국의 노동자여!': ['Left', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Welfare State', 'Socialism'],
     '좌파연합': ['Left', 'Socialism', 'Progressive', 'Labor-rights', 'Social Justice', 'Environmentalism', 'Anti-corruption'],
     '통합 트라야비야': ['Right', 'Conservatism', 'Nationalism', 'Market Economy', 'Authoritarianism', 'Federalism'],
 }
 
 # 중형 규모 정당
 medium_parties = {
+    'LGBT 평등당': ['LGBT Rights', 'Social Justice', 'Progressive', 'Civil Liberties', 'Feminism', 'Gender Equality'],
+    '개혁': ['Liberalism', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
     '기본소득당': ['Progressive', 'Social Justice', 'Welfare State', 'Universal Basic Income', 'Labor-rights'],
-    '녹색당': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability', 'Animal Rights', 'Climate Justice'],
+    '농민당': ['Rural Development', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist'],
     '시민이 모였다!': ['Centrist', 'Anti-corruption', 'Progressive', 'Social Justice', 'Direct Democracy', 'Civic Engagement'],
-    '연방공화당': ['Republicanism', 'Conservatism', 'Right', 'Nationalism', 'Protectionist', 'Authoritarianism'],
-    '자유혁신당': ['Center-left', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
     '진보를 외치다': ['Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption', 'Globalism'],
     '청년당': ['Progressive', 'Innovation', 'Social Justice', 'Center-left', 'Civic Engagement', 'Youth Politics'],
-    '특이점이 온다': ['Centrist', 'Progressive', 'Social Justice', 'Technocratic', 'Innovation', 'Digital Rights',
-                'Artificial Intelligence Ethics', 'Blockchain Governance', 'Techno-progressivism', 'Posthumanism', 'Transhumanism'],
+    '트라야비야 연방공화당': ['Republicanism', 'Conservatism', 'Right', 'Nationalism', 'Protectionist', 'Authoritarianism'],
+    '특이점이 온다': ['Centrist', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights', 'Transhumanism',
+                'Post-scarcity Economics', 'Space Exploration Advocacy', 'Artificial Intelligence Ethics', 'Blockchain Governance',
+                'Techno-progressivism', 'Posthumanism', 'Urban Development'],
 }
 
 # 소수 정당
 minor_parties = {
-    'LGBT 평등당': ['LGBT Rights', 'Social Justice', 'Progressive', 'Civil Liberties', 'Feminism'],
     '공산당': ['Socialism', 'Far-left', 'Labor-rights', 'Social Justice', 'Progressive', 'Communism'],
     '공정무역당': ['Progressive', 'Social Justice', 'Environmentalism', 'Anti-corruption', 'Globalism'],
     '국가신성당': ['Religious', 'Right', 'Traditionalism', 'Nationalism', 'Authoritarianism'],
-    '국민자유전선': ['Far-right', 'Fascism', 'Nationalism', 'Conservatism', 'Traditionalism', 'Authoritarianism'],
     '국민행동당': ['Populism', 'Right', 'Nationalism', 'Anti-corruption', 'Conservatism'],
     '균형잡힌 미래': ['Centrist', 'Center-right', 'Progressive', 'Social Justice', 'Mixed Economy'],
     '노인당': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Rural Development', 'Elderly Rights'],
-    '농민당': ['Rural Development', 'Right', 'Protectionist', 'Conservatism', 'Nationalism'],
     '단결하는 신앙당': ['Religious', 'Traditionalism', 'Nationalism', 'Far-right', 'Conservatism', 'Authoritarianism'],
     '디지털 권리당': ['Digital Rights', 'Privacy Rights', 'Technocratic', 'Progressive', 'Civil Liberties'],
     '자연보호당': ['Environmentalism', 'Progressive', 'Social Justice', 'Left', 'Sustainability'],
-    '미래당': ['Technocratic', 'Innovation', 'Progressive', 'Environmentalism', 'Globalism'],
+    '자유혁신당': ['Center-left', 'Progressive', 'Innovation', 'Technocratic', 'Social Justice', 'Digital Rights'],
+    '미래?': ['Technocratic', 'Innovation', 'Progressive', 'Environmentalism', 'Globalism'],
     '민주시민모임': ['Center-left', 'Progressive', 'Social Justice', 'Environmentalism', 'Direct Democracy', 'Civic Engagement'],
     '보호하라!': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Authoritarianism'],
     '복지추구당': ['Welfare State', 'Social Justice', 'Progressive', 'Labor-rights', 'Universal Basic Income'],
@@ -150,13 +150,13 @@ minor_parties = {
     '생명당': ['Environmentalism', 'Progressive', 'Social Justice', 'Centrist', 'Civil Liberties'],
     '전사회당': ['Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Anti-globalization'],
     '정의': ['Social Justice', 'Left', 'Progressive', 'Environmentalism', 'Anti-corruption'],
+    '트라야비야 국민전선': ['Far-right', 'Fascism', 'Nationalism', 'Conservatism', 'Traditionalism', 'Authoritarianism'],
     '통일당': ['Pacifism', 'Centrist', 'Nationalism', 'Progressive', 'Social Justice'],
     '평화': ['Pacifism', 'Environmentalism', 'Social Justice', 'Progressive', 'Civic Engagement'],
     '우리는 안정을 추구한다': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Nationalism'],
     '우리는 페미니스트': ['Feminism', 'Left', 'Far-left', 'Feminism', 'Social Justice', 'Gender Equality', 'Progressive'],
     '인권정의당': ['Individual-rights', 'Social Justice', 'Progressive', 'Centrist', 'Feminism'],
 }
-
         
 # 지역 정당
 regional_parties = {
@@ -174,6 +174,7 @@ regional_parties = {
     '살기좋은 안텐시': {'region': '안텐시', 'ideology': ['Centrist', 'Center-right', 'Progressive', 'Rural Development', 'Urban Development', 'Regionalist']},
     '세오어 보호당': {'region': '그라나데, 포어', 'ideology': ['Far-right', 'Nationalism', 'Conservatism', 'Traditionalism', 'Protectionist', 'Regionalist']},
     '테트라 인민당': {'region': '테트라', 'ideology': ['Far-left', 'Socialism', 'Progressive', 'Labor-rights', 'Anti-globalization', 'Regionalist']},
+    '하파차 자유시민': {'region': '하파차', 'ideology': ['Liberalism', 'Center-right', 'Progressive', 'Market Economy', 'Regionalist']},
     '하파차의 후예': {'region': '하파차', 'ideology': ['Conservatism', 'Traditionalism', 'Right', 'Protectionist', 'Regionalist']},
     '하파차 민주연합': {'region': '하파차', 'ideology': ['Center-left', 'Left', 'Progressive', 'Social Justice', 'Environmentalism', 'Regionalist']},
 }

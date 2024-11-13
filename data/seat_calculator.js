@@ -1,78 +1,63 @@
 // seat_calculator.js (의석수 계산)
 
 export function calculateSeats(subdivisions) {
-    const results = {}; // 선거 결과 저장 객체
-    let percentage = 0; // 득표 퍼센테이지
+    const SEAT = 1500; // 총 의석수 (지역구 의석수 + 비례대표 의석수)
+    const PER = 0.002; // 득표 퍼센티지 기준
+    const totalPartyVotes = {}; // 정당별 총 득표 인구수 저장 객체
+    const localPartySeats = {}; // 지역구 의석수 저장 객체
+    let totalPopulation = 0; // 전체 인구수
 
-    subdivisions.forEach(function (subdivision) {
+    // 각 행정구역에 대해 반복
+    subdivisions.forEach(subdivision => {
         const population = parseInt(subdivision.getAttribute('data-population'), 10); // 인구 정보 가져오기
         const parties = JSON.parse(subdivision.getAttribute('data-parties')); // 정당 정보 가져오기
 
-        // 총 인구수 계산
-        let totalPopulation = 0;
-        subdivisions.forEach(function (subdivision) {
-            totalPopulation += parseInt(subdivision.getAttribute('data-population'), 10);
-        });
-
-        // 각 정당의 득표 퍼센테이지 계산
+        totalPopulation += population; // 총 인구수 계산
         const totalVotes = Object.values(parties).reduce((a, b) => a + b, 0); // 총 득표수 계산
-        const partyPercentages = {};
-        for (let party in parties) {
-            partyPercentages[party] = (parties[party] / totalVotes) * 100; // 득표 퍼센테이지 계산
+
+        // 각 정당의 득표 퍼센티지 및 해당 행정구역에서의 득표 인구수 계산
+        for (const [party, votes] of Object.entries(parties)) {
+            const partyPercentage = votes / totalVotes;
+            const votesForParty = population * partyPercentage; // 해당 행정구역에서 해당 정당 득표 인구수 계산
+            totalPartyVotes[party] = (totalPartyVotes[party] || 0) + votesForParty; // 정당별 총 득표 인구수 합산
         }
 
-        // 각 정당의 의석수 계산
-        const seats = {};
-        for (let party in partyPercentages) {
-            const votes = (partyPercentages[party] / 100) * totalVotes; // 정당의 득표수 계산
-            seats[party] = Math.round(votes * population / totalPopulation * 100); // 의석수 계산
-            percentage += seats[party]; // 총 의석수 계산
-        }
-
-        // 결과 저장
-        results[subdivision.getAttribute('data-name')] = seats;
-    });
-
-    const partySeats = {}; // 정당별 의석수 저장 객체 (비례대표 의석수)
-    for (const province in results) {
-        const seats = results[province]; 
-        for (let party in seats) {
-            if (seats[party] > 0) { // 의석수가 0보다 큰 경우만
-                if (partySeats[party]) partySeats[party] += seats[party]; // 이미 있는 경우 더하기
-                else partySeats[party] = seats[party]; // 없는 경우 새로 만들기
+        // 특정 득표 퍼센티지 이하인 정당 제거
+        for (const party in totalPartyVotes) {
+            if ((totalPartyVotes[party] / totalPopulation) < PER) {
+                delete totalPartyVotes[party];
             }
         }
-    }
 
-    const localPartySeats = {}; // 지역구 의석수 저장 객체
-    // 지역구 의석수 계산, 해당 행정구역에서 가장 많은 득표를 한 정당에게 1석씩 주기
-    subdivisions.forEach(function (subdivision) {
-        const parties = JSON.parse(subdivision.getAttribute('data-parties'));
+        // 지역구 의석수 계산: 최대 득표 정당에게 1석 부여
         const maxVotes = Math.max(...Object.values(parties));
-        for (let party in parties) {
-            if (parties[party] === maxVotes) {
-                if (localPartySeats[party]) localPartySeats[party] += 1;
-                else localPartySeats[party] = 1;
-            }
+        for (const [party, votes] of Object.entries(parties)) {
+            if (votes === maxVotes) localPartySeats[party] = (localPartySeats[party] || 0) + 1;
         }
     });
+
+    const proportionalSeats = SEAT - subdivisions.length; // 비례대표 의석수
+    const proportionalPartySeats = {}; // 비례대표 의석수 저장 객체
+    const percentage = {}; // 득표 퍼센티지 저장 객체
+
+    // 정당별 득표 퍼센티지 계산
+    for (const [party, votes] of Object.entries(totalPartyVotes)) percentage[party] = votes / totalPopulation;
+
+    const totalPercentage = Object.values(percentage).reduce((a, b) => a + b, 0); // 총 득표 퍼센티지
 
     // 비례대표 의석수 계산
-    const semitotalSeats = Object.values(partySeats).reduce((a, b) => a + b, 0);
-    const proportionalSeats = 2000 - subdivisions.length; // 비례대표 의석수
-    const proportionalPartySeats = {}; // 비례대표 의석수 저장 객체
-    for (let party in partySeats) {
-        const percentage = partySeats[party] / semitotalSeats;
-        proportionalPartySeats[party] = Math.round(percentage * proportionalSeats);
-    }
+    for (const [party, percent] of Object.entries(percentage))  proportionalPartySeats[party] = Math.round(proportionalSeats * (percent / totalPercentage));
 
-    const finalSeats = {};
-    // 최종 의석수 계산
-    for (let party in proportionalPartySeats) {
-        if (localPartySeats[party]) finalSeats[party] = localPartySeats[party] + proportionalPartySeats[party];
-        else finalSeats[party] = proportionalPartySeats[party];
-    }
-    for (let party in localPartySeats) if (!finalSeats[party]) finalSeats[party] = localPartySeats[party];
+    const finalSeats = {}; // 최종 의석수 저장 객체
 
-    return {finalSeats, proportionalPartySeats, localPartySeats};
+    // 비례대표 의석수 합산
+    for (const [party, seats] of Object.entries(proportionalPartySeats))  finalSeats[party] = (localPartySeats[party] || 0) + seats;
+
+    // 지역구 의석수 합산
+    for (const [party, seats] of Object.entries(localPartySeats)) if (!finalSeats[party]) finalSeats[party] = seats;
+
+    // 의석수가 0인 정당 제거
+    for (const party in finalSeats) if (finalSeats[party] === 0) delete finalSeats[party];
+
+    return { SEAT, PER, finalSeats, proportionalPartySeats, localPartySeats }; // 최종 결과 반환
 }

@@ -1,8 +1,6 @@
 from PIL import Image
 from collections import defaultdict
-import sys
-sys.path.append('f:/Code/MAP')
-import data.mashup.province_color as pcolor
+import province_color as pcolor
 
 # 16진수 색상을 RGB 색상으로 변환하는 함수
 def hex_to_rgb(hex_color):

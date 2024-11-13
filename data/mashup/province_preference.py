@@ -22,13 +22,13 @@ province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, �
     "메르노": {"Conservative": 1.13, "Progressive": 0.87},
 
     # 그미즈리 주
-    "오크모": {"Conservative": 1.10, "Progressive": 0.90},
+    "오크모": {"Conservative": 0.89, "Progressive": 1.11},
     "미톤노": {"Conservative": 0.97, "Progressive": 1.03},
     "페아그": {"Conservative": 0.91, "Progressive": 1.09},
-    "그미즈리": {"Conservative": 0.85, "Progressive": 1.15},
-    "아센시": {"Conservative": 1.02, "Progressive": 0.98},
-    "메깅고": {"Conservative": 0.94, "Progressive": 1.06},
-    "호오토": {"Conservative": 1.11, "Progressive": 0.89},
+    "그미즈리": {"Conservative": 0.83, "Progressive": 1.17},
+    "아센시": {"Conservative": 1.15, "Progressive": 0.85},
+    "메깅고": {"Conservative": 1.08, "Progressive": 0.92},
+    "호오토": {"Conservative": 1.26, "Progressive": 0.74},
     "키에오": {"Conservative": 1.20, "Progressive": 0.80},
 
     # 도마니 주
