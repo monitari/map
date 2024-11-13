@@ -29,6 +29,9 @@
 
         <!-- Leading Party Toggle Button (Initially Hidden) -->
         <button id="leading-party-toggle">1등 정당</button>
+
+        <!-- Area Names Toggle Button -->
+        <button id="toggle-names">행정구역 이름 표시/숨기기</button>
     </div>
 
     <div id="info-box">

@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 파일 경로 설정
 province_info_file = 'data/mashup/province_info.txt'
@@ -47,6 +48,22 @@ def read_province_data(input_file):
         ]
 
 # 지역 정보 업데이트 함수
+def process_province_data(data, election_data):
+    province_election_data = election_data[
+        (election_data['세부행정구역'] == data['subprovince']) &
+        (election_data['행정구역'] == data['province']) &
+        (election_data['주'] == data['province_state'])
+    ]
+
+    if province_election_data.empty:
+        raise ValueError(f"{data['province']} 지역의 선거 데이터📊를 찾을 수 없어요! 아무래도 외계인이 납치해 간 것 같아요! 👽")
+
+    province_election_data = province_election_data.iloc[0]
+    for column in province_election_data.index:
+        if column not in ['주', '행정구역', '세부행정구역', '면적', '인구', '인구밀도']:
+            data[column] = province_election_data[column]
+    return data
+
 def update_province_info(input_file, election_file, output_file):
     sys.stdout.write(f"지역 정보를 읽고 선거 데이터📊를 추가하는 중이에요: {input_file}, {election_file} - 데이터 요리사가 열심히 일하고 있어요. 🍳\n")
     sys.stdout.flush()
@@ -56,26 +73,19 @@ def update_province_info(input_file, election_file, output_file):
     total_rows = len(province_data)
     bar_length = 40
 
-    for processed_rows, data in enumerate(province_data, start=1):
-        province_election_data = election_data[
-            (election_data['세부행정구역'] == data['subprovince']) &
-            (election_data['행정구역'] == data['province']) &
-            (election_data['주'] == data['province_state'])
-        ]
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(process_province_data, data, election_data) for data in province_data]
+        for processed_rows, future in enumerate(as_completed(futures), start=1):
+            try:
+                future.result()
+            except ValueError as e:
+                sys.stdout.write(f"\n{e}\n")
+            if processed_rows % 10 == 0 or processed_rows == total_rows:
+                progress = processed_rows / total_rows
+                bar = '█' * int(bar_length * progress) + '-' * (bar_length - int(bar_length * progress))
+                sys.stdout.write(f"\r데이터 요리중: [{bar}] {processed_rows}/{total_rows} - 냄새가 끝내줘요. 😋")
+                sys.stdout.flush()
 
-        if province_election_data.empty:
-            raise ValueError(f"{data['province']} 지역의 선거 데이터📊를 찾을 수 없어요! 아무래도 외계인이 납치해 간 것 같아요! 👽")
-
-        province_election_data = province_election_data.iloc[0]
-        for column in province_election_data.index:
-            if column not in ['주', '행정구역', '세부행정구역', '면적', '인구', '인구밀도']:
-                data[column] = province_election_data[column]
-        if processed_rows % 10 == 0 or processed_rows == total_rows:
-            progress = processed_rows / total_rows
-            bar = '█' * int(bar_length * progress) + '-' * (bar_length - int(bar_length * progress))
-            sys.stdout.write(f"\r데이터 요리중: [{bar}] {processed_rows}/{total_rows} - 냄새가 끝내줘요. 😋")
-            sys.stdout.flush()
-            
     sys.stdout.write("\r" + " " * (bar_length + 100) + "\r")
     sys.stdout.write(f"데이터 업데이트 완료! {output_file}에 저장했어요. 요리가 완성되었어요. 맛있게 드세요! 🍽️\n")
     sys.stdout.flush()

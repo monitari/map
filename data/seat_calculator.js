@@ -2,7 +2,7 @@
 
 export function calculateSeats(subdivisions) {
     const SEAT = 1500; // 총 의석수 (지역구 의석수 + 비례대표 의석수)
-    const PER = 0.002; // 득표 퍼센티지 기준
+    const PER = 0.003; // 득표 퍼센티지 기준
     const totalPartyVotes = {}; // 정당별 총 득표 인구수 저장 객체
     const localPartySeats = {}; // 지역구 의석수 저장 객체
     let totalPopulation = 0; // 전체 인구수
@@ -42,6 +42,7 @@ export function calculateSeats(subdivisions) {
 
     // 정당별 득표 퍼센티지 계산
     for (const [party, votes] of Object.entries(totalPartyVotes)) percentage[party] = votes / totalPopulation;
+    //console.log(totalPopulation);
 
     const totalPercentage = Object.values(percentage).reduce((a, b) => a + b, 0); // 총 득표 퍼센티지
 

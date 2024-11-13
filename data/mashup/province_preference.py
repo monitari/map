@@ -5,10 +5,10 @@ ideological_spectrum = ['Far-left', 'Left', 'Center-left', 'Centrist', 'Center-r
 
 province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, 진보주의: 0.0})
     # 아이리카 주
-    "메초오비카": {"Conservative": 1.16, "Progressive": 0.84},
+    "메초오비카": {"Conservative": 1.12, "Progressive": 0.88},
     "아브레": {"Conservative": 0.86, "Progressive": 1.14},
     "피에트라": {"Conservative": 0.83, "Progressive": 1.17},
-    "아이리카": {"Conservative": 1.00, "Progressive": 1.00},
+    "아이리카": {"Conservative": 0.94, "Progressive": 1.06},
     "메르네": {"Conservative": 0.85, "Progressive": 1.15},
     "츠비키": {"Conservative": 1.02, "Progressive": 0.98},
     "하르바트": {"Conservative": 1.07, "Progressive": 0.93},
@@ -45,12 +45,12 @@ province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, �
     "메옹": {"Conservative": 1.12, "Progressive": 0.88},
 
     # 림덴시 주
-    "파미즈": {"Conservative": 0.89, "Progressive": 1.11},
-    "스피가": {"Conservative": 0.95, "Progressive": 1.05},
+    "파미즈": {"Conservative": 0.86, "Progressive": 1.14},
+    "스피가": {"Conservative": 0.91, "Progressive": 1.09},
     "아르고": {"Conservative": 0.79, "Progressive": 1.21},
     "모리고": {"Conservative": 0.78, "Progressive": 1.22},
     "펜보드": {"Conservative": 1.00, "Progressive": 1.00},
-    "메바치": {"Conservative": 0.92, "Progressive": 1.08},
+    "메바치": {"Conservative": 0.91, "Progressive": 1.09},
     "모호카": {"Conservative": 1.20, "Progressive": 0.80},
     "린토카": {"Conservative": 1.12, "Progressive": 0.88},
     "낙소": {"Conservative": 0.86, "Progressive": 1.14},
@@ -124,7 +124,7 @@ province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, �
     "베아골": {"Conservative": 1.14, "Progressive": 0.86},
 
     # 안텐시 주
-    "모호보드": {"Conservative": 1.02, "Progressive": 0.98},
+    "모호보드": {"Conservative": 1.21, "Progressive": 0.79},
     "아핀고": {"Conservative":  1.11, "Progressive": 0.89},
     "비에노": {"Conservative": 0.93, "Progressive": 1.07},
     "시세디": {"Conservative": 0.84, "Progressive": 1.16},
@@ -162,9 +162,9 @@ province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, �
     "파시벤토": {"Conservative": 0.95, "Progressive": 1.05},
     "오고이모": {"Conservative": 1.03, "Progressive": 0.97},
     "미느리오": {"Conservative": 0.92, "Progressive": 1.08},
-    "산세오": {"Conservative": 1.15, "Progressive": 0.85},
-    "아스타나": {"Conservative": 1.07, "Progressive": 0.93},
-    "티레니오": {"Conservative": 0.94, "Progressive": 1.06},
+    "산세오": {"Conservative": 1.04, "Progressive": 0.96},
+    "아스타나": {"Conservative": 0.91, "Progressive": 1.09},
+    "티레니오": {"Conservative": 0.92, "Progressive": 1.08},
     "비엥고": {"Conservative": 1.12, "Progressive": 0.88},
     "아린키고": {"Conservative": 1.21, "Progressive": 0.79},
     "하싱고": {"Conservative":  0.91, "Progressive": 1.09},
