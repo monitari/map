@@ -14,7 +14,7 @@ html, body {
 /* 다크 모드 토글 버튼 */
 #dark-mode-toggle {
     position: absolute;
-    top: 12px;
+    top: 15px;
     left: 250px;
     padding: 10px 20px;
     background-color: rgba(85, 85, 85, 0.8);

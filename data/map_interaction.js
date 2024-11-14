@@ -22,8 +22,8 @@ window.toggleMinimize = function () {
     const infoBox = document.getElementById('info-box');
     const minimizeButton = document.getElementById('minimize-button');
     infoBox.classList.toggle('minimized');
-    if (!infoBox.classList.contains('minimized')) minimizeButton.textContent = '〓';
-    else minimizeButton.textContent = '　';
+    if (!infoBox.classList.contains('minimized')) minimizeButton.innerHTML = '<i class="fas fa-minus"></i>';
+    else minimizeButton.innerHTML = '　';
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalLocalSeats = Object.values(localPartySeats).reduce((a, b) => a + b, 0);
 
             let resultHTML = `
-                <button id="minimize-button" onclick="toggleMinimize()">〓</button>
+                <button id="minimize-button" onclick="toggleMinimize()"><i class="fas fa-minus"></i></button>
                 <h3 class="result-header">선거 결과
                     <span class="event-date">${event}</span>
                 </h3>
@@ -245,15 +245,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // 행정구역 이름 토글 버튼 이벤트 리스너 추가
     toggleNamesButton.addEventListener('click', () => {
         document.querySelectorAll('.province-name').forEach(name => name.classList.toggle('hidden'));
-        if (toggleNamesButton.textContent === '행정구역 이름 보기') toggleNamesButton.textContent = '행정구역 이름 숨기기';
-        else toggleNamesButton.textContent = '행정구역 이름 보기';
+        if (toggleNamesButton.textContent.includes('행정구역 이름 보기')) toggleNamesButton.innerHTML = '<i class="fas fa-map-signs"></i> 행정구역 이름 숨기기';
+        else toggleNamesButton.innerHTML = '<i class="fas fa-map-signs"></i> 행정구역 이름 보기';
     });
 
     // 다크 모드 토글 버튼 이벤트 리스너 추가
     darkModeToggleButton.addEventListener('click', function() {
         document.body.classList.toggle('light-mode');
-        if (document.body.classList.contains('light-mode')) this.textContent = '다크 모드';
-        else this.textContent = '라이트 모드';
+        if (document.body.classList.contains('light-mode')) this.innerHTML = '<i class="far fa-lightbulb"></i>'; // 전구 켜짐 아이콘
+        else this.innerHTML = '<i class="fas fa-lightbulb"></i>'; // 전구 꺼짐 아이콘
     });
 
     // 숫자 포맷 함수

@@ -5,16 +5,20 @@
     <style>
         /* CSS_CONTENT */
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <!-- Dark-mode On Off Button -->
-    <button id="dark-mode-toggle">라이트 모드</button>
+    <button id="dark-mode-toggle"><i class="far fa-lightbulb"></i></button>
 
     <!-- SVG Content -->
     <div id="map-container">
         <h1 id="map-title">트라야비야 선거 지도</h1>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" id="map">
             <!-- SVG_CONTENT -->
+            <g id="text-elements">
+                <!-- TEXT_CONTENT -->
+            </g>
         </svg>
 
         <!-- Tooltip Element -->
@@ -43,24 +47,24 @@
         <!-- Toggle Buttons Container -->
         <div id="toggle-buttons">
             <!-- Population Color Toggle Button -->
-            <button id="population-toggle">인구</button>
-                
+            <button id="population-toggle"><i class="fas fa-users"></i> 인구</button>
+            
             <!-- Population Density Toggle Button -->
-            <button id="density-toggle">인구 밀도</button>
+            <button id="density-toggle"><i class="fas fa-chart-area"></i> 인구 밀도</button>
             
             <!-- Election Results Toggle Button -->
-            <button id="election-toggle">선거 결과</button>
+            <button id="election-toggle"><i class="fas fa-vote-yea"></i> 선거 결과</button>
 
             <!-- Leading Party Toggle Button (Initially Hidden) -->
-            <button id="leading-party-toggle">1등 정당</button>
+            <button id="leading-party-toggle"><i class="fas fa-trophy"></i> 1등 정당</button>
 
             <!-- Area Names Toggle Button -->
-            <button id="toggle-names">행정구역 이름 보기</button>
+            <button id="toggle-names"><i class="fas fa-map-signs"></i> 행정구역 이름 보기</button>
         </div>
     </div>
 
     <div id="info-box">
-        <button id="minimize-button" onclick="toggleMinimize()">▼</button>
+        <button id="minimize-button" onclick="toggleMinimize()"></button>
     </div>
 
     <!-- JavaScript to control interaction -->
