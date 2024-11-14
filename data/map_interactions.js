@@ -1,81 +1,97 @@
 // map_interactions.js
 
-export function initializeMapInteractions(mapContainer, map) { // 지도 상호작용 초기화
-    const MIN_SCALE = 1; // 최소 확대 배율
-    const MAX_SCALE = 7; // 최대 확대 배율
-    const SCALE_STEP = 0.2; // 확대 배율 증감량
-    const TRANSITION_DURATION = '0.1s'; // 변환 효과 지속 시간
-    const NO_TRANSITION = '0s'; // 변환 효과 없음
+export function initializeMapInteractions(mapContainer, map) {
+    const MIN_SCALE = 1;
+    const MAX_SCALE = 10;
+    const SCALE_STEP = 0.3;
+    const TRANSITION_DURATION = '0.1s';
+    const NO_TRANSITION = '0s';
 
-    let scale = MIN_SCALE; // 확대 배율
-    let translateX = 0; // X축 이동 거리
-    let translateY = 0; // Y축 이동 거리
-    let isDragging = false; // 드래그 여부
-    let startX, startY; // 드래그 시작 지점
+    let scale = MIN_SCALE;
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX, startY;
+    let isTransforming = false;
 
-    function applyTransform() { // 변환 적용
-        map.style.transformOrigin = '0 0'; // 변환 기준점
-        map.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    const scaleBarInner = document.getElementById('scale-bar-inner');
+    const scaleText = document.getElementById('scale-text');
+
+    function updateScaleBar() {
+        const scaleLength = Math.max(6, 400 / scale); // 최소 길이를 6으로 설정
+        scaleBarInner.style.width = `${scaleLength * 100 / 400}%`; // 400을 기준으로 퍼센트 계산
+        scaleText.textContent = `${Math.round(scaleLength)} B`;
     }
 
-    function handleWheel(event) { // 마우스 휠 이벤트 처리
-        event.preventDefault(); // 기본 동작 방지
+    function applyTransform() {
+        if (!isTransforming) {
+            isTransforming = true;
+            requestAnimationFrame(() => {
+                map.style.transformOrigin = '0 0';
+                map.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+                updateScaleBar(); // 스케일 바 업데이트
+                isTransforming = false;
+            });
+        }
+    }
 
-        const rect = mapContainer.getBoundingClientRect(); // 지도 컨테이너의 위치 및 크기
-        const offsetX = event.clientX - rect.left; // X축 위치
-        const offsetY = event.clientY - rect.top; // Y축 위치
+    function handleWheel(event) {
+        event.preventDefault();
 
-        const delta = event.deltaY > 0 ? -SCALE_STEP : SCALE_STEP; // 확대 배율 증감량
-        const newScale = Math.min(Math.max(MIN_SCALE, scale + delta), MAX_SCALE); // 새로운 확대 배율
+        const rect = mapContainer.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
 
-        const ratio = newScale / scale; // 확대 배율 비율
-        const newOriginX = (offsetX - translateX) * (1 - ratio); // X축 변환 기준점
-        const newOriginY = (offsetY - translateY) * (1 - ratio); // Y축 변환 기준점
+        const delta = event.deltaY > 0 ? -SCALE_STEP : SCALE_STEP;
+        const newScale = Math.min(Math.max(MIN_SCALE, scale + delta), MAX_SCALE);
+
+        const ratio = newScale / scale;
+        const newOriginX = (offsetX - translateX) * (1 - ratio);
+        const newOriginY = (offsetY - translateY) * (1 - ratio);
 
         translateX += newOriginX;
-        translateY += newOriginY; // 변환 기준점 적용
-        scale = newScale; // 확대 배율 적용
+        translateY += newOriginY;
+        scale = newScale;
 
-        map.style.transition = scale === MIN_SCALE ? `transform ${TRANSITION_DURATION} ease-out` : 
-            `transform ${NO_TRANSITION}`; // 변환 효과 적용(최소 확대 배율일 경우 효과 적용)
-        if (scale === MIN_SCALE) { // 최소 확대 배율일 경우 초기화
+        map.style.transition = scale === MIN_SCALE ? `transform ${TRANSITION_DURATION} ease-out` : `transform ${NO_TRANSITION}`;
+        if (scale === MIN_SCALE) {
             translateX = 0;
             translateY = 0;
         }
 
-        applyTransform(); // 변환 적용
+        applyTransform();
     }
 
-    function handleMouseDown(event) { // 마우스 다운 이벤트 처리
-        if (event.button === 0) { // 마우스 왼쪽 버튼 클릭 시
-            isDragging = true; // 드래그 상태로 설정
-            startX = event.clientX; 
+    function handleMouseDown(event) {
+        if (event.button === 0) {
+            isDragging = true;
+            startX = event.clientX;
             startY = event.clientY;
-            map.style.transition = `transform ${TRANSITION_DURATION} ease-out`;
+            map.style.transition = `transform ${NO_TRANSITION}`;
         }
     }
 
-    function handleMouseMove(event) { // 마우스 이동 이벤트 처리
-        if (isDragging) { // 드래그 중일 경우
-            const dx = event.clientX - startX; // X축 이동 거리
-            const dy = event.clientY - startY; // Y축 이동 거리
+    function handleMouseMove(event) {
+        if (isDragging) {
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
 
             translateX += dx;
             translateY += dy;
-            applyTransform(); // 변환 적용
-
             startX = event.clientX;
             startY = event.clientY;
+
+            applyTransform();
         }
     }
 
-    function handleMouseUpOrLeave() { // 마우스 업 또는 벗어남 이벤트 처리
-        isDragging = false; // 드래그 상태 해제
+    function handleMouseUpOrLeave() { 
+        isDragging = false;
     }
 
-    mapContainer.addEventListener('wheel', handleWheel); // 마우스 휠 이벤트
-    mapContainer.addEventListener('mousedown', handleMouseDown); // 마우스 다운 이벤트
-    mapContainer.addEventListener('mousemove', handleMouseMove); // 마우스 이동 이벤트
-    mapContainer.addEventListener('mouseup', handleMouseUpOrLeave); // 마우스 업 이벤트
-    mapContainer.addEventListener('mouseleave', handleMouseUpOrLeave); // 마우스 벗어남 이벤트
+    mapContainer.addEventListener('wheel', handleWheel, { passive: false });
+    mapContainer.addEventListener('mousedown', handleMouseDown);
+    mapContainer.addEventListener('mousemove', handleMouseMove);
+    mapContainer.addEventListener('mouseup', handleMouseUpOrLeave);
+    mapContainer.addEventListener('mouseleave', handleMouseUpOrLeave);
 }

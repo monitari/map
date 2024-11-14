@@ -7,19 +7,29 @@
     </style>
 </head>
 <body>
+    <!-- Dark-mode On Off Button -->
+    <button id="dark-mode-toggle">라이트 모드</button>
+
     <!-- SVG Content -->
     <div id="map-container">
+        <h1 id="map-title">트라야비야 선거 지도</h1>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" id="map">
             <!-- SVG_CONTENT -->
         </svg>
 
         <!-- Tooltip Element -->
         <div id="tooltip"></div>
+
+        <!-- Scale Bar Element -->
+        <div id="scale-bar">
+            <div id="scale-bar-inner"></div>
+            <span id="scale-text">400 B</span>
+        </div>
     </div>
     <!-- Toggle Buttons Container -->
     <div id="toggle-buttons">
         <!-- Population Color Toggle Button -->
-        <button id="population-toggle">인구 분포</button>
+        <button id="population-toggle">인구</button>
             
         <!-- Population Density Toggle Button -->
         <button id="density-toggle">인구 밀도</button>
@@ -31,13 +41,13 @@
         <button id="leading-party-toggle">1등 정당</button>
 
         <!-- Area Names Toggle Button -->
-        <button id="toggle-names">행정구역 이름 표시/숨기기</button>
+        <button id="toggle-names">행정구역 이름 보기</button>
     </div>
 
     <div id="info-box">
         <button id="minimize-button" onclick="toggleMinimize()">▼</button>
-        <!-- 기존 내용 -->
     </div>
+
     <!-- JavaScript to control interaction -->
     <script type="module" src="./data/map_interaction.js"></script>
 </body>

@@ -13,19 +13,26 @@ const MIN_OPACITY = 0.15;
 const MAX_OPACITY = 1;
 const VOTE_GAP_DIVISOR = 40;
 const MINVOTE = 1;
+const scaleBarInner = document.getElementById('scale-bar-inner');
+scaleBarInner.style.width = '100%';
+
+// 행정구역 이름 숨기기
+document.querySelectorAll('.province-name').forEach(name => name.classList.add('hidden'));
 
 // 정보 상자 최소화/최대화 토글 함수
 window.toggleMinimize = function () {
     const infoBox = document.getElementById('info-box');
     const minimizeButton = document.getElementById('minimize-button');
     infoBox.classList.toggle('minimized');
-    minimizeButton.textContent = infoBox.classList.contains('minimized') ? '▼' : '▲';
+    if (!infoBox.classList.contains('minimized')) minimizeButton.textContent = '〓';
+    else minimizeButton.textContent = '　';
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     // DOM 요소 선택
     const subdivisions = document.querySelectorAll('.subdivision');
     const tooltip = document.getElementById('tooltip');
+    const darkModeToggleButton = document.getElementById('dark-mode-toggle');
     const populationToggleButton = document.getElementById('population-toggle');
     const densityToggleButton = document.getElementById('density-toggle');
     const electionToggleButton = document.getElementById('election-toggle');
@@ -131,33 +138,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalLocalSeats = Object.values(localPartySeats).reduce((a, b) => a + b, 0);
 
             let resultHTML = `
-                <button id="minimize-button" onclick="toggleMinimize()">▲</button>
-                <h3 style="margin-bottom: 5px; margin-top: -5px;">선거 결과
-                <span style="font-size: 0.8em; margin-left: 5px; color: gray; font-weight: normal;">${event}</span>
+                <button id="minimize-button" onclick="toggleMinimize()">〓</button>
+                <h3 class="result-header">선거 결과
+                    <span class="event-date">${event}</span>
                 </h3>
-                <div style="font-size: 0.8em; margin-bottom: 5px;">
-                비례대표 의석수는 전체 ${SEAT}석에서 지역구 의석수를 제외한 ${SEAT - totalLocalSeats}석(이론치) 중에서 ${PER * 100}% 이상을 받은 정당에게 배분됩니다.
+                <div class="seat-info">
+                    비례대표는 전체 ${SEAT}석에서 지역구를 제외한 ${SEAT - totalLocalSeats}석(이론치) 중 ${PER * 100}% 이상 득표한 정당에 배분됩니다.
                 </div>`;
 
             sortedParties.forEach(party => {
-                const colorBox = `<span style="display:inline-block;width:10px;height:10px;background-color:${partyColors[party]};margin-right:3px;"></span>`;
+                const colorBox = `<span class="color-box" style="background-color:${partyColors[party]};"></span>`;
                 const percentage = ((finalSeats[party] / finalTotalSeats) * 100).toFixed(2);
                 resultHTML += `
-                    <div style="display: flex; align-items: center; margin: 3px 0;">
-                        <p style="line-height: 1.2; margin: 0; flex-grow: 1;">
+                    <div class="party-result">
+                        <p class="party-info">
                             ${colorBox}${party} ${finalSeats[party]}석
-                            <span style="font-size: 0.7em;">${percentage}% (${proportionalPartySeats[party] || 0} + ${localPartySeats[party] || 0})</span>
+                            <span class="party-percentage">${percentage}% (${proportionalPartySeats[party] || 0} + ${localPartySeats[party] || 0})</span>
                         </p>
-                        <div style="background-color: ${partyColors[party]}; height: 10px; width: ${percentage}%;"></div>
+                        <div class="percentage-bar" style="background-color: ${partyColors[party]}; width: ${percentage}%;"></div>
                     </div>`;
             });
 
-            resultHTML += `<p style="font-weight:bold; margin-top: 5px; margin-bottom: 2px; font-size: 1.2em;">
-                            ${finalTotalSeats}석 <span style="font-size: 1em;">(비례 ${totalProportionalSeats}석 + 지역구 ${totalLocalSeats}석)</span></p>`;
+            resultHTML += `<p class="total-seats">
+                            ${finalTotalSeats}석 <span class="seat-details">(비례 ${totalProportionalSeats}석 + 지역구 ${totalLocalSeats}석)</span>
+                        </p>`;
+
             infoBox.innerHTML = resultHTML;
-        } else {
-            infoBox.style.display = 'none';
         }
+        else infoBox.style.display = 'none';
     };
 
     // 모드 토글 함수
@@ -180,6 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     toggleNamesButton.addEventListener('click', () => {
         document.querySelectorAll('.province-name').forEach(name => name.classList.toggle('hidden'));
+        if (toggleNamesButton.textContent === '행정구역 이름 보기') toggleNamesButton.textContent = '행정구역 이름 숨기기';
+        else toggleNamesButton.textContent = '행정구역 이름 보기';
+    });
+
+    // 다크 모드 토글 버튼 이벤트 리스너 추가
+    darkModeToggleButton.addEventListener('click', function() {
+        document.body.classList.toggle('light-mode');
+        if (document.body.classList.contains('light-mode')) this.textContent = '다크 모드';
+        else this.textContent = '라이트 모드';
     });
 
     // 숫자 포맷 함수
@@ -253,31 +270,46 @@ document.addEventListener('DOMContentLoaded', () => {
         sortedParties.forEach(party => {
             const value = parseFloat(parties[party]);
             const color = partyColors[party] || 'rgb(200, 200, 200)';
-            if (value >= MINVOTE) {
-                barHtml += `<div style="background-color: ${color}; height: 20px; width: ${value}%;"></div>`;
-            }
+            if (value >= MINVOTE) barHtml += `<div class="bar-segment" style="background-color: ${color}; flex-grow: ${value};"></div>`;
         });
 
         if (otherParties.length > 0) {
             const otherSum = otherParties.reduce((acc, cur) => acc + cur.value, 0);
-            barHtml += `<div style="background-color: rgb(200, 200, 200); height: 20px; width: ${otherSum}%;"></div>`;
+            barHtml += `<div class="bar-segment other" style="flex-grow: ${otherSum};"></div>`;
         }
-
-        if (invalidVotes > 0) {
-            barHtml += `<div style="background-color: black; height: 20px; width: ${invalidVotes}%;"></div>`;
-        }
+        if (invalidVotes > 0)  barHtml += `<div class="bar-segment invalid" style="flex-grow: ${invalidVotes};"></div>`;
 
         return `
-            <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 3px; margin-left: 3px;">
-                ${subname}<span style="font-size: 0.6em; color: gray; margin-left: 5px;">${name}, ${state} 주</span>
+            <div class="location-header">
+                ${subname} <span class="location-details">${name}, ${state} 주</span>
             </div>
-            <div style="font-size: 1em; margin-left: 3px;">
-                <div>면적 | ${formatNumber(area)}A <span style="font-size: 0.8em; color: gray; margin-left: 5px;">(${rankArea}위)</span></div>
-                <div>인구 | ${formatNumber(population)}명 <span style="font-size: 0.8em; color: gray; margin-left: 5px;">(${rankPopulation}위)</span></div>
-                <div>인구 밀도 | ${(population / area).toFixed(3)}명/A <span style="font-size: 0.8em; color: gray; margin-left: 5px;">(${rankDensity}위)</span></div>
-                <div style="font-size: 0.8em; color: gray; margin-top: 2px;">사건 | ${events}</div>
-                <div style="margin-left: 10px; margin-top: 2px;">${partiesHtml + otherHtml}</div>
-                <div style="display: flex; margin-top: 10px; height: 20px; border: 1px solid #ccc;">${barHtml}</div>
+            <div class="location-stats">
+                <div class="stat-group">
+                    <div class="stat-item">
+                        <span class="stat-label">인구 |</span> 
+                        <span class="population-number">${formatNumber(population)}명</span>
+                        <span class="rank">(${rankPopulation} / ${subdivisions.length}위)</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">면적 |</span> 
+                        <span class="area-number">${formatNumber(area)}A</span>
+                        <span class="rank">(${rankArea} / ${subdivisions.length}위)</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">인구 밀도 |</span> 
+                        <span class="density-number">${(population / area).toFixed(3)}명/A</span>
+                        <span class="rank">(${rankDensity} / ${subdivisions.length}위)</span>
+                    </div>
+                </div>
+                <div class="events">
+                    <span class="stat-label">사건</span> | ${events}
+                </div>
+                <div class="party-info">
+                    ${partiesHtml + otherHtml}
+                </div>
+                <div class="bar-container">
+                    ${barHtml}
+                </div>
             </div>`;
     };
 
@@ -290,4 +322,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 초기 색상 적용
     applyColor();
+    
 });
