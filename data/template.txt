@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- Dark-mode On Off Button -->
-    <button id="dark-mode-toggle"><i class="far fa-lightbulb"></i></button>
+    <button id="dark-mode-toggle"><i class="fa fa-lightbulb"></i></button>
 
     <!-- SVG Content -->
     <div id="map-container">
