@@ -1,3 +1,4 @@
+/* 기본 스타일 */
 html, body {
     margin: 0;
     padding: 0;
@@ -5,17 +6,18 @@ html, body {
     height: 100%;
     overflow: hidden;
     font-family: Arial, sans-serif;
-    background-color: #1e1e1e; /* 배경을 어두운 색으로 변경 */
-    color: #ffffff; /* 기본 텍스트 색상을 밝은 색으로 변경 */
+    background-color: #1e1e1e; /* 어두운 배경 */
+    color: #ffffff; /* 밝은 텍스트 */
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* 다크 모드 토글 버튼 */
 #dark-mode-toggle {
     position: absolute;
     top: 12px;
     left: 250px;
     padding: 10px 20px;
-    background-color: rgba(85, 85, 85, 0.8); /* 투명도 0.8로 설정 */
+    background-color: rgba(85, 85, 85, 0.8);
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -27,7 +29,7 @@ html, body {
 }
 
 #dark-mode-toggle.light-mode {
-    background-color: rgba(255, 255, 255, 0.8); /* 투명도 0.8로 설정 */
+    background-color: rgba(255, 255, 255, 0.8);
     color: #000000;
 }
 
@@ -41,25 +43,28 @@ html, body {
     background-color: #555555;
 }
 
+/* 지도 제목 */
 #map-title {
     position: absolute;
     top: -5px;
     left: 10px;
     font-size: 24px;
     font-weight: bold;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     z-index: 10;
-    background-color: rgba(50, 50, 50, 0.8); /* 배경을 어두운 색으로 변경 */
+    background-color: rgba(50, 50, 50, 0.8);
     padding: 5px 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, color 0.3s;
+    user-select: none;
 }
 
+/* 지도 컨테이너 */
 #map-container {
     width: 100%;
     height: 100%;
-    border: 1px solid #444444; /* 테두리를 어두운 색으로 변경 */
+    border: 1px solid #444444;
     padding: 10px;
     box-sizing: border-box;
     display: flex;
@@ -67,7 +72,7 @@ html, body {
     align-items: center;
     margin: 0 auto;
     transform-origin: center center;
-    background-color: rgba(30, 30, 30, 1); /* 배경을 어두운 색으로 변경 */
+    background-color: rgba(30, 30, 30, 1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, border-color 0.3s;
 }
@@ -77,20 +82,22 @@ html, body {
     height: 100%;
 }
 
+/* 행정구역 스타일 */
 .subdivision {
-    fill: #444444; /* 색상을 어두운 색으로 변경 */
+    fill: #444444;
     transition: fill 0.3s;
 }
 
+/* 툴팁 스타일 */
 #tooltip {
     position: absolute;
-    background-color: #333333; /* 배경을 어두운 색으로 변경 */
-    border: 1px solid #555555; /* 테두리를 어두운 색으로 변경 */
+    background-color: #333333;
+    border: 1px solid #555555;
     border-radius: 6px;
     padding: 8px;
     z-index: 1000;
     font-size: 13px;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     display: none;
     transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out, background-color 0.3s, border-color 0.3s, color 0.3s;
     opacity: 0;
@@ -105,10 +112,12 @@ html, body {
     transform: translateY(0);
 }
 
+/* 텍스트 선택 불가능 */
 text {
     user-select: none;
 }
 
+/* 툴팁 내용 스타일 */
 .location-header {
     font-size: 1.6em;
     font-weight: bold;
@@ -117,7 +126,7 @@ text {
 
 .location-details {
     font-size: 0.9em;
-    color: #aaaaaa; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #aaaaaa;
     transition: color 0.3s;
 }
 
@@ -150,7 +159,7 @@ text {
 
 .rank {
     font-size: 0.7em;
-    color: #bbbbbb; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #bbbbbb;
     margin-top: 1px;
     transition: color 0.3s;
 }
@@ -159,7 +168,7 @@ text {
     font-size: 1em;
     margin-top: 10px;
     margin-bottom: 10px;
-    color: #dddddd; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #dddddd;
     transition: color 0.3s;
 }
 
@@ -167,10 +176,20 @@ text {
     display: flex;
     height: 20px;
     margin-top: 10px;
-    border: 1px solid #555555; /* 테두리를 어두운 색으로 변경 */
+    border: 1px solid #555555;
     border-radius: 3px;
     overflow: hidden;
     transition: border-color 0.3s;
+}
+
+.bar-segment.other {
+    background: repeating-linear-gradient(
+        45deg,
+        #ccc,
+        #ccc 10px,
+        #fff 10px,
+        #fff 20px
+    );
 }
 
 .party-info {
@@ -178,7 +197,7 @@ text {
     line-height: 1.2;
     margin: 0;
     flex-grow: 1;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     transition: color 0.3s;
 }
 
@@ -195,20 +214,63 @@ text {
     background-color: black;
 }
 
-#toggle-buttons {
+#control-container {
     position: fixed;
-    bottom: 10px;
-    left: 10px;
+    bottom: 10px; /* 화면 하단에서 30px 떨어진 위치 */
+    left: 10px; /* 화면 좌측에서 10px 떨어진 위치 */
     z-index: 1000;
     display: flex;
+    flex-direction: column;
+    gap: 5px; /* 슬라이더와 버튼 사이 간격 */
+}
+
+.slider-container {
+    padding: 10px;
+    background-color: rgba(50, 50, 50, 0.8); /* 다크 모드 배경 */
+    border: none;
+    border-radius: 8px; /* 모서리를 둥글게 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: background-color 0.3s, border-color 0.3s;
+    user-select: none;
+}
+
+.slider-container div {
+    margin-bottom: 10px; /* 슬라이더 사이 간격 */
+}
+
+.slider-container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff; /* 다크 모드 텍스트 색상 */
+    transition: color 0.3s;
+}
+
+.slider-container input[type="range"] {
+    width: 100%;
+}
+
+body.light-mode .slider-container {
+    background-color: rgba(240, 240, 240, 0.8) !important; /* 라이트 모드 배경 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+body.light-mode .slider-container label {
+    color: #000000 !important; /* 라이트 모드 텍스트 색상 */
+    transition: color 0.3s;
+}
+
+#toggle-buttons {
+    display: flex;
     gap: 12px;
+    margin-top: 10px;
 }
 
 #toggle-buttons button {
     font-size: 14px;
     padding: 8px 16px;
-    background-color: rgba(85, 85, 85, 0.8); /* 투명도 0.8로 설정 */
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    background-color: rgba(85, 85, 85, 0.8);
+    color: #ffffff;
     cursor: pointer;
     border: none;
     border-radius: 5px;
@@ -218,7 +280,7 @@ text {
 }
 
 #toggle-buttons button:hover {
-    background-color: #666666; /* 호버 시 배경을 어두운 색으로 변경 */
+    background-color: #666666;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -232,9 +294,10 @@ text {
     display: none;
 }
 
+/* 행정구역 이름 스타일 */
 .province-name {
     font-size: 18px;
-    fill: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    fill: #ffffff;
     text-anchor: middle;
     pointer-events: none;
     opacity: 1;
@@ -254,6 +317,7 @@ body.light-mode .province-name.hidden {
     transition: fill 0.3s, opacity 0.3s ease-in-out;
 }
 
+/* 정보 상자 최소화 버튼 */
 #minimize-button {
     position: absolute;
     top: 5px;
@@ -266,14 +330,15 @@ body.light-mode .province-name.hidden {
     z-index: 10;
 }
 
+/* 정보 상자 */
 #info-box {
     position: absolute;
     top: 10px;
     right: 10px;
     width: 600px;
     height: auto;
-    background-color: rgba(40, 40, 40, 0.9); /* 배경을 어두운 색으로 변경 */
-    border: 1px solid #555555; /* 테두리를 어두운 색으로 변경 */
+    background-color: rgba(40, 40, 40, 0.9);
+    border: 1px solid #555555;
     border-radius: 8px;
     padding: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -286,14 +351,14 @@ body.light-mode .province-name.hidden {
 
 #info-box h3 {
     font-size: 16px;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     margin-top: 0;
     margin-bottom: 10px;
     transition: color 0.3s;
 }
 
 #info-box p {
-    color: #dddddd; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #dddddd;
     line-height: 1.6;
     transition: color 0.3s;
 }
@@ -303,7 +368,7 @@ body.light-mode .province-name.hidden {
     height: 40px;
     padding: 0;
     border-radius: 50%;
-    background-color: #333333; /* 배경을 어두운 색으로 변경 */
+    background-color: #333333;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -316,28 +381,30 @@ body.light-mode .province-name.hidden {
     line-height: 40px;
 }
 
+/* 결과 헤더 */
 .result-header {
     margin-top: -5px;
     font-size: 1.1em;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     transition: color 0.3s;
 }
 
 .event-date {
     font-size: 0.8em;
     margin-left: 5px;
-    color: #aaaaaa; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #aaaaaa;
     font-weight: normal;
     transition: color 0.3s;
 }
 
 .seat-info {
     font-size: 0.7em;
-    color: #bbbbbb; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #bbbbbb;
     margin-bottom: 7px;
     transition: color 0.3s;
 }
 
+/* 정당 결과 */
 .party-result {
     display: flex;
     align-items: center;
@@ -350,13 +417,25 @@ body.light-mode .province-name.hidden {
     height: 12px;
     margin-right: 6px;
     border-radius: 2px;
-    border: 1px solid #888888; /* 테두리를 어두운 색으로 변경 */
+    border: 1px solid #888888;
+    transition: border-color 0.3s;
+}
+
+.color-box.other {
+    background: repeating-linear-gradient(
+        45deg,
+        #ccc,
+        #ccc 10px,
+        #fff 10px,
+        #fff 20px
+    );
+    border: 1px solid #888888;
     transition: border-color 0.3s;
 }
 
 .party-percentage {
     font-size: 0.7em;
-    color: #cccccc; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #cccccc;
     margin-left: 2px;
     margin-bottom: 2px;
     transition: color 0.3s;
@@ -372,23 +451,24 @@ body.light-mode .province-name.hidden {
     margin-top: 8px;
     margin-bottom: 4px;
     font-size: 1.1em;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     transition: color 0.3s;
 }
 
 .seat-details {
     font-size: 0.9em;
-    color: #cccccc; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #cccccc;
     transition: color 0.3s;
 }
 
+/* 스케일 바 */
 #scale-bar {
     position: fixed;
     bottom: 10px;
     right: 10px;
     width: 100px;
     height: 10px;
-    background-color: #444444; /* 배경을 어두운 색으로 변경 */
+    background-color: #444444;
     border-radius: 5px;
     display: flex;
     align-items: center;
@@ -401,7 +481,7 @@ body.light-mode .province-name.hidden {
 #scale-bar-inner {
     width: 80%;
     height: 100%;
-    background-color: #ffffff; /* 내부 색상을 밝은 색으로 유지 */
+    background-color: #ffffff;
     transition: background-color 0.3s;
 }
 
@@ -410,11 +490,11 @@ body.light-mode .province-name.hidden {
     bottom: 25px;
     right: 10px;
     font-size: 12px;
-    color: #ffffff; /* 텍스트 색상을 밝은 색으로 변경 */
+    color: #ffffff;
     transition: color 0.3s;
 }
 
-/* 기존 light-mode 스타일 유지 */
+/* 라이트 모드 스타일 */
 body.light-mode {
     background-color: #ffffff !important;
     color: #000000 !important;
@@ -430,7 +510,7 @@ body.light-mode #map-title {
 body.light-mode #dark-mode-toggle,
 body.light-mode #info-box,
 body.light-mode #toggle-buttons button {
-    background-color: rgba(240, 240, 240, 0.8) !important; /* 투명도 0.8로 설정 */
+    background-color: rgba(240, 240, 240, 0.8) !important;
     color: #000000 !important;
     border-color: #cccccc !important;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;

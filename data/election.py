@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import random
 import warnings
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 파일 경로 설정
 province_info_path = 'data/mashup/province_info.txt'
@@ -187,30 +186,6 @@ def calculate_vote_shares(event, state, row):
     return vote_shares
 
 # 데이터 처리 함수
-def process_state_data(state, cities, global_event, global_sub_event):
-    data = []
-    for _, row in cities.iterrows():
-        result_row = {
-            '주': state,
-            '행정구역': row['행정구역'].strip(),
-            '세부행정구역': row['세부행정구역'],
-            '면적': row['면적'],
-            '인구': row['인구'],
-            '인구밀도': row['인구밀도'],
-            '사건': f"{global_event} - {global_sub_event}",
-            '도시지수': row['도시지수'],
-            '경제지수': row['경제지수']
-        }
-
-        vote_shares = calculate_vote_shares(global_event, state, row)
-        result_row.update(vote_shares)
-        result_row['무효표'] = 100 - sum(vote_shares.values())
-        result_row['총합'] = round(sum(vote_shares.values()) + result_row['무효표'], 3)
-        
-        data.append(result_row)
-    return data
-
-# 데이터 처리 함수
 def process_data_with_indexes(province_info):
     province_info = calculate_indexes(province_info)
     data = []
@@ -219,22 +194,37 @@ def process_data_with_indexes(province_info):
     print(f"전국적 사건 발생! 🌍 {global_event} - {global_sub_event}, 과연 민심은 어떠할까요? 🤔")
 
     total_rows = len(province_info)
+    processed_rows = 0
     bar_length = 40
 
-    with ThreadPoolExecutor() as executor:
-        futures = {executor.submit(process_state_data, state, cities, global_event, global_sub_event): state for state, cities in province_info.groupby('주')}
-        processed_rows = 0
-        for future in as_completed(futures):
-            state_data = future.result()
-            data.extend(state_data)
-            processed_rows += len(state_data)
+    for state, cities in province_info.groupby('주'):
+        for _, row in cities.iterrows():
+            result_row = {
+                '주': state,
+                '행정구역': row['행정구역'].strip(),
+                '세부행정구역': row['세부행정구역'],
+                '면적': row['면적'],
+                '인구': row['인구'],
+                '인구밀도': row['인구밀도'],
+                '사건': f"{global_event} - {global_sub_event}",
+                '도시지수': row['도시지수'],
+                '경제지수': row['경제지수']
+            }
+
+            vote_shares = calculate_vote_shares(global_event, state, row)
+            result_row.update(vote_shares)
+            result_row['무효표'] = 100 - sum(vote_shares.values())
+            result_row['총합'] = round(sum(vote_shares.values()) + result_row['무효표'], 3)
+            
+            data.append(result_row)
+            
+            processed_rows += 1
             if processed_rows % 10 == 0 or processed_rows == total_rows:
                 progress = processed_rows / total_rows
                 block = int(bar_length * progress)
                 bar = '█' * block + '-' * (bar_length - block)
                 sys.stdout.write(f"\r선거 집계 중: [{bar}] {processed_rows}/{total_rows} - 아직도 계산 중인데, 커피 한 잔 하실래요? ☕️")
-                sys.stdout.flush()
-
+  
     sys.stdout.write("\r" + " " * (bar_length + 80) + "\r")
     sys.stdout.write(f"선거 결과 데이터📊 생성 완료! {election_result_path}에 저장했어요. 커피 다 마셨나요? ☕️\n")
     sys.stdout.flush()

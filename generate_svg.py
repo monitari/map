@@ -130,13 +130,9 @@ def main():
             sys.stdout.flush()
 
     sys.stdout.write("\r" + " " * (bar_length + 70) + "\r")
-    sys.stdout.write("이제 SVG 요소를 생성하고 있어요! 🧙✨")
+    sys.stdout.write(f"데이터 처리가 완료되었어요! 조금만 기다려주세요! 🐢🏁\n")
     sys.stdout.flush()
-    
     svg_elements = [process_province(key, bgr_color, image, province_data) for key, bgr_color in province_colors.items()]
-
-    sys.stdout.write("\r" + " " * 100 + "\r")
-    sys.stdout.write("이제 HTML 파일을 생성하고 있어요! 🧙✨\n")
 
     svg_content = f"""
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {image.shape[1]} {image.shape[0]}" id="map">

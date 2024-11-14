@@ -26,22 +26,37 @@
             <span id="scale-text">400 B</span>
         </div>
     </div>
-    <!-- Toggle Buttons Container -->
-    <div id="toggle-buttons">
-        <!-- Population Color Toggle Button -->
-        <button id="population-toggle">인구</button>
+
+    <!-- Control Container -->
+    <div id="control-container">
+        <!-- Range Slider Container -->
+        <div id="range-slider-container" class="slider-container" style="display: none;">
+            <div>
+                <label for="range-slider"><span id="range-value">범위 | 0 - 0</span></label>
+                <div class="range-slider">
+                    <input type="range" id="range-slider-min" min="0" max="0" value="0" step="1">
+                    <input type="range" id="range-slider-max" min="0" max="0" value="0" step="1">
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Buttons Container -->
+        <div id="toggle-buttons">
+            <!-- Population Color Toggle Button -->
+            <button id="population-toggle">인구</button>
+                
+            <!-- Population Density Toggle Button -->
+            <button id="density-toggle">인구 밀도</button>
             
-        <!-- Population Density Toggle Button -->
-        <button id="density-toggle">인구 밀도</button>
-        
-        <!-- Election Results Toggle Button -->
-        <button id="election-toggle">선거 결과</button>
+            <!-- Election Results Toggle Button -->
+            <button id="election-toggle">선거 결과</button>
 
-        <!-- Leading Party Toggle Button (Initially Hidden) -->
-        <button id="leading-party-toggle">1등 정당</button>
+            <!-- Leading Party Toggle Button (Initially Hidden) -->
+            <button id="leading-party-toggle">1등 정당</button>
 
-        <!-- Area Names Toggle Button -->
-        <button id="toggle-names">행정구역 이름 보기</button>
+            <!-- Area Names Toggle Button -->
+            <button id="toggle-names">행정구역 이름 보기</button>
+        </div>
     </div>
 
     <div id="info-box">

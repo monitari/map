@@ -5,16 +5,14 @@ import { initializeMapInteractions } from './map_interactions.js';
 import partyColors from './mashup/party_color.js';
 import { handleMouseEnter, handleMouseMove, handleMouseLeave } from './mouse_events.js';
 
-const MIN_POP = 50000;
-const MAX_POP = 3000000;
-const MIN_DENSITY = 1;
-const MAX_DENSITY = 5000;
 const MIN_OPACITY = 0.15;
 const MAX_OPACITY = 1;
 const VOTE_GAP_DIVISOR = 40;
 const MINVOTE = 1;
-const scaleBarInner = document.getElementById('scale-bar-inner');
-scaleBarInner.style.width = '100%';
+const MIN_POP = 10000;
+const MAX_POP = 3000000;
+const MIN_DENSITY = 0;
+const MAX_DENSITY = 5000;
 
 // 행정구역 이름 숨기기
 document.querySelectorAll('.province-name').forEach(name => name.classList.add('hidden'));
@@ -38,29 +36,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const electionToggleButton = document.getElementById('election-toggle');
     const leadingPartyToggleButton = document.getElementById('leading-party-toggle');
     const toggleNamesButton = document.getElementById('toggle-names');
+    const rangeSliderContainer = document.getElementById('range-slider-container');
+    const rangeSliderMin = document.getElementById('range-slider-min');
+    const rangeSliderMax = document.getElementById('range-slider-max');
+    const rangeValue = document.getElementById('range-value');
+    const scaleBarInner = document.getElementById('scale-bar-inner');
     const infoBox = document.getElementById('info-box');
     const mapContainer = document.getElementById('map-container');
     const map = document.getElementById('map');
-
+    
     let mode = ''; // 현재 모드
     let showLeadingPartyMode = false; // 주요 정당 모드 표시 여부
-
+    let MIN_VALUE = 0;
+    let MAX_VALUE = 1000000;
+    scaleBarInner.style.width = '100%';
+    
     // 지도 상호작용 초기화
     initializeMapInteractions(mapContainer, map);
 
     // 색상 계산 함수
-    const getColor = (normalized) => `rgb(250, ${Math.floor(255 * (1 - normalized))}, ${Math.floor(255 * (1 - normalized))})`;
+    const getColor = (normalized) => `rgba(250, 0, 0, ${normalized})`;
+
+    // 슬라이더 값 변경 이벤트 리스너 추가
+    const updateRangeValue = () => {
+        let min = parseInt(rangeSliderMin.value, 10);
+        let max = parseInt(rangeSliderMax.value, 10);
+    
+        // 최소값이 최대값보다 큰 경우 값을 교환
+        if (min > max) {
+            [min, max] = [max, min];
+            rangeSliderMin.value = min;
+            rangeSliderMax.value = max;
+        }
+    
+        rangeValue.textContent = `${mode === 'population' ? '인구' : '인구 밀도'} | 
+        ${min}${mode === 'population' ? '명' : '명/A'} - ${max}${mode === 'population' ? '명' : '명/A'}`;
+        MIN_VALUE = min;
+        MAX_VALUE = max;
+        applyColor();
+    };
+
+    // 인구 밀도 슬라이더 값 변경 이벤트 리스너 추가
+    rangeSliderMin.addEventListener('input', updateRangeValue);
+    rangeSliderMax.addEventListener('input', updateRangeValue);
 
     // 인구 기반 색상 계산 함수
     const getPopulationColor = (population) => {
-        const normalized = (parseInt(population) - MIN_POP) / (MAX_POP - MIN_POP);
+        const normalized = (parseInt(population) - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
         return getColor(normalized);
     };
-
+    
     // 인구 밀도 기반 색상 계산 함수
     const getDensityColor = (population, area) => {
         const density = population / area;
-        const normalized = (density - MIN_DENSITY) / (MAX_DENSITY - MIN_DENSITY);
+        const normalized = (density - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
         return getColor(normalized);
     };
 
@@ -76,9 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 secondMaxVote = maxVote;
                 maxVote = vote;
                 leadingParty = party;
-            } else if (vote > secondMaxVote) {
-                secondMaxVote = vote;
-            }
+            } 
+            else if (vote > secondMaxVote) secondMaxVote = vote;
         }
 
         if (!leadingParty || maxVote === secondMaxVote) return 'rgba(255, 255, 255, 0.5)';
@@ -174,18 +202,47 @@ document.addEventListener('DOMContentLoaded', () => {
         displayElectionResults(mode === 'election');
         applyColor();
         leadingPartyToggleButton.style.display = mode === 'election' ? 'block' : 'none';
+        if (mode === 'population') {
+            MIN_VALUE = MIN_POP;
+            MAX_VALUE = MAX_POP;
+            rangeSliderMin.min = MIN_POP;
+            rangeSliderMin.max = MAX_POP;
+            rangeSliderMax.min = MIN_POP;
+            rangeSliderMax.max = MAX_POP;
+        } else if (mode === 'density') {
+            MIN_VALUE = MIN_DENSITY;
+            MAX_VALUE = MAX_DENSITY;
+            rangeSliderMin.min = MIN_DENSITY;
+            rangeSliderMin.max = MAX_DENSITY;
+            rangeSliderMax.min = MIN_DENSITY;
+            rangeSliderMax.max = MAX_DENSITY;
+        }
+        rangeSliderContainer.style.display = (mode === 'population' || mode === 'density') ? 'block' : 'none';
+        applyColor();
     };
 
     // 이벤트 리스너 추가
-    populationToggleButton.addEventListener('click', () => toggleMode('population'));
-    densityToggleButton.addEventListener('click', () => toggleMode('density'));
+    populationToggleButton.addEventListener('click', () => {
+        toggleMode('population');
+        rangeSliderMin.value = MIN_POP;
+        rangeSliderMax.value = MAX_POP;
+        rangeValue.textContent = `인구 | ${rangeSliderMin.value}명 - ${rangeSliderMax.value}명`;
+    });
+    densityToggleButton.addEventListener('click', () => {
+        toggleMode('density');
+        rangeSliderMin.value = MIN_DENSITY;
+        rangeSliderMax.value = MAX_DENSITY;
+        rangeValue.textContent = `인구 밀도 | ${rangeSliderMin.value}명/A - ${rangeSliderMax.value}명/A`;
+    });
     electionToggleButton.addEventListener('click', () => toggleMode('election'));
 
+    // 1등 정당 토글 버튼 이벤트 리스너 추가
     leadingPartyToggleButton.addEventListener('click', () => {
         showLeadingPartyMode = !showLeadingPartyMode;
         applyColor();
     });
 
+    // 행정구역 이름 토글 버튼 이벤트 리스너 추가
     toggleNamesButton.addEventListener('click', () => {
         document.querySelectorAll('.province-name').forEach(name => name.classList.toggle('hidden'));
         if (toggleNamesButton.textContent === '행정구역 이름 보기') toggleNamesButton.textContent = '행정구역 이름 숨기기';
@@ -236,10 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 otherParties.push({ party, value });
             } else {
                 if (counter % 3 === 0) partiesHtml += '<div style="display: flex; justify-content: space-between; margin-bottom: 5px;">';
+                const colorBox = `<span class="color-box" style="background-color:${color}; width: 12px; height: 12px; margin-right: 5px;"></span>`;
                 partiesHtml += `
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
                                 text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px; font-size: 12px;">
-                        <div style="width: 12px; height: 12px; background-color: ${color}; margin-right: 5px;"></div>
+                        ${colorBox}
                         ${party}<span style="color: gray; margin-left: 5px;">${value.toFixed(3)}%</span>
                     </div>`;
                 if (counter % 3 === 2) partiesHtml += '</div>';
@@ -247,21 +305,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         if (counter % 3 !== 0) partiesHtml += '</div>';
-
+        
         let otherHtml = '';
         if (otherParties.length > 0 || invalidVotes > 0) {
             const otherSum = otherParties.reduce((acc, cur) => acc + cur.value, 0);
+            const otherColorBox = `<span class="color-box other" style="width: 12px; height: 12px; margin-right: 5px;"></span>`;            
+            const invalidColorBox = `<span class="color-box" style="background-color: rgb(0, 0, 0); width: 12px; height: 12px; margin-right: 5px;"></span>`;
             otherHtml += `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
-                                text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px; font-size: 12px;">
-                        <div style="width: 12px; height: 12px; background-color: rgb(200, 200, 200); margin-right: 5px;"></div>
-                        기타<span style="color: gray; margin-left: 5px;">${otherSum.toFixed(3)}% (${MINVOTE}% 미만)</span>
+                                text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px; font-size: 12px;">
+                        ${otherColorBox}기타<span style="color: gray; margin-left: 5px;">${otherSum.toFixed(3)}% (${MINVOTE}% 미만)</span>
                     </div>
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
-                                text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px; font-size: 12px;">
-                        <div style="width: 12px; height: 12px; background-color: rgb(0, 0, 0); margin-right: 5px;"></div>
-                        무효표<span style="color: gray; margin-left: 5px;">${invalidVotes.toFixed(3)}%</span>
+                                text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 5px; font-size: 12px; justify-content: flex-end;">
+                        ${invalidColorBox}무효표<span style="color: gray; margin-left: 5px;">${invalidVotes.toFixed(3)}%</span>
                     </div>
                 </div>`;
         }
