@@ -9,10 +9,10 @@ const MIN_OPACITY = 0.15;
 const MAX_OPACITY = 1;
 const VOTE_GAP_DIVISOR = 40;
 const MINVOTE = 1;
-const MIN_POP = 10000;
-const MAX_POP = 3000000;
-const MIN_DENSITY = 0;
-const MAX_DENSITY = 5000;
+const MIN_POP = 1000;
+const MAX_POP = 1000000;
+const MIN_DENSITY = 0.0;
+const MAX_DENSITY = 5000.0;
 
 // 행정구역 이름 숨기기
 document.querySelectorAll('.province-name').forEach(name => name.classList.add('hidden'));
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const subdivisions = document.querySelectorAll('.subdivision');
     const tooltip = document.getElementById('tooltip');
     const darkModeToggleButton = document.getElementById('dark-mode-toggle');
+    const generateButton = document.getElementById('generate-button');
     const populationToggleButton = document.getElementById('population-toggle');
     const densityToggleButton = document.getElementById('density-toggle');
     const electionToggleButton = document.getElementById('election-toggle');
@@ -42,38 +43,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const rangeValue = document.getElementById('range-value');
     const scaleBarInner = document.getElementById('scale-bar-inner');
     const infoBox = document.getElementById('info-box');
+    const mainTheme = document.getElementById('main-theme');
+    const controlContainer = document.getElementById('control-container');
     const mapContainer = document.getElementById('map-container');
     const map = document.getElementById('map');
+    const loadingOverlay = document.getElementById('loading-overlay');
     
     let mode = ''; // 현재 모드
     let showLeadingPartyMode = false; // 주요 정당 모드 표시 여부
     let MIN_VALUE = 0;
     let MAX_VALUE = 1000000;
+    let animationFrameId = null; // 애니메이션 프레임 ID
     scaleBarInner.style.width = '100%';
     
     // 지도 상호작용 초기화
     initializeMapInteractions(mapContainer, map);
+
+    // 페이지 로드 시 메인 테마 표시
+    setTimeout(() => {
+        mainTheme.classList.add('hidden');
+        mapContainer.style.display = 'block';
+        controlContainer.style.display = 'block';
+        darkModeToggleButton.style.display = 'block'; // 다크 모드 토글 버튼 표시
+    }, 1000); // 1초 후에 메인 테마 숨기기
 
     // 색상 계산 함수
     const getColor = (normalized) => `rgba(250, 0, 0, ${normalized})`;
 
     // 슬라이더 값 변경 이벤트 리스너 추가
     const updateRangeValue = () => {
-        let min = parseInt(rangeSliderMin.value, 10);
-        let max = parseInt(rangeSliderMax.value, 10);
-    
+        let min = parseFloat(rangeSliderMin.value);
+        let max = parseFloat(rangeSliderMax.value);
+
         // 최소값이 최대값보다 큰 경우 값을 교환
         if (min > max) {
             [min, max] = [max, min];
             rangeSliderMin.value = min;
             rangeSliderMax.value = max;
         }
-    
+
         rangeValue.textContent = `${mode === 'population' ? '인구' : '인구 밀도'} | 
-        ${min}${mode === 'population' ? '명' : '명/A'} - ${max}${mode === 'population' ? '명' : '명/A'}`;
+        ${min.toFixed(mode === 'population' ? 0 : 1)}${mode === 'population' ? '명' : '명/A'} - ${
+            max.toFixed(mode === 'population' ? 0 : 1)}${mode === 'population' ? '명' : '명/A'}`; 
         MIN_VALUE = min;
         MAX_VALUE = max;
-        applyColor();
+
+        // 애니메이션 프레임 요청
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(applyColor); 
     };
 
     // 인구 밀도 슬라이더 값 변경 이벤트 리스너 추가
@@ -136,21 +153,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const population = parseInt(subdivision.getAttribute('data-population'), 10);
             const area = parseFloat(subdivision.getAttribute('data-area'));
             const parties = JSON.parse(subdivision.getAttribute('data-parties'));
-
-            if (mode === 'population') {
-                subdivision.style.fill = getPopulationColor(population);
-            } else if (mode === 'density') {
-                subdivision.style.fill = getDensityColor(population, area);
-            } else if (mode === 'election') {
-                if (showLeadingPartyMode) {
-                    subdivision.style.fill = partyColors[getLeadingParty(parties)];
-                } else {
-                    subdivision.style.fill = getElectionColor(parties);
-                }
-            } else {
-                subdivision.style.fill = 'rgb(200, 200, 200)';
-            }
+    
+            if (mode === 'population') subdivision.style.fill = getPopulationColor(population);
+            else if (mode === 'density') subdivision.style.fill = getDensityColor(population, area);
+            else if (mode === 'election') {
+                if (showLeadingPartyMode) subdivision.style.fill = partyColors[getLeadingParty(parties)];
+                else subdivision.style.fill = getElectionColor(parties);
+            } 
+            else subdivision.style.fill = 'rgb(200, 200, 200)';
         });
+        animationFrameId = null;
     };
 
     // 선거 결과 표시 함수
@@ -167,21 +179,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let resultHTML = `
                 <button id="minimize-button" onclick="toggleMinimize()"><i class="fas fa-minus"></i></button>
-                <h3 class="result-header">선거 결과
+                <h3 class="result-header"><i class="fas fa-vote-yea"></i> 선거 결과
                     <span class="event-date">${event}</span>
                 </h3>
                 <div class="seat-info">
                     비례대표는 전체 ${SEAT}석에서 지역구를 제외한 ${SEAT - totalLocalSeats}석(이론치) 중 ${PER * 100}% 이상 득표한 정당에 배분됩니다.
                 </div>`;
 
-            sortedParties.forEach(party => {
+            sortedParties.forEach((party, index) => {
                 const colorBox = `<span class="color-box" style="background-color:${partyColors[party]};"></span>`;
                 const percentage = ((finalSeats[party] / finalTotalSeats) * 100).toFixed(2);
+                const icon = index === 0 ? '<i class="fas fa-crown"></i>' : '';
                 resultHTML += `
                     <div class="party-result">
                         <p class="party-info">
                             ${colorBox}${party} ${finalSeats[party]}석
                             <span class="party-percentage">${percentage}% (${proportionalPartySeats[party] || 0} + ${localPartySeats[party] || 0})</span>
+                            ${icon}
                         </p>
                         <div class="percentage-bar" style="background-color: ${partyColors[party]}; width: ${percentage}%;"></div>
                     </div>`;
@@ -203,6 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
         applyColor();
         leadingPartyToggleButton.style.display = mode === 'election' ? 'block' : 'none';
         if (mode === 'population') {
+            rangeSliderMin.step = 1;
+            rangeSliderMax.step = 1;
             MIN_VALUE = MIN_POP;
             MAX_VALUE = MAX_POP;
             rangeSliderMin.min = MIN_POP;
@@ -210,6 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
             rangeSliderMax.min = MIN_POP;
             rangeSliderMax.max = MAX_POP;
         } else if (mode === 'density') {
+            rangeSliderMin.step = 0.1;
+            rangeSliderMax.step = 0.1;
             MIN_VALUE = MIN_DENSITY;
             MAX_VALUE = MAX_DENSITY;
             rangeSliderMin.min = MIN_DENSITY;
@@ -221,6 +239,19 @@ document.addEventListener('DOMContentLoaded', () => {
         applyColor();
     };
 
+    // 선거 데이터 생성 버튼 이벤트 리스너 추가
+    generateButton.addEventListener('click', () => {
+        loadingOverlay.classList.add('visible'); // 로딩 오버레이 표시
+        fetch('http://127.0.0.1:5000/generate', { method: 'POST' })
+            .then(response => {
+                if (response.redirected) window.location.href = response.url;
+                else loadingOverlay.classList.remove('visible'); // 로딩 오버레이 숨기기
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loadingOverlay.classList.remove('visible'); // 로딩 오버레이 숨기기
+            });
+    });
     // 이벤트 리스너 추가
     populationToggleButton.addEventListener('click', () => {
         toggleMode('population');
@@ -232,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleMode('density');
         rangeSliderMin.value = MIN_DENSITY;
         rangeSliderMax.value = MAX_DENSITY;
-        rangeValue.textContent = `인구 밀도 | ${rangeSliderMin.value}명/A - ${rangeSliderMax.value}명/A`;
+        rangeValue.textContent = `인구 밀도 | ${MIN_DENSITY.toFixed(1)}명/A - ${MAX_DENSITY.toFixed(1)}명/A`;
     });
     electionToggleButton.addEventListener('click', () => toggleMode('election'));
 

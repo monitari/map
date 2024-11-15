@@ -98,18 +98,33 @@ html, body {
     z-index: 1000;
     font-size: 13px;
     color: #ffffff;
-    display: none;
-    transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out, background-color 0.3s, border-color 0.3s, color 0.3s;
-    opacity: 0;
-    transform: translateY(10px);
+    visibility: hidden; /* 기본 숨김 상태 */
+    opacity: 0; /* 투명 */
+    transform-origin: top left; /* 애니메이션 기준점 */
+    transform: scale(0.5); /* 축소된 상태 */
+    transition: 
+        opacity 0.3s ease-in-out, 
+        transform 0.3s ease-in-out, 
+        background-color 0.3s, 
+        border-color 0.3s, 
+        color 0.3s;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     user-select: none;
-    pointer-events: none;
+    pointer-events: none; /* 마우스 이벤트 차단 */
 }
 
 #tooltip.show {
-    opacity: 1;
-    transform: translateY(0);
+    visibility: visible; /* 표시 상태 */
+    opacity: 1; /* 불투명 */
+    transform: scale(1); /* 원래 크기로 확대 */
+    pointer-events: auto; /* 마우스 이벤트 활성화 */
+}
+
+#tooltip.hide {
+    visibility: visible; /* 사라질 때에도 visibility 유지 */
+    opacity: 0; /* 투명 */
+    transform: scale(0.5); /* 축소 상태 */
+    pointer-events: none; /* 마우스 이벤트 차단 */
 }
 
 /* 텍스트 선택 불가능 */
@@ -381,6 +396,82 @@ body.light-mode .province-name.hidden {
     line-height: 40px;
 }
 
+/* 메인 테마 스타일 */
+#main-theme {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#main-theme.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.3s, opacity 0.3s;
+}
+
+#loading-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear 0.3s, opacity 0.3s;
+}
+
+#loading-message {
+    color: #ffffff;
+    font-size: 24px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px auto; /* 가운데 정렬 */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loading-text {
+    font-size: 18px;
+    color: #ffffff;
+    animation: blink 1.5s step-start infinite;
+}
+
 /* 결과 헤더 */
 .result-header {
     margin-top: -5px;
@@ -464,8 +555,9 @@ body.light-mode .province-name.hidden {
 /* 스케일 바 */
 #scale-bar {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
+    bottom: 10px; /* 화면 아래에서 여백 조정 */
+    right: 10px; /* 화면 오른쪽에서 여백 조정 */
+    max-width: 90%;
     width: 100px;
     height: 10px;
     background-color: #444444;
@@ -482,16 +574,21 @@ body.light-mode .province-name.hidden {
     width: 80%;
     height: 100%;
     background-color: #ffffff;
+    border-radius: inherit; /* 부모의 둥근 모서리를 상속 */
     transition: background-color 0.3s;
 }
 
 #scale-text {
     position: absolute;
-    bottom: 25px;
-    right: 10px;
+    top: -20px; /* 스케일 바 위로 텍스트 위치 */
+    right: 0; /* 텍스트가 우측 정렬되도록 설정 */
+    transform: translateX(0); /* 정렬된 상태 유지 */
     font-size: 12px;
     color: #ffffff;
     transition: color 0.3s;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    pointer-events: none; /* 텍스트가 클릭 대상이 되지 않게 설정 */
+    text-align: right; /* 텍스트를 오른쪽으로 정렬 */
 }
 
 /* 라이트 모드 스타일 */
@@ -535,7 +632,6 @@ body.light-mode #scale-text {
 
 body.light-mode .result-header,
 body.light-mode .party-result,
-body.light-mode .location-details,
 body.light-mode .location-stats,
 body.light-mode .stat-group, 
 body.light-mode .stat-item,
@@ -563,7 +659,7 @@ body.light-mode .seat-info {
 }
 
 body.light-mode #map-container {
-    background-color: rgba(240, 240, 240, 1) !important;
+    background-color: rgba(245, 245, 245, 1) !important;
     transition: background-color 0.3s;
 }
 

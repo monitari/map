@@ -5,10 +5,15 @@ import pandas as pd
 import json
 import os
 import sys
+import io
 
 import data.make as make
 import data.election as elect
 import data.mashup.province_color as pcolor
+
+# 인코딩 설정
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
 
 # 주별 색상 정보
 province_colors = {key: [int(value[i:i+2], 16) for i in (5, 3, 1)] for key, value in pcolor.province_colors.items()}

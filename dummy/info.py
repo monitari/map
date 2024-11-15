@@ -11,161 +11,165 @@ def format_number(number):
     else:
         return str(number)
 
-# 주 할당 튜플
-province = {
-    "그라나데": ["안파키", "아파그라나다", "페카그라나다", "그라나다", "보피노", "메르노"],
-    "그미즈리": ["오크모", "미톤노", "페아그", "그미즈리", "아센시", "메깅고", "호오토", "키에오"],
-    "도마니": ["오브니", "바스바드", "케릴티", "메고기", "에링고", "커피", "즈조이", "가안", "브고홀", "모옹홀", "메옹"],
-    "림덴시": ["파미즈", "스피가", "아르고", "모리고", "펜보드", "메바치", "모호카", "린토카", "낙소", "보빈", "라토카", "세오고", "시안", "보어"],
-    "메세기": ["크라나", "나다이", "옹피오", "메세기", "포크란", "크레이", "안파기"],
-    "미네바": ["아리나", "만토", "메가", "코에가", "민마나", "모에바", "아바나", "솔바", "미바나", "에디아다", "리에다"],
-    "미치바": ["메고이오", "우프레나", "미츠비", "알고", "산시아고", "나릴로", "유프란", "미치바"],
-    "바니카-메고차": ["바니아", "미에고", "메고리", "민고", "이벤토", "마링고"],
-    "베고차": ["모베이", "트롱페이", "바티아", "이베이", "페린", "리안토", "오고소", "민마", "테안타", "모반토", "레링가"],
-    "세그레차": ["하롱골", "미골", "메링골", "세골", "키골", "리에골", "페아골", "베아골"],
-    "아이리카": ["메초오비카", "아브레", "피에트라", "아이리카", "메르네", "츠비키", "하르바트"],
-    "안텐시": ["모호보드", "아핀고", "비에노", "시세디", "메즈노", "아신가", "키르가"],
-    "카리아-로": ["노베라니나", "아르모텐타", "피고모싱고메고차바데다", "미베이토메고차피덴타", "안트로아싱가"],
-    "테트라": ["아젠타", "아칸타", "파르티엔타", "유칸타", "테트리다모스", "테트리비제모스", "테타"],
-    "포어": ["메네트리포어", "안트리포어", "라간", "안파", "테사", "아르테", "세가", "오르도기"],
-    "하파차": ["파시벤토", "오고이모", "미느리오", "산세오", "아스타나", "티레니오", "비엥고", "아린키고", "하싱고", "모잉고", "하르고"]
-}
+def read_data(file_path):
+    province_data = {}
+    total_population = 0
 
-# 데이터를 읽어서 처리
-province_data = {}
-total_population = 0
-
-# 데이터 읽기
-with open("data/mashup/province_info.txt", "r", encoding='utf-8') as file:
-    lines = file.readlines()
-    for line in lines:
-        # 각 줄을 읽어서 세부행정구역, 행정구역, 주, 면적, 인구로 나누기
-        sub_region, name, state, area, population = line.strip().split(", ")
-        province_data[sub_region] = {"name": name.strip(), "state": state.strip(), "area": area.strip(), "population": population.strip()}
-        total_population += int(population)
-
-# 결과를 파일에 쓰기
-with open("dummy/output.txt", "w", encoding='utf-8') as output_file:
-    # 인구 비율 계산
-    max_name_length = max(len(province_name) for province_name in province_data.keys())
+    with open(file_path, "r", encoding='utf-8') as file:
+        lines = file.readlines()
+        for line in lines:
+            sub_region, name, state, area, population = line.strip().split(", ")
+            province_data[sub_region] = {
+                "name": name.strip(),
+                "state": state.strip(),
+                "area": int(area.strip()),
+                "population": int(population.strip())
+            }
+            total_population += int(population)
     
-    for province_name, info in province_data.items():
-        population = int(info["population"])
-        population_ratio = population / total_population
-        tabs = "\t" * ((max_name_length - len(province_name)) // 4 + 1)
-        # output_file.write(f"{province_name}:{tabs}{population_ratio:.2%}\t" if cnt % 4 != 3 else "\n")
-    
-    output_file.write("-" * 128 + "\n")
+    return province_data, total_population
 
-   # 각 주에 대해 반복하며 데이터 출력
-    for pro in province:
-        output_file.write(f"{pro} 주의 행정구역 수: {len(province[pro])}개\n")
-        total_area = sum([int(province_data[p]['area']) for p in province[pro] if p in province_data])
-        total_population_pro = sum([int(province_data[p]['population']) for p in province[pro] if p in province_data])
-        
-        output_file.write(f"{pro} 주의 면적: " + format_number(total_area) + "A\n")
-        output_file.write(f"{pro} 주의 인구: " + format_number(total_population_pro) + "명\n")
-        
-        if total_area > 0:
-            output_file.write(f"{pro} 주의 인구 밀도: {total_population_pro / total_area:.2f}명/A\n")
-        else:
-            output_file.write(f"{pro} 주의 인구 밀도: 계산 불가 (면적이 0)\n")
-        
-        output_file.write(f"{pro} 주의 전체 대비 인구 비율: {total_population_pro / total_population:.2%}\n\n")
+def write_output(province_data, total_population, output_path):
+    with open(output_path, "w", encoding='utf-8') as output_file:
+        # 주
+        provinces = {}
+        for info in province_data.values():
+            state = info["state"]
+            if state not in provinces: provinces[state] = {"total_area": 0, "total_population": 0, "regions": []}
+            provinces[state]["total_area"] += info["area"]
+            provinces[state]["total_population"] += info["population"]
+            provinces[state]["regions"].append(info)
 
-    output_file.write("-" * 128 + "\n")
+        # 총 인구 출력
+        output_file.write("국가명 : 트라야비아\n")
+        output_file.write(f"주 수: {len(provinces)}개\n")
+        output_file.write(f"행정구역 수: {len(province_data)}개\n")
+        output_file.write(f"총 인구: {format_number(total_population)}명\n")
+        output_file.write(f"총 인구 밀도: {total_population / sum(info['area'] for info in province_data.values()):.2f}명/A\n\n")
+        output_file.write("-" * 128 + "\n")
 
-    # 총 인구 출력
-    output_file.write("국가명 : 트라야비아\n")
-    output_file.write(f"주 수: {len(province)}개\n")
-    output_file.write(f"행정구역 수: {len(province_data)}개\n")
-    output_file.write(f"총 인구: {format_number(total_population)}명\n")
-    output_file.write(f"총 인구 밀도: {total_population / sum([int(province_data[p]['area']) for p in province_data]):.2f}명/A\n\n")
+        # 주별 정보 출력
+        for state, data in provinces.items():
+            output_file.write(f"{state} 주의 행정구역 수: {len(data['regions'])}개\n")
+            output_file.write(f"{state} 주의 면적: {format_number(data['total_area'])}A\n")
+            output_file.write(f"{state} 주의 인구: {format_number(data['total_population'])}명\n")
+            
+            if data['total_area'] > 0: output_file.write(f"{state} 주의 인구 밀도: {data['total_population'] / data['total_area']:.2f}명/A\n")
+            else: output_file.write(f"{state} 주의 인구 밀도: 계산 불가 (면적이 0)\n")
+            output_file.write(f"{state} 주의 전체 대비 인구 비율: {data['total_population'] / total_population:.2%}\n\n")
+        output_file.write("-" * 128 + "\n")
 
-    # 주 정보 (인구가 가장 많은 주, 가장 적은 주, 인구 밀도가 가장 높은 주, 낮은 주)
-    max_population = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]))
-    max_population_num = sum([int(province_data[p]['population']) for p in province[max_population] if p in province_data])
-    min_population = min(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]))
-    min_population_num = sum([int(province_data[p]['population']) for p in province[min_population] if p in province_data])
-    max_density = max(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[x] if p in province_data]))
-    max_density_ratio = sum([int(province_data[p]['population']) for p in province[max_density] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[max_density] if p in province_data])
-    min_density = min(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[x] if p in province_data]))
-    min_density_ratio = sum([int(province_data[p]['population']) for p in province[min_density] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[min_density] if p in province_data])
+        # 주 정보 (인구가 가장 많은 주, 가장 적은 주, 인구 밀도가 가장 높은 주, 낮은 주)
+        max_population_state = max(provinces, key=lambda x: provinces[x]['total_population'])
+        min_population_state = min(provinces, key=lambda x: provinces[x]['total_population'])
+        max_density_state = max(provinces, key=lambda x: provinces[x]['total_population'] / provinces[x]['total_area'])
+        min_density_state = min(provinces, key=lambda x: provinces[x]['total_population'] / provinces[x]['total_area'])
 
-    output_file.write(f"인구가 가장 많은 주: {max_population} ({format_number(max_population_num)}명)\n")
-    output_file.write(f"인구가 가장 적은 주: {min_population} ({format_number(min_population_num)}명)\n")
-    output_file.write(f"인구 밀도가 가장 높은 주: {max_density} ({max_density_ratio:.2f}명/A)\n")
-    output_file.write(f"인구 밀도가 가장 낮은 주: {min_density} ({min_density_ratio:.2f}명/A)\n\n")
+        output_file.write(f"인구가 가장 많은 주: {max_population_state} ({format_number(provinces[max_population_state]['total_population'])}명)\n")
+        output_file.write(f"인구가 가장 적은 주: {min_population_state} ({format_number(provinces[min_population_state]['total_population'])}명)\n")
+        output_file.write(f"인구 밀도가 가장 높은 주: {max_density_state} ({provinces[max_density_state]['total_population'] / provinces[max_density_state]['total_area']:.2f}명/A)\n")
+        output_file.write(f"인구 밀도가 가장 낮은 주: {min_density_state} ({provinces[min_density_state]['total_population'] / provinces[min_density_state]['total_area']:.2f}명/A)\n\n")
 
-    # 행정구역 정보 (인구가 가장 많은 행정구역, 가장 적은 행정구역, 인구 밀도가 가장 높은 행정구역, 낮은 행정구역)
-    max_population = max(province_data, key=lambda x: int(province_data[x]["population"]))
-    max_population_num = int(province_data[max_population]["population"])
-    min_population = min(province_data, key=lambda x: int(province_data[x]["population"]))
-    min_population_num = int(province_data[min_population]["population"])
-    max_density = max(province_data, key=lambda x: int(province_data[x]["population"]) / int(province_data[x]["area"]))
-    max_density_ratio = int(province_data[max_density]["population"]) / int(province_data[max_density]["area"])
-    min_density = min(province_data, key=lambda x: int(province_data[x]["population"]) / int(province_data[x]["area"]))
-    min_density_ratio = int(province_data[min_density]["population"]) / int(province_data[min_density]["area"])
+        # 행정구역 정보 (인구가 가장 많은 행정구역, 가장 적은 행정구역, 인구 밀도가 가장 높은 행정구역, 낮은 행정구역)
+        max_population_region = max(province_data, key=lambda x: province_data[x]["population"])
+        min_population_region = min(province_data, key=lambda x: province_data[x]["population"])
+        max_density_region = max(province_data, key=lambda x: province_data[x]["population"] / province_data[x]["area"])
+        min_density_region = min(province_data, key=lambda x: province_data[x]["population"] / province_data[x]["area"])
 
-    output_file.write(f"인구가 가장 많은 행정구역: {max_population} ({format_number(max_population_num)}명)\n")
-    output_file.write(f"인구가 가장 적은 행정구역: {min_population} ({format_number(min_population_num)}명)\n")
-    output_file.write(f"인구 밀도가 가장 높은 행정구역: {max_density} ({max_density_ratio:.2f}명/A)\n")
-    output_file.write(f"인구 밀도가 가장 낮은 행정구역: {min_density} ({min_density_ratio:.2f}명/A)\n\n")
+        output_file.write(f"인구가 가장 많은 행정구역: {max_population_region} ({format_number(province_data[max_population_region]['population'])}명)\n")
+        output_file.write(f"인구가 가장 적은 행정구역: {min_population_region} ({format_number(province_data[min_population_region]['population'])}명)\n")
+        output_file.write(f"인구 밀도가 가장 높은 행정구역: {max_density_region} ({province_data[max_density_region]['population'] / province_data[max_density_region]['area']:.2f}명/A)\n")
+        output_file.write(f"인구 밀도가 가장 낮은 행정구역: {min_density_region} ({province_data[min_density_region]['population'] / province_data[min_density_region]['area']:.2f}명/A)\n\n")
+        output_file.write("-" * 128 + "\n")
 
-    output_file.write("-" * 128 + "\n")
+        # 주별 인구 순위
+        population_rank = sorted(provinces, key=lambda x: provinces[x]['total_population'], reverse=True)
+        output_file.write("\n주별 인구 순위\n")
+        for rank, state in enumerate(population_rank): output_file.write(f"{rank + 1}위: {state} ({format_number(provinces[state]['total_population'])}명)\n")
+        output_file.write("\n")
 
-    # 주별 인구 순위
-    population_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]), reverse=True)
-    output_file.write("\n주별 인구 순위\n")
-    for rank, pro in enumerate(population_rank):
-        output_file.write(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['population']) for p in province[pro] if p in province_data]))}명)\n")
+        # 주별 인구 밀도 순위
+        density_rank = sorted(provinces, key=lambda x: provinces[x]['total_population'] / provinces[x]['total_area'], reverse=True)
+        output_file.write("주별 인구 밀도 순위\n")
+        for rank, state in enumerate(density_rank): output_file.write(f"{rank + 1}위: {state} ({provinces[state]['total_population'] / provinces[state]['total_area']:.2f}명/A)\n")
+        output_file.write("\n")
 
-    output_file.write("\n")
+        # 행정구역별 인구 순위
+        population_rank = sorted(province_data, key=lambda x: province_data[x]["population"], reverse=True)
+        output_file.write("행정구역별 인구 순위\n")
+        for rank, region in enumerate(population_rank): output_file.write(f"{rank + 1}위: {region} ({format_number(province_data[region]['population'])}명) (주 : {province_data[region]['state']})\n")
+        output_file.write("\n")
 
-    # 주별 인구 밀도 순위
-    density_rank = sorted(province, key=lambda x: sum([int(province_data[p]['population']) for p in province[x] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[x] if p in province_data]), reverse=True)
-    output_file.write("주별 인구 밀도 순위\n")
-    for rank, pro in enumerate(density_rank):
-        output_file.write(f"{rank + 1}위: {pro} ({sum([int(province_data[p]['population']) for p in province[pro] if p in province_data]) / sum([int(province_data[p]['area']) for p in province[pro] if p in province_data]):>6.2f}명/A)\n")
+        # 행정구역별 인구 밀도 순위
+        density_rank = sorted(province_data, key=lambda x: province_data[x]["population"] / province_data[x]["area"], reverse=True)
+        output_file.write("행정구역별 인구 밀도 순위\n")
+        for rank, region in enumerate(density_rank): output_file.write(f"{rank + 1}위: {region} ({province_data[region]['population'] / province_data[region]['area']:.2f}명/A) (주 : {province_data[region]['state']})\n")
+        output_file.write("\n")
 
-    output_file.write("\n")
+        # 주별 면적 순위
+        area_rank = sorted(provinces, key=lambda x: provinces[x]['total_area'], reverse=True)
+        output_file.write("주별 면적 순위\n")
+        for rank, state in enumerate(area_rank): output_file.write(f"{rank + 1}위: {state} ({format_number(provinces[state]['total_area'])}A)\n")   
+        output_file.write("\n")
 
-    # 행정구역별 인구 순위
-    population_rank = sorted(province_data, key=lambda x: int(province_data[x]["population"]), reverse=True)
-    output_file.write("행정구역별 인구 순위\n")
-    for rank, pro in enumerate(population_rank):
-        for p in province:
-            if pro in province[p]:
-                output_file.write(f"{rank + 1}위: {pro} ({format_number(int(province_data[pro]['population']))}명) (주 : {p})\n")
+        # 행정구역별 면적 순위
+        area_rank = sorted(province_data, key=lambda x: province_data[x]["area"], reverse=True)
+        output_file.write("행정구역별 면적 순위\n")
+        for rank, region in enumerate(area_rank): output_file.write(f"{rank + 1}위: {region} ({format_number(province_data[region]['area'])}A) (주 : {province_data[region]['state']})\n")
+        output_file.write("\n")
 
-    output_file.write("\n")
+def main():
+    province_data, total_population = read_data("data/mashup/province_info.txt")
+    provinces = {}
+    for info in province_data.values():
+        state = info["state"]
+        if state not in provinces: provinces[state] = {"total_area": 0, "total_population": 0}
+        provinces[state]["total_area"] += info["area"]
+        provinces[state]["total_population"] += info["population"]
 
-    # 행정구역별 인구 밀도 순위
-    density_rank = sorted(province_data, key=lambda x: int(province_data[x]["population"]) / int(province_data[x]["area"]), reverse=True)
-    output_file.write("행정구역별 인구 밀도 순위\n")
-    for rank, pro in enumerate(density_rank):
-        for p in province:
-            if pro in province[p]:
-                output_file.write(f"{rank + 1}위: {pro} ({int(province_data[pro]['population']) / int(province_data[pro]['area']):>6.2f}명/A) (주 : {p})\n")
+    while True:
+        print("원하는 작업을 선택하세요.")
+        print("0. 데이터 저장")
+        print("1. 주별 인구 순위")
+        print("2. 주별 인구 밀도 순위")
+        print("3. 행정구역별 인구 순위")
+        print("4. 행정구역별 인구 밀도 순위")
+        print("5. 주별 면적 순위")
+        print("6. 행정구역별 면적 순위")
+        print("-1. 종료")
 
-    output_file.write("\n")
+        choice = input("번호를 입력하세요: ")
 
-    # 주별 면적 순위
-    area_rank = sorted(province, key=lambda x: sum([int(province_data[p]['area']) for p in province[x] if p in province_data]), reverse=True)
-    output_file.write("주별 면적 순위\n")
-    for rank, pro in enumerate(area_rank):
-        output_file.write(f"{rank + 1}위: {pro} ({format_number(sum([int(province_data[p]['area']) for p in province[pro] if p in province_data]))}A)\n")
-    
-    output_file.write("\n")
+        if choice == "-1": break
+        elif choice == "0":
+            write_output(province_data, total_population, "dummy/output.txt")
+            print("데이터를 저장했습니다.")
+        elif choice == "1":
+            population_rank = sorted(provinces, key=lambda x: provinces[x]['total_population'], reverse=True)
+            print("\n주별 인구 순위")
+            for rank, state in enumerate(population_rank): print(f"{rank + 1}위: {state} ({format_number(provinces[state]['total_population'])}명)")
+        elif choice == "2":
+            density_rank = sorted(provinces, key=lambda x: provinces[x]['total_population'] / provinces[x]['total_area'], reverse=True)
+            print("\n주별 인구 밀도 순위")
+            for rank, state in enumerate(density_rank): print(f"{rank + 1}위: {state} ({provinces[state]['total_population'] / provinces[state]['total_area']:.2f}명/A)")
+        elif choice == "3":
+            population_rank = sorted(province_data, key=lambda x: province_data[x]["population"], reverse=True)
+            print("\n행정구역별 인구 순위")
+            for rank, region in enumerate(population_rank): print(f"{rank + 1}위: {region} ({format_number(province_data[region]['population'])}명) (주 : {province_data[region]['state']})")
+        elif choice == "4":
+            density_rank = sorted(province_data, key=lambda x: province_data[x]["population"] / province_data[x]["area"], reverse=True)
+            print("\n행정구역별 인구 밀도 순위")
+            for rank, region in enumerate(density_rank): print(f"{rank + 1}위: {region} ({province_data[region]['population'] / province_data[region]['area']:.2f}명/A) (주 : {province_data[region]['state']})")
+        elif choice == "5":
+            area_rank = sorted(provinces, key=lambda x: provinces[x]['total_area'], reverse=True)
+            print("\n주별 면적 순위")
+            for rank, state in enumerate(area_rank): print(f"{rank + 1}위: {state} ({format_number(provinces[state]['total_area'])}A)")
+        elif choice == "6":
+            area_rank = sorted(province_data, key=lambda x: province_data[x]["area"], reverse=True)
+            print("\n행정구역별 면적 순위")
+            for rank, region in enumerate(area_rank): print(f"{rank + 1}위: {region} ({format_number(province_data[region]['area'])}A) (주 : {province_data[region]['state']})")
+        else: print("잘못된 입력입니다. 다시 시도하세요.")
+        print("=" * 128, end="\n\n")
 
-    # 행정구역별 면적 순위
-    area_rank = sorted(province_data, key=lambda x: int(province_data[x]["area"]), reverse=True)
-    output_file.write("행정구역별 면적 순위\n")
-    for rank, pro in enumerate(area_rank):
-        for p in province:
-            if pro in province[p]:
-                output_file.write(f"{rank + 1}위: {pro} ({format_number(int(province_data[pro]['area']))}A) (주 : {p})\n")
-
-    output_file.write("\n")
-
-print("완료되었습니다.")
+if __name__ == "__main__":
+    main()
