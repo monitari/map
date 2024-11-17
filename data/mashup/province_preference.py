@@ -160,14 +160,14 @@ province_preference = { # 정당 선호도 (행정구역: {보수주의: 0.0, �
 
     # 하파차 주
     "파시벤토": {"Conservative": 0.95, "Progressive": 1.05},
-    "오고이모": {"Conservative": 1.03, "Progressive": 0.97},
+    "오고이모": {"Conservative": 1.12, "Progressive": 0.88},
     "미느리오": {"Conservative": 0.92, "Progressive": 1.08},
     "산세오": {"Conservative": 1.04, "Progressive": 0.96},
     "아스타나": {"Conservative": 0.91, "Progressive": 1.09},
     "티레니오": {"Conservative": 0.92, "Progressive": 1.08},
     "비엥고": {"Conservative": 1.12, "Progressive": 0.88},
     "아린키고": {"Conservative": 1.21, "Progressive": 0.79},
-    "하싱고": {"Conservative":  0.91, "Progressive": 1.09},
+    "하싱고": {"Conservative":  1.08, "Progressive": 0.92},
     "모잉고": {"Conservative": 1.04, "Progressive": 0.96},
     "하르고": {"Conservative": 0.92, "Progressive": 1.08},
 }
@@ -232,6 +232,6 @@ def define_party_preference(conservative, progressive):
     gaussian_distribution /= gaussian_distribution.sum()  # 정규화
     
     for i, key in enumerate(preference_scores.keys()):
-        distribution[key] = gaussian_distribution[i] * 5 + 1
+        distribution[key] = gaussian_distribution[i] * 10 + 1
     
     return distribution

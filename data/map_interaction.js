@@ -5,9 +5,9 @@ import { initializeMapInteractions } from './map_interactions.js';
 import partyColors from './mashup/party_color.js';
 import { handleMouseEnter, handleMouseMove, handleMouseLeave } from './mouse_events.js';
 
-const MIN_OPACITY = 0.15;
+const MIN_OPACITY = 0.1;
 const MAX_OPACITY = 1;
-const VOTE_GAP_DIVISOR = 40;
+const VOTE_GAP_DIVISOR = 30;
 const MINVOTE = 1;
 const MIN_POP = 1000;
 const MAX_POP = 1000000;
@@ -114,10 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const getElectionColor = (parties) => {
         let maxVote = 0,
             secondMaxVote = 0,
-            leadingParty = '';
-
-        for (let party in parties) {
-            const vote = parties[party];
+            leadingParty = null;
+    
+        for (const [party, vote] of Object.entries(parties)) {
             if (vote > maxVote) {
                 secondMaxVote = maxVote;
                 maxVote = vote;
@@ -125,15 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
             } 
             else if (vote > secondMaxVote) secondMaxVote = vote;
         }
-
-        if (!leadingParty || maxVote === secondMaxVote) return 'rgba(255, 255, 255, 0.5)';
-
+    
+        if (!leadingParty || maxVote === secondMaxVote) return 'rgb(255, 255, 255, 0)'; // 투표가 동률인 경우 투명색 반환
+    
         const voteGap = maxVote - secondMaxVote;
         const opacity = Math.min(MAX_OPACITY, Math.max(MIN_OPACITY, voteGap / VOTE_GAP_DIVISOR));
         const baseColor = partyColors[leadingParty] || 'rgb(255, 255, 255)';
-
+    
         return baseColor.replace('rgb', 'rgba').replace(')', `, ${opacity})`);
-    };
+    };    
 
     // 주요 정당 계산 함수
     const getLeadingParty = (seats) => {
@@ -187,20 +186,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>`;
 
             sortedParties.forEach((party, index) => {
-                const colorBox = `<span class="color-box" style="background-color:${partyColors[party]};"></span>`;
                 const percentage = ((finalSeats[party] / finalTotalSeats) * 100).toFixed(2);
-                const icon = index === 0 ? '<i class="fas fa-crown"></i>' : '';
+                const icon = index === 0 ? '<i class="fas fa-crown" style="font-size: 0.8em; display: inline-block;"></i>' : '';
                 resultHTML += `
                     <div class="party-result">
                         <p class="party-info">
-                            ${colorBox}${party} ${finalSeats[party]}석
-                            <span class="party-percentage">${percentage}% (${proportionalPartySeats[party] || 0} + ${localPartySeats[party] || 0})</span>
+                            <span class="color-box" style="background-color:${partyColors[party]};"></span>
+                            <span class="party-with-seats">${party} ${finalSeats[party]}석</span>
                             ${icon}
+                            <span class="party-percentage" style="white-space: nowrap;">${percentage}% (${proportionalPartySeats[party] || 0} + ${localPartySeats[party] || 0})</span>                     
                         </p>
                         <div class="percentage-bar" style="background-color: ${partyColors[party]}; width: ${percentage}%;"></div>
                     </div>`;
             });
-
+            
             resultHTML += `<p class="total-seats">
                             ${finalTotalSeats}석 <span class="seat-details">(비례 ${totalProportionalSeats}석 + 지역구 ${totalLocalSeats}석)</span>
                         </p>`;
@@ -329,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden; 
                                 text-overflow: ellipsis; flex-grow: 1; min-width: 0; margin: 0 4px; font-size: 12px;">
                         ${colorBox}
-                        ${party}<span style="color: gray; margin-left: 5px;">${value.toFixed(3)}%</span>
+                        ${party}<span style="color: gray; margin-left: 5px; transform: translateY(2px);">${value.toFixed(3)}%</span>
                     </div>`;
                 if (counter % 3 === 2) partiesHtml += '</div>';
                 counter++;
@@ -390,10 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="rank">(${rankDensity} / ${subdivisions.length}위)</span>
                     </div>
                 </div>
-                <div class="events">
-                    <span class="stat-label">사건</span> | ${events}
-                </div>
-                <div class="party-info">
+                <div class="parties-info">
                     ${partiesHtml + otherHtml}
                 </div>
                 <div class="bar-container">

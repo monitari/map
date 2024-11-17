@@ -76,7 +76,7 @@ def logistic_function(x, L=2, k=0.05, x0=50):
     returning = (L / (1 + np.exp(exponent))) / 10 + 1
     
     factor = np.random.normal(1.05, 0.1) 
-    factor = min(max(factor, 0.85), 1.25)
+    factor = min(max(factor, 0.75), 1.35)
     if returning > 1.0: returning *= factor
     else: returning /= factor
     return returning
@@ -113,7 +113,9 @@ def adjust_alignment_with_indexes(vote_shares, province_info_row):
             if party in regional_parties: vote_shares[party] *= 3.0
             for alignment in all_parties[party]:
                 if alignment in alignment_impact: vote_shares[party] *= alignment_impact[alignment]
-                if alignment in party_preference_index: vote_shares[party] *= party_preference_index[alignment]
+                if alignment in party_preference_index: 
+                    vote_shares[party] *= party_preference_index[alignment]
+                    #print(f"{party}의 정당 선호도 지수: {party_preference_index[alignment]}")
         else: raise ValueError(f"정당 {party}에 대한 정치 성향이 없습니다. 이 정당은 외계에서 온 건가요? 👽🚀")
     return vote_shares
 
@@ -131,7 +133,7 @@ def calculate_vote_shares(event, state, row):
 
     state_vote_ranges = {
         "그미즈리": {
-            "그미즈리 국민당": (1500.0, 2500.0), "그미즈리 민주당": (500.0, 1500.0),
+            "그미즈리 국민당": (2000.0, 3000.0), "그미즈리 민주당": (500.0, 1500.0),
             "그미즈리 녹색당": (0.0, 300.0), "그미즈리 통합당": (0.0, 200.0), "그미즈리 노동당": (0.0, 100.0), "default": (0.0, 50.0)
         },
         "하파차": {"하파차 민주연합": (150.0, 450.0), "default": (5.0, 50.0)},

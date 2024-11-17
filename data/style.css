@@ -179,14 +179,6 @@ text {
     transition: color 0.3s;
 }
 
-.events {
-    font-size: 1em;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: #dddddd;
-    transition: color 0.3s;
-}
-
 .bar-container {
     display: flex;
     height: 20px;
@@ -208,7 +200,6 @@ text {
 }
 
 .party-info {
-    margin-top: 10px;
     line-height: 1.2;
     margin: 0;
     flex-grow: 1;
@@ -350,7 +341,7 @@ body.light-mode .province-name.hidden {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 600px;
+    width: auto;
     height: auto;
     background-color: rgba(40, 40, 40, 0.9);
     border: 1px solid #555555;
@@ -367,14 +358,13 @@ body.light-mode .province-name.hidden {
 #info-box h3 {
     font-size: 16px;
     color: #ffffff;
-    margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     transition: color 0.3s;
 }
 
 #info-box p {
     color: #dddddd;
-    line-height: 1.6;
+    line-height: 1.5;
     transition: color 0.3s;
 }
 
@@ -412,6 +402,7 @@ body.light-mode .province-name.hidden {
     z-index: 1000;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+    user-select: none;
 }
 
 #main-theme.hidden {
@@ -434,6 +425,7 @@ body.light-mode .province-name.hidden {
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s linear 0.3s, opacity 0.3s;
+    user-select: none;
 }
 
 #loading-overlay.visible {
@@ -491,7 +483,8 @@ body.light-mode .province-name.hidden {
 .seat-info {
     font-size: 0.7em;
     color: #bbbbbb;
-    margin-bottom: 7px;
+    margin-top: 2px;
+    margin-bottom: 6px;
     transition: color 0.3s;
 }
 
@@ -506,10 +499,14 @@ body.light-mode .province-name.hidden {
     display: inline-block;
     width: 12px;
     height: 12px;
-    margin-right: 6px;
     border-radius: 2px;
     border: 1px solid #888888;
     transition: border-color 0.3s;
+    transform: translateY(1px);
+}
+
+.party-info .color-box {
+    transform: translateY(2px);
 }
 
 .color-box.other {
@@ -522,6 +519,11 @@ body.light-mode .province-name.hidden {
     );
     border: 1px solid #888888;
     transition: border-color 0.3s;
+}
+
+.party-with-seats {
+    font-size: 1em;
+    font-weight: bold;
 }
 
 .party-percentage {
@@ -539,8 +541,8 @@ body.light-mode .province-name.hidden {
 
 .total-seats {
     font-weight: bold;
-    margin-top: 8px;
-    margin-bottom: 4px;
+    margin-top: 2px;
+    margin-bottom: -5px;
     font-size: 1.1em;
     color: #ffffff;
     transition: color 0.3s;
@@ -638,7 +640,6 @@ body.light-mode .stat-item,
 body.light-mode .population-number,
 body.light-mode .area-number,
 body.light-mode .density-number,
-body.light-mode .events,
 body.light-mode .party-info,
 body.light-mode .party-percentage,
 body.light-mode .total-seats,
