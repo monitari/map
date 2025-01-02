@@ -1,6 +1,6 @@
 # Trayaviya Election Map  
 
-![image](https://github.com/user-attachments/assets/b764529c-adeb-4d29-8cb0-4169c452a423)
+![image](https://github.com/user-attachments/assets/71bb4e8d-bd92-4693-a608-4d6b2f04d002)
 
 This project is a map-based application for visualizing administrative divisions, population, population density, and election results.  
 The **frontend**, built with JavaScript, handles map interactions and data visualization, while the **backend**, developed using Python, manages regional data processing, election result generation, and data management. Users can explore population statistics, density maps, and election outcomes through various modes and update data in real time.

@@ -104,7 +104,7 @@ def main():
     style_path = r'data\style.css'
     template_path = r'data\template.txt'
     province_info_path = r'data\xlsx\province_info_all.xlsx'
-    output_path = "vector_map.html"
+    output_path = "index.html"
 
     image = cv2.imread(image_path)
     if image is None: raise FileNotFoundError(f"이미지가 없는데요? {image_path} 🖼️🚫 어딨니, 내 사랑스러운 이미지야? 😢")

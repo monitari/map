@@ -15,7 +15,7 @@ def generate():
 
 @app.route('/map')
 def serve_map():
-    return send_from_directory(os.getcwd(), 'vector_map.html')
+    return send_from_directory(os.getcwd(), 'index.html')
 
 @app.route('/data/<path:filename>')
 def serve_static(filename):
